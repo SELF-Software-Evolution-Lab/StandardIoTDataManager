@@ -1,0 +1,16 @@
+version: '2'
+services:
+    xrepo-mongodb:
+        image: mongo:4.0.2
+        ports:
+            - "27017:27017"
+        command: mongos --configdb xrepo-mongodb-config
+    xrepo-mongodb-node:
+        build:
+            context: .
+            dockerfile: mongodb/MongoDB.Dockerfile
+        command: mongod --replSet rs1 --noprealloc --smallfiles
+    xrepo-mongodb-config:
+        image: mongo:4.0.2
+        container_name: xrepo-mongodb-config
+        command: mongod --noprealloc --smallfiles --configsvr --dbpath /data/db
