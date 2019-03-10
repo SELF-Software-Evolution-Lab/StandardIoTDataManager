@@ -32,7 +32,8 @@
         },
         {
             "fieldName": "notes",
-            "fieldType": "String"
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
         },
         {
             "fieldName": "startTime",

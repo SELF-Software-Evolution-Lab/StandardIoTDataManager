@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { JhiAlertService, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
+import { JhiAlertService, JhiDataUtils, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
 
 import { ISampling } from 'app/shared/model/sampling.model';
 import { AccountService } from 'app/core';
@@ -35,6 +35,7 @@ export class SamplingComponent implements OnInit, OnDestroy {
         protected jhiAlertService: JhiAlertService,
         protected accountService: AccountService,
         protected activatedRoute: ActivatedRoute,
+        protected dataUtils: JhiDataUtils,
         protected router: Router,
         protected eventManager: JhiEventManager
     ) {
@@ -104,6 +105,14 @@ export class SamplingComponent implements OnInit, OnDestroy {
 
     trackId(index: number, item: ISampling) {
         return item.id;
+    }
+
+    byteSize(field) {
+        return this.dataUtils.byteSize(field);
+    }
+
+    openFile(contentType, field) {
+        return this.dataUtils.openFile(contentType, field);
     }
 
     registerChangeInSamplings() {

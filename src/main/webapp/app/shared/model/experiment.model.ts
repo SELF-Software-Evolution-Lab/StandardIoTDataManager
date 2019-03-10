@@ -4,7 +4,7 @@ export interface IExperiment {
     id?: string;
     name?: string;
     description?: string;
-    notes?: string;
+    notes?: any;
     created?: Moment;
     createdBy?: string;
     systemName?: string;
@@ -16,7 +16,7 @@ export class Experiment implements IExperiment {
         public id?: string,
         public name?: string,
         public description?: string,
-        public notes?: string,
+        public notes?: any,
         public created?: Moment,
         public createdBy?: string,
         public systemName?: string,

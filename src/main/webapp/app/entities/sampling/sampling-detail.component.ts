@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { JhiDataUtils } from 'ng-jhipster';
 
 import { ISampling } from 'app/shared/model/sampling.model';
 
@@ -10,7 +11,7 @@ import { ISampling } from 'app/shared/model/sampling.model';
 export class SamplingDetailComponent implements OnInit {
     sampling: ISampling;
 
-    constructor(protected activatedRoute: ActivatedRoute) {}
+    constructor(protected dataUtils: JhiDataUtils, protected activatedRoute: ActivatedRoute) {}
 
     ngOnInit() {
         this.activatedRoute.data.subscribe(({ sampling }) => {
@@ -18,6 +19,13 @@ export class SamplingDetailComponent implements OnInit {
         });
     }
 
+    byteSize(field) {
+        return this.dataUtils.byteSize(field);
+    }
+
+    openFile(contentType, field) {
+        return this.dataUtils.openFile(contentType, field);
+    }
     previousState() {
         window.history.back();
     }

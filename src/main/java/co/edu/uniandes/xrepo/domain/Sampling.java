@@ -130,6 +130,18 @@ public class Sampling implements Serializable {
         return this;
     }
 
+    public Sampling addDevices(Device device) {
+        this.devices.add(device);
+        device.setSampling(this);
+        return this;
+    }
+
+    public Sampling removeDevices(Device device) {
+        this.devices.remove(device);
+        device.setSampling(null);
+        return this;
+    }
+
     public void setDevices(Set<Device> devices) {
         this.devices = devices;
     }

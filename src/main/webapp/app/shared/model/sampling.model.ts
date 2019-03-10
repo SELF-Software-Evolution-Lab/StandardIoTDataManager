@@ -4,7 +4,7 @@ import { IDevice } from 'app/shared/model/device.model';
 export interface ISampling {
     id?: string;
     name?: string;
-    notes?: string;
+    notes?: any;
     startTime?: Moment;
     endTime?: Moment;
     experimentName?: string;
@@ -16,7 +16,7 @@ export class Sampling implements ISampling {
     constructor(
         public id?: string,
         public name?: string,
-        public notes?: string,
+        public notes?: any,
         public startTime?: Moment,
         public endTime?: Moment,
         public experimentName?: string,
