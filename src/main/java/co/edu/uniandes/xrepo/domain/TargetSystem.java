@@ -1,14 +1,17 @@
 package co.edu.uniandes.xrepo.domain;
 
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import javax.validation.constraints.*;
-
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * A TargetSystem.
@@ -28,6 +31,14 @@ public class TargetSystem implements Serializable {
 
     @Field("description")
     private String description;
+
+    @NotNull
+    @Field("created")
+    private Instant created;
+
+    @NotNull
+    @Field("created_by")
+    private String createdBy;
 
     @DBRef
     @Field("organization")
@@ -66,6 +77,32 @@ public class TargetSystem implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Instant getCreated() {
+        return created;
+    }
+
+    public TargetSystem created(Instant created) {
+        this.created = created;
+        return this;
+    }
+
+    public void setCreated(Instant created) {
+        this.created = created;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public TargetSystem createdBy(String createdBy) {
+        this.createdBy = createdBy;
+        return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     public Organization getOrganization() {
@@ -108,6 +145,8 @@ public class TargetSystem implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
+            ", created='" + getCreated() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
             "}";
     }
 }

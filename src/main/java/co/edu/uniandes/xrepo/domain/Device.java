@@ -97,18 +97,6 @@ public class Device implements Serializable {
         return this;
     }
 
-    public Device addSensor(Sensor sensor) {
-        this.sensors.add(sensor);
-        sensor.setDevice(this);
-        return this;
-    }
-
-    public Device removeSensor(Sensor sensor) {
-        this.sensors.remove(sensor);
-        sensor.setDevice(null);
-        return this;
-    }
-
     public void setSensors(Set<Sensor> sensors) {
         this.sensors = sensors;
     }

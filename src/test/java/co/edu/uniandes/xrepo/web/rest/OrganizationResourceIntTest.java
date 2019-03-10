@@ -1,5 +1,7 @@
 package co.edu.uniandes.xrepo.web.rest;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.junit.Before;
@@ -49,6 +51,12 @@ public class OrganizationResourceIntTest {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
+    private static final Instant DEFAULT_CREATED = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
     @Autowired
     private OrganizationRepository organizationRepository;
 
@@ -95,7 +103,9 @@ public class OrganizationResourceIntTest {
     public static Organization createEntity() {
         Organization organization = new Organization()
             .name(DEFAULT_NAME)
-            .description(DEFAULT_DESCRIPTION);
+            .description(DEFAULT_DESCRIPTION)
+            .created(DEFAULT_CREATED)
+            .createdBy(DEFAULT_CREATED_BY);
         return organization;
     }
 
@@ -122,6 +132,8 @@ public class OrganizationResourceIntTest {
         Organization testOrganization = organizationList.get(organizationList.size() - 1);
         assertThat(testOrganization.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testOrganization.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testOrganization.getCreated()).isEqualTo(DEFAULT_CREATED);
+        assertThat(testOrganization.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
     }
 
     @Test
@@ -162,6 +174,42 @@ public class OrganizationResourceIntTest {
     }
 
     @Test
+    public void checkCreatedIsRequired() throws Exception {
+        int databaseSizeBeforeTest = organizationRepository.findAll().size();
+        // set the field null
+        organization.setCreated(null);
+
+        // Create the Organization, which fails.
+        OrganizationDTO organizationDTO = organizationMapper.toDto(organization);
+
+        restOrganizationMockMvc.perform(post("/api/organizations")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(organizationDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Organization> organizationList = organizationRepository.findAll();
+        assertThat(organizationList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    public void checkCreatedByIsRequired() throws Exception {
+        int databaseSizeBeforeTest = organizationRepository.findAll().size();
+        // set the field null
+        organization.setCreatedBy(null);
+
+        // Create the Organization, which fails.
+        OrganizationDTO organizationDTO = organizationMapper.toDto(organization);
+
+        restOrganizationMockMvc.perform(post("/api/organizations")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(organizationDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Organization> organizationList = organizationRepository.findAll();
+        assertThat(organizationList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
     public void getAllOrganizations() throws Exception {
         // Initialize the database
         organizationRepository.save(organization);
@@ -172,7 +220,9 @@ public class OrganizationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(organization.getId())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
+            .andExpect(jsonPath("$.[*].created").value(hasItem(DEFAULT_CREATED.toString())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY.toString())));
     }
     
     @Test
@@ -186,7 +236,9 @@ public class OrganizationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(organization.getId()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
+            .andExpect(jsonPath("$.created").value(DEFAULT_CREATED.toString()))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY.toString()));
     }
 
     @Test
@@ -207,7 +259,9 @@ public class OrganizationResourceIntTest {
         Organization updatedOrganization = organizationRepository.findById(organization.getId()).get();
         updatedOrganization
             .name(UPDATED_NAME)
-            .description(UPDATED_DESCRIPTION);
+            .description(UPDATED_DESCRIPTION)
+            .created(UPDATED_CREATED)
+            .createdBy(UPDATED_CREATED_BY);
         OrganizationDTO organizationDTO = organizationMapper.toDto(updatedOrganization);
 
         restOrganizationMockMvc.perform(put("/api/organizations")
@@ -221,6 +275,8 @@ public class OrganizationResourceIntTest {
         Organization testOrganization = organizationList.get(organizationList.size() - 1);
         assertThat(testOrganization.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testOrganization.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testOrganization.getCreated()).isEqualTo(UPDATED_CREATED);
+        assertThat(testOrganization.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
     }
 
     @Test

@@ -1,6 +1,7 @@
 package co.edu.uniandes.xrepo.service.dto;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
@@ -18,6 +19,12 @@ public class OrganizationDTO implements Serializable {
     private String name;
 
     private String description;
+
+    @NotNull
+    private Instant created;
+
+    @NotNull
+    private String createdBy;
 
 
     public String getId() {
@@ -42,6 +49,22 @@ public class OrganizationDTO implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Instant getCreated() {
+        return created;
+    }
+
+    public void setCreated(Instant created) {
+        this.created = created;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     @Override
@@ -71,6 +94,8 @@ public class OrganizationDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
+            ", created='" + getCreated() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
             "}";
     }
 }

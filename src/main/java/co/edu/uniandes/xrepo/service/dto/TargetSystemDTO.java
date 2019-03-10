@@ -1,7 +1,11 @@
 package co.edu.uniandes.xrepo.service.dto;
-import javax.validation.constraints.*;
+
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * A DTO for the TargetSystem entity.
@@ -15,6 +19,12 @@ public class TargetSystemDTO implements Serializable {
     private String name;
 
     private String description;
+
+    @NotNull
+    private Instant created;
+
+    @NotNull
+    private String createdBy;
 
 
     private String organizationId;
@@ -43,6 +53,22 @@ public class TargetSystemDTO implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Instant getCreated() {
+        return created;
+    }
+
+    public void setCreated(Instant created) {
+        this.created = created;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     public String getOrganizationId() {
@@ -88,6 +114,8 @@ public class TargetSystemDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
+            ", created='" + getCreated() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
             ", organization=" + getOrganizationId() +
             ", organization='" + getOrganizationName() + "'" +
             "}";

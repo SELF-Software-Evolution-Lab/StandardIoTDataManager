@@ -1,14 +1,8 @@
 package co.edu.uniandes.xrepo.web.rest;
 
-import co.edu.uniandes.xrepo.XrepoApp;
-
-import co.edu.uniandes.xrepo.domain.TargetSystem;
-import co.edu.uniandes.xrepo.domain.Organization;
-import co.edu.uniandes.xrepo.repository.TargetSystemRepository;
-import co.edu.uniandes.xrepo.service.TargetSystemService;
-import co.edu.uniandes.xrepo.service.dto.TargetSystemDTO;
-import co.edu.uniandes.xrepo.service.mapper.TargetSystemMapper;
-import co.edu.uniandes.xrepo.web.rest.errors.ExceptionTranslator;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,14 +18,24 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
 
-import java.util.List;
-
-
+import co.edu.uniandes.xrepo.XrepoApp;
+import co.edu.uniandes.xrepo.domain.Organization;
+import co.edu.uniandes.xrepo.domain.TargetSystem;
+import co.edu.uniandes.xrepo.repository.TargetSystemRepository;
+import co.edu.uniandes.xrepo.service.TargetSystemService;
+import co.edu.uniandes.xrepo.service.dto.TargetSystemDTO;
+import co.edu.uniandes.xrepo.service.mapper.TargetSystemMapper;
 import static co.edu.uniandes.xrepo.web.rest.TestUtil.createFormattingConversionService;
+import co.edu.uniandes.xrepo.web.rest.errors.ExceptionTranslator;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test class for the TargetSystemResource REST controller.
@@ -47,6 +51,12 @@ public class TargetSystemResourceIntTest {
 
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
 
     @Autowired
     private TargetSystemRepository targetSystemRepository;
@@ -94,7 +104,9 @@ public class TargetSystemResourceIntTest {
     public static TargetSystem createEntity() {
         TargetSystem targetSystem = new TargetSystem()
             .name(DEFAULT_NAME)
-            .description(DEFAULT_DESCRIPTION);
+            .description(DEFAULT_DESCRIPTION)
+            .created(DEFAULT_CREATED)
+            .createdBy(DEFAULT_CREATED_BY);
         // Add required entity
         Organization organization = OrganizationResourceIntTest.createEntity();
         organization.setId("fixed-id-for-tests");
@@ -125,6 +137,8 @@ public class TargetSystemResourceIntTest {
         TargetSystem testTargetSystem = targetSystemList.get(targetSystemList.size() - 1);
         assertThat(testTargetSystem.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testTargetSystem.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testTargetSystem.getCreated()).isEqualTo(DEFAULT_CREATED);
+        assertThat(testTargetSystem.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
     }
 
     @Test
@@ -165,6 +179,42 @@ public class TargetSystemResourceIntTest {
     }
 
     @Test
+    public void checkCreatedIsRequired() throws Exception {
+        int databaseSizeBeforeTest = targetSystemRepository.findAll().size();
+        // set the field null
+        targetSystem.setCreated(null);
+
+        // Create the TargetSystem, which fails.
+        TargetSystemDTO targetSystemDTO = targetSystemMapper.toDto(targetSystem);
+
+        restTargetSystemMockMvc.perform(post("/api/target-systems")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(targetSystemDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<TargetSystem> targetSystemList = targetSystemRepository.findAll();
+        assertThat(targetSystemList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    public void checkCreatedByIsRequired() throws Exception {
+        int databaseSizeBeforeTest = targetSystemRepository.findAll().size();
+        // set the field null
+        targetSystem.setCreatedBy(null);
+
+        // Create the TargetSystem, which fails.
+        TargetSystemDTO targetSystemDTO = targetSystemMapper.toDto(targetSystem);
+
+        restTargetSystemMockMvc.perform(post("/api/target-systems")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(targetSystemDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<TargetSystem> targetSystemList = targetSystemRepository.findAll();
+        assertThat(targetSystemList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
     public void getAllTargetSystems() throws Exception {
         // Initialize the database
         targetSystemRepository.save(targetSystem);
@@ -175,7 +225,9 @@ public class TargetSystemResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(targetSystem.getId())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
+            .andExpect(jsonPath("$.[*].created").value(hasItem(DEFAULT_CREATED.toString())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY.toString())));
     }
     
     @Test
@@ -189,7 +241,9 @@ public class TargetSystemResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(targetSystem.getId()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
+            .andExpect(jsonPath("$.created").value(DEFAULT_CREATED.toString()))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY.toString()));
     }
 
     @Test
@@ -210,7 +264,9 @@ public class TargetSystemResourceIntTest {
         TargetSystem updatedTargetSystem = targetSystemRepository.findById(targetSystem.getId()).get();
         updatedTargetSystem
             .name(UPDATED_NAME)
-            .description(UPDATED_DESCRIPTION);
+            .description(UPDATED_DESCRIPTION)
+            .created(UPDATED_CREATED)
+            .createdBy(UPDATED_CREATED_BY);
         TargetSystemDTO targetSystemDTO = targetSystemMapper.toDto(updatedTargetSystem);
 
         restTargetSystemMockMvc.perform(put("/api/target-systems")
@@ -224,6 +280,8 @@ public class TargetSystemResourceIntTest {
         TargetSystem testTargetSystem = targetSystemList.get(targetSystemList.size() - 1);
         assertThat(testTargetSystem.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testTargetSystem.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testTargetSystem.getCreated()).isEqualTo(UPDATED_CREATED);
+        assertThat(testTargetSystem.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
     }
 
     @Test

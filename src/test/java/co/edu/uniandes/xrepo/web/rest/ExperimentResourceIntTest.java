@@ -1,5 +1,7 @@
 package co.edu.uniandes.xrepo.web.rest;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.junit.Before;
@@ -53,6 +55,12 @@ public class ExperimentResourceIntTest {
     private static final String DEFAULT_NOTES = "AAAAAAAAAA";
     private static final String UPDATED_NOTES = "BBBBBBBBBB";
 
+    private static final Instant DEFAULT_CREATED = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
     @Autowired
     private ExperimentRepository experimentRepository;
 
@@ -100,7 +108,9 @@ public class ExperimentResourceIntTest {
         Experiment experiment = new Experiment()
             .name(DEFAULT_NAME)
             .description(DEFAULT_DESCRIPTION)
-            .notes(DEFAULT_NOTES);
+            .notes(DEFAULT_NOTES)
+            .created(DEFAULT_CREATED)
+            .createdBy(DEFAULT_CREATED_BY);
         // Add required entity
         TargetSystem targetSystem = TargetSystemResourceIntTest.createEntity();
         targetSystem.setId("fixed-id-for-tests");
@@ -132,6 +142,8 @@ public class ExperimentResourceIntTest {
         assertThat(testExperiment.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testExperiment.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testExperiment.getNotes()).isEqualTo(DEFAULT_NOTES);
+        assertThat(testExperiment.getCreated()).isEqualTo(DEFAULT_CREATED);
+        assertThat(testExperiment.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
     }
 
     @Test
@@ -172,6 +184,42 @@ public class ExperimentResourceIntTest {
     }
 
     @Test
+    public void checkCreatedIsRequired() throws Exception {
+        int databaseSizeBeforeTest = experimentRepository.findAll().size();
+        // set the field null
+        experiment.setCreated(null);
+
+        // Create the Experiment, which fails.
+        ExperimentDTO experimentDTO = experimentMapper.toDto(experiment);
+
+        restExperimentMockMvc.perform(post("/api/experiments")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(experimentDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Experiment> experimentList = experimentRepository.findAll();
+        assertThat(experimentList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    public void checkCreatedByIsRequired() throws Exception {
+        int databaseSizeBeforeTest = experimentRepository.findAll().size();
+        // set the field null
+        experiment.setCreatedBy(null);
+
+        // Create the Experiment, which fails.
+        ExperimentDTO experimentDTO = experimentMapper.toDto(experiment);
+
+        restExperimentMockMvc.perform(post("/api/experiments")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(experimentDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Experiment> experimentList = experimentRepository.findAll();
+        assertThat(experimentList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
     public void getAllExperiments() throws Exception {
         // Initialize the database
         experimentRepository.save(experiment);
@@ -183,7 +231,9 @@ public class ExperimentResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(experiment.getId())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
-            .andExpect(jsonPath("$.[*].notes").value(hasItem(DEFAULT_NOTES.toString())));
+            .andExpect(jsonPath("$.[*].notes").value(hasItem(DEFAULT_NOTES.toString())))
+            .andExpect(jsonPath("$.[*].created").value(hasItem(DEFAULT_CREATED.toString())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY.toString())));
     }
     
     @Test
@@ -198,7 +248,9 @@ public class ExperimentResourceIntTest {
             .andExpect(jsonPath("$.id").value(experiment.getId()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
-            .andExpect(jsonPath("$.notes").value(DEFAULT_NOTES.toString()));
+            .andExpect(jsonPath("$.notes").value(DEFAULT_NOTES.toString()))
+            .andExpect(jsonPath("$.created").value(DEFAULT_CREATED.toString()))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY.toString()));
     }
 
     @Test
@@ -220,7 +272,9 @@ public class ExperimentResourceIntTest {
         updatedExperiment
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
-            .notes(UPDATED_NOTES);
+            .notes(UPDATED_NOTES)
+            .created(UPDATED_CREATED)
+            .createdBy(UPDATED_CREATED_BY);
         ExperimentDTO experimentDTO = experimentMapper.toDto(updatedExperiment);
 
         restExperimentMockMvc.perform(put("/api/experiments")
@@ -235,6 +289,8 @@ public class ExperimentResourceIntTest {
         assertThat(testExperiment.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testExperiment.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testExperiment.getNotes()).isEqualTo(UPDATED_NOTES);
+        assertThat(testExperiment.getCreated()).isEqualTo(UPDATED_CREATED);
+        assertThat(testExperiment.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
     }
 
     @Test

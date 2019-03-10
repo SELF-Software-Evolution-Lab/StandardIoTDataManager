@@ -17,6 +17,8 @@
             <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="name"><span>Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="created"><span>Created</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="createdBy"><span>Created By</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -25,6 +27,8 @@
                 <td><a [routerLink]="['/organization', organization.id, 'view' ]">{{organization.id}}</a></td>
                 <td>{{organization.name}}</td>
                 <td>{{organization.description}}</td>
+                <td>{{organization.created | date:'medium'}}</td>
+                <td>{{organization.createdBy}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

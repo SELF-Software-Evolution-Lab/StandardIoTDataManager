@@ -18,6 +18,8 @@
             <th jhiSortBy="name"><span>Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="notes"><span>Notes</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="created"><span>Created</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="createdBy"><span>Created By</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="systemName"><span>System</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
@@ -28,6 +30,8 @@
                 <td>{{experiment.name}}</td>
                 <td>{{experiment.description}}</td>
                 <td>{{experiment.notes}}</td>
+                <td>{{experiment.created | date:'medium'}}</td>
+                <td>{{experiment.createdBy}}</td>
                 <td>
                     <div *ngIf="experiment.systemId">
                         <a [routerLink]="['../target-system', experiment.systemId , 'view' ]" >{{experiment.systemName}}</a>

@@ -1,6 +1,7 @@
 package co.edu.uniandes.xrepo.service.dto;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
@@ -20,6 +21,12 @@ public class ExperimentDTO implements Serializable {
     private String description;
 
     private String notes;
+
+    @NotNull
+    private Instant created;
+
+    @NotNull
+    private String createdBy;
 
 
     private String systemId;
@@ -56,6 +63,22 @@ public class ExperimentDTO implements Serializable {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public Instant getCreated() {
+        return created;
+    }
+
+    public void setCreated(Instant created) {
+        this.created = created;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     public String getSystemId() {
@@ -102,6 +125,8 @@ public class ExperimentDTO implements Serializable {
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
             ", notes='" + getNotes() + "'" +
+            ", created='" + getCreated() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
             ", system=" + getSystemId() +
             ", system='" + getSystemName() + "'" +
             "}";

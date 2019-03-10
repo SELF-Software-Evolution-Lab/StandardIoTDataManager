@@ -1,9 +1,9 @@
 /* tslint:disable max-line-length */
-import { TestBed, getTestBed } from '@angular/core/testing';
+import { getTestBed, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { of } from 'rxjs';
-import { take, map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
+import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { TargetSystemService } from 'app/entities/target-system/target-system.service';
 import { ITargetSystem, TargetSystem } from 'app/shared/model/target-system.model';
 
@@ -13,6 +13,7 @@ describe('Service Tests', () => {
         let service: TargetSystemService;
         let httpMock: HttpTestingController;
         let elemDefault: ITargetSystem;
+        let currentDate: moment.Moment;
         beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [HttpClientTestingModule]
@@ -20,13 +21,19 @@ describe('Service Tests', () => {
             injector = getTestBed();
             service = injector.get(TargetSystemService);
             httpMock = injector.get(HttpTestingController);
+            currentDate = moment();
 
-            elemDefault = new TargetSystem('ID', 'AAAAAAA', 'AAAAAAA');
+            elemDefault = new TargetSystem('ID', 'AAAAAAA', 'AAAAAAA', currentDate, 'AAAAAAA');
         });
 
         describe('Service methods', async () => {
             it('should find an element', async () => {
-                const returnedFromService = Object.assign({}, elemDefault);
+                const returnedFromService = Object.assign(
+                    {
+                        created: currentDate.format(DATE_TIME_FORMAT)
+                    },
+                    elemDefault
+                );
                 service
                     .find('123')
                     .pipe(take(1))
@@ -39,11 +46,17 @@ describe('Service Tests', () => {
             it('should create a TargetSystem', async () => {
                 const returnedFromService = Object.assign(
                     {
-                        id: 'ID'
+                        id: 'ID',
+                        created: currentDate.format(DATE_TIME_FORMAT)
                     },
                     elemDefault
                 );
-                const expected = Object.assign({}, returnedFromService);
+                const expected = Object.assign(
+                    {
+                        created: currentDate
+                    },
+                    returnedFromService
+                );
                 service
                     .create(new TargetSystem(null))
                     .pipe(take(1))
@@ -56,12 +69,19 @@ describe('Service Tests', () => {
                 const returnedFromService = Object.assign(
                     {
                         name: 'BBBBBB',
-                        description: 'BBBBBB'
+                        description: 'BBBBBB',
+                        created: currentDate.format(DATE_TIME_FORMAT),
+                        createdBy: 'BBBBBB'
                     },
                     elemDefault
                 );
 
-                const expected = Object.assign({}, returnedFromService);
+                const expected = Object.assign(
+                    {
+                        created: currentDate
+                    },
+                    returnedFromService
+                );
                 service
                     .update(expected)
                     .pipe(take(1))
@@ -74,11 +94,18 @@ describe('Service Tests', () => {
                 const returnedFromService = Object.assign(
                     {
                         name: 'BBBBBB',
-                        description: 'BBBBBB'
+                        description: 'BBBBBB',
+                        created: currentDate.format(DATE_TIME_FORMAT),
+                        createdBy: 'BBBBBB'
                     },
                     elemDefault
                 );
-                const expected = Object.assign({}, returnedFromService);
+                const expected = Object.assign(
+                    {
+                        created: currentDate
+                    },
+                    returnedFromService
+                );
                 service
                     .query(expected)
                     .pipe(

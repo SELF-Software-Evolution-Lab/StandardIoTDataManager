@@ -2,6 +2,7 @@ package co.edu.uniandes.xrepo.domain;
 
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
@@ -33,6 +34,14 @@ public class Experiment implements Serializable {
 
     @Field("notes")
     private String notes;
+
+    @NotNull
+    @Field("created")
+    private Instant created;
+
+    @NotNull
+    @Field("created_by")
+    private String createdBy;
 
     @DBRef
     @Field("system")
@@ -86,6 +95,32 @@ public class Experiment implements Serializable {
         this.notes = notes;
     }
 
+    public Instant getCreated() {
+        return created;
+    }
+
+    public Experiment created(Instant created) {
+        this.created = created;
+        return this;
+    }
+
+    public void setCreated(Instant created) {
+        this.created = created;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public Experiment createdBy(String createdBy) {
+        this.createdBy = createdBy;
+        return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
     public TargetSystem getSystem() {
         return system;
     }
@@ -127,6 +162,8 @@ public class Experiment implements Serializable {
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
             ", notes='" + getNotes() + "'" +
+            ", created='" + getCreated() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
             "}";
     }
 }

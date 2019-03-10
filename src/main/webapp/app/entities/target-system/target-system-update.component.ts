@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiAlertService } from 'ng-jhipster';
 import { ITargetSystem } from 'app/shared/model/target-system.model';
 import { TargetSystemService } from './target-system.service';
@@ -18,6 +20,7 @@ export class TargetSystemUpdateComponent implements OnInit {
     isSaving: boolean;
 
     organizations: IOrganization[];
+    created: string;
 
     constructor(
         protected jhiAlertService: JhiAlertService,
@@ -30,6 +33,7 @@ export class TargetSystemUpdateComponent implements OnInit {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ targetSystem }) => {
             this.targetSystem = targetSystem;
+            this.created = this.targetSystem.created != null ? this.targetSystem.created.format(DATE_TIME_FORMAT) : null;
         });
         this.organizationService
             .query({ filter: 'targetsystem-is-null' })
@@ -64,6 +68,7 @@ export class TargetSystemUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
+        this.targetSystem.created = this.created != null ? moment(this.created, DATE_TIME_FORMAT) : null;
         if (this.targetSystem.id !== undefined) {
             this.subscribeToSaveResponse(this.targetSystemService.update(this.targetSystem));
         } else {

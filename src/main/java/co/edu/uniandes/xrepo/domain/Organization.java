@@ -2,13 +2,13 @@ package co.edu.uniandes.xrepo.domain;
 
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -16,7 +16,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * A Organization.
  */
 @Document(collection = "organization")
-@TypeAlias("xrepo:organization")
 public class Organization implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,6 +30,14 @@ public class Organization implements Serializable {
 
     @Field("description")
     private String description;
+
+    @NotNull
+    @Field("created")
+    private Instant created;
+
+    @NotNull
+    @Field("created_by")
+    private String createdBy;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
@@ -66,6 +73,32 @@ public class Organization implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public Instant getCreated() {
+        return created;
+    }
+
+    public Organization created(Instant created) {
+        this.created = created;
+        return this;
+    }
+
+    public void setCreated(Instant created) {
+        this.created = created;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public Organization createdBy(String createdBy) {
+        this.createdBy = createdBy;
+        return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -94,6 +127,8 @@ public class Organization implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
+            ", created='" + getCreated() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
             "}";
     }
 }

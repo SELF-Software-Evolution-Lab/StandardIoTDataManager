@@ -16,6 +16,20 @@
         {
             "fieldName": "description",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "created",
+            "fieldType": "Instant",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "createdBy",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
         }
     ],
     "dto": "mapstruct",

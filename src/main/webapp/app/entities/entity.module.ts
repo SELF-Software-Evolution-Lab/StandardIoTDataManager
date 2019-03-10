@@ -35,6 +35,18 @@ import { RouterModule } from '@angular/router';
             {
                 path: 'sample',
                 loadChildren: './sample/sample.module#XrepoSampleModule'
+            },
+            {
+                path: 'organization',
+                loadChildren: './organization/organization.module#XrepoOrganizationModule'
+            },
+            {
+                path: 'target-system',
+                loadChildren: './target-system/target-system.module#XrepoTargetSystemModule'
+            },
+            {
+                path: 'experiment',
+                loadChildren: './experiment/experiment.module#XrepoExperimentModule'
             }
             /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
         ])

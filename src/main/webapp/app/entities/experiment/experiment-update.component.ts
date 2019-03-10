@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiAlertService } from 'ng-jhipster';
 import { IExperiment } from 'app/shared/model/experiment.model';
 import { ExperimentService } from './experiment.service';
@@ -18,6 +20,7 @@ export class ExperimentUpdateComponent implements OnInit {
     isSaving: boolean;
 
     systems: ITargetSystem[];
+    created: string;
 
     constructor(
         protected jhiAlertService: JhiAlertService,
@@ -30,6 +33,7 @@ export class ExperimentUpdateComponent implements OnInit {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ experiment }) => {
             this.experiment = experiment;
+            this.created = this.experiment.created != null ? this.experiment.created.format(DATE_TIME_FORMAT) : null;
         });
         this.targetSystemService
             .query({ filter: 'experiment-is-null' })
@@ -64,6 +68,7 @@ export class ExperimentUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
+        this.experiment.created = this.created != null ? moment(this.created, DATE_TIME_FORMAT) : null;
         if (this.experiment.id !== undefined) {
             this.subscribeToSaveResponse(this.experimentService.update(this.experiment));
         } else {
