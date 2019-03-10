@@ -1,23 +1,20 @@
 package co.edu.uniandes.xrepo.domain;
 
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
 /**
- * A Organization.
+ * A TargetSystem.
  */
-@Document(collection = "organization")
-@TypeAlias("xrepo:organization")
-public class Organization implements Serializable {
+@Document(collection = "target_system")
+public class TargetSystem implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
@@ -32,6 +29,10 @@ public class Organization implements Serializable {
     @Field("description")
     private String description;
 
+    @DBRef
+    @Field("organization")
+    private Organization organization;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
         return id;
@@ -45,7 +46,7 @@ public class Organization implements Serializable {
         return name;
     }
 
-    public Organization name(String name) {
+    public TargetSystem name(String name) {
         this.name = name;
         return this;
     }
@@ -58,13 +59,26 @@ public class Organization implements Serializable {
         return description;
     }
 
-    public Organization description(String description) {
+    public TargetSystem description(String description) {
         this.description = description;
         return this;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public TargetSystem organization(Organization organization) {
+        this.organization = organization;
+        return this;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -76,11 +90,11 @@ public class Organization implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Organization organization = (Organization) o;
-        if (organization.getId() == null || getId() == null) {
+        TargetSystem targetSystem = (TargetSystem) o;
+        if (targetSystem.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), organization.getId());
+        return Objects.equals(getId(), targetSystem.getId());
     }
 
     @Override
@@ -90,7 +104,7 @@ public class Organization implements Serializable {
 
     @Override
     public String toString() {
-        return "Organization{" +
+        return "TargetSystem{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +

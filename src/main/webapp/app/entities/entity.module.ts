@@ -1,5 +1,5 @@
-import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
     imports: [
@@ -7,6 +7,10 @@ import {RouterModule} from '@angular/router';
             {
                 path: 'organization',
                 loadChildren: './organization/organization.module#XrepoOrganizationModule'
+            },
+            {
+                path: 'target-system',
+                loadChildren: './target-system/target-system.module#XrepoTargetSystemModule'
             }
             /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
         ])
