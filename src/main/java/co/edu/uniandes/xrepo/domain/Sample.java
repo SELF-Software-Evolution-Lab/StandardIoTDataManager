@@ -8,13 +8,24 @@ import java.util.Objects;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * A Sample.
  */
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Document(collection = "sample")
+@TypeAlias("xrepo:sample")
 public class Sample implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -99,15 +110,5 @@ public class Sample implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hashCode(getId());
-    }
-
-    @Override
-    public String toString() {
-        return "Sample{" +
-            "id=" + getId() +
-            ", ts='" + getTs() + "'" +
-            ", sensorInternalId='" + getSensorInternalId() + "'" +
-            ", samplingId='" + getSamplingId() + "'" +
-            "}";
     }
 }

@@ -4,21 +4,33 @@ package co.edu.uniandes.xrepo.domain;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 /**
  * A Sampling.
  */
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@EqualsAndHashCode
 @Document(collection = "sampling")
+@TypeAlias("xrepo:sampling")
 public class Sampling implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -130,51 +142,8 @@ public class Sampling implements Serializable {
         return this;
     }
 
-    public Sampling addDevices(Device device) {
-        this.devices.add(device);
-        device.setSampling(this);
-        return this;
-    }
-
-    public Sampling removeDevices(Device device) {
-        this.devices.remove(device);
-        device.setSampling(null);
-        return this;
-    }
-
     public void setDevices(Set<Device> devices) {
         this.devices = devices;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Sampling sampling = (Sampling) o;
-        if (sampling.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), sampling.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(getId());
-    }
-
-    @Override
-    public String toString() {
-        return "Sampling{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", notes='" + getNotes() + "'" +
-            ", startTime='" + getStartTime() + "'" +
-            ", endTime='" + getEndTime() + "'" +
-            "}";
-    }
 }

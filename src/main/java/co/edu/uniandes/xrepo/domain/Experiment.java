@@ -3,20 +3,28 @@ package co.edu.uniandes.xrepo.domain;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 /**
  * A Experiment.
  */
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Document(collection = "experiment")
+@TypeAlias("xrepo:experiment")
 public class Experiment implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -135,35 +143,4 @@ public class Experiment implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Experiment experiment = (Experiment) o;
-        if (experiment.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), experiment.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(getId());
-    }
-
-    @Override
-    public String toString() {
-        return "Experiment{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", description='" + getDescription() + "'" +
-            ", notes='" + getNotes() + "'" +
-            ", created='" + getCreated() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            "}";
-    }
 }
