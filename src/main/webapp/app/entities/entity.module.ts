@@ -11,6 +11,14 @@ import { RouterModule } from '@angular/router';
             {
                 path: 'target-system',
                 loadChildren: './target-system/target-system.module#XrepoTargetSystemModule'
+            },
+            {
+                path: 'sensor',
+                loadChildren: './sensor/sensor.module#XrepoSensorModule'
+            },
+            {
+                path: 'device',
+                loadChildren: './device/device.module#XrepoDeviceModule'
             }
             /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
         ])

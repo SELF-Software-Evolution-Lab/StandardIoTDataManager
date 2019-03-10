@@ -1,0 +1,39 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="sensor">
+            <h2><span>Sensor</span> {{sensor.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Internal Id</span></dt>
+                <dd>
+                    <span>{{sensor.internalId}}</span>
+                </dd>
+                <dt><span>Sensor Type</span></dt>
+                <dd>
+                    <span>{{sensor.sensorType}}</span>
+                </dd>
+                <dt><span>Potential Freq</span></dt>
+                <dd>
+                    <span>{{sensor.potentialFreq}}</span>
+                </dd>
+                <dt><span>Sampling Freq</span></dt>
+                <dd>
+                    <span>{{sensor.samplingFreq}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/sensor', sensor.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
