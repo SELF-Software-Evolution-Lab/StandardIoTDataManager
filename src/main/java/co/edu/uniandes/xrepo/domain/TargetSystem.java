@@ -3,6 +3,8 @@ package co.edu.uniandes.xrepo.domain;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -13,6 +15,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import co.edu.uniandes.xrepo.domain.metadata.OperativeRange;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -55,6 +58,9 @@ public class TargetSystem implements Serializable {
     @DBRef
     @Field("organization")
     private Organization organization;
+
+    @Field("operativeRanges")
+    private List<OperativeRange> operativeRanges= new ArrayList<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
@@ -129,6 +135,20 @@ public class TargetSystem implements Serializable {
     public void setOrganization(Organization organization) {
         this.organization = organization;
     }
+
+    public List<OperativeRange> getOperativeRanges() {
+        return operativeRanges;
+    }
+
+    public TargetSystem operativeRanges(List<OperativeRange> operativeRanges) {
+        this.operativeRanges = operativeRanges;
+        return this;
+    }
+
+    public void setOperativeRanges(List<OperativeRange> operativeRanges) {
+        this.operativeRanges = operativeRanges;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
 }

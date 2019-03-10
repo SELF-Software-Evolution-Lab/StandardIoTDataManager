@@ -2,29 +2,33 @@ package co.edu.uniandes.xrepo.domain;
 
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * A Device.
  */
-@Document(collection = "device")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class Device implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
-    @Id
-    private String id;
-
     @NotNull
     @Field("internal_id")
     private String internalId;
@@ -37,18 +41,12 @@ public class Device implements Serializable {
     @Field("description")
     private String description;
 
-    @DBRef
+    @Field("specs")
+    private Map<String, String> specs = new HashMap<>();
+
     @Field("sensor")
     private Set<Sensor> sensors = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getInternalId() {
         return internalId;
     }
@@ -100,35 +98,32 @@ public class Device implements Serializable {
     public void setSensors(Set<Sensor> sensors) {
         this.sensors = sensors;
     }
+
+    public Map<String, String> getSpecs() {
+        return specs;
+    }
+
+    public Device specs(Map<String, String> specs) {
+        this.specs = specs;
+        return this;
+    }
+
+    public void setSpecs(Map<String, String> specs) {
+        this.specs = specs;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Device device = (Device) o;
-        if (device.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), device.getId());
+        return internalId.equals(device.internalId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
-    }
-
-    @Override
-    public String toString() {
-        return "Device{" +
-            "id=" + getId() +
-            ", internalId='" + getInternalId() + "'" +
-            ", name='" + getName() + "'" +
-            ", description='" + getDescription() + "'" +
-            "}";
+        return Objects.hash(internalId);
     }
 }

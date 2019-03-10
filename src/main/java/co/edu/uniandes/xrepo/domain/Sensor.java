@@ -7,21 +7,24 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * A Sensor.
  */
-@Document(collection = "sensor")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class Sensor implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
-    @Id
-    private String id;
-
     @NotNull
     @Field("internal_id")
     private String internalId;
@@ -37,14 +40,6 @@ public class Sensor implements Serializable {
     private BigDecimal samplingFreq;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getInternalId() {
         return internalId;
     }
@@ -100,32 +95,14 @@ public class Sensor implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Sensor sensor = (Sensor) o;
-        if (sensor.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), sensor.getId());
+        return internalId.equals(sensor.internalId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
-    }
-
-    @Override
-    public String toString() {
-        return "Sensor{" +
-            "id=" + getId() +
-            ", internalId='" + getInternalId() + "'" +
-            ", sensorType='" + getSensorType() + "'" +
-            ", potentialFreq=" + getPotentialFreq() +
-            ", samplingFreq=" + getSamplingFreq() +
-            "}";
+        return Objects.hash(internalId);
     }
 }

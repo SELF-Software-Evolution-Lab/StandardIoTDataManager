@@ -3,7 +3,9 @@ package co.edu.uniandes.xrepo.domain;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
@@ -15,6 +17,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import co.edu.uniandes.xrepo.domain.metadata.OperativeCondition;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -56,9 +59,12 @@ public class Sampling implements Serializable {
     @Field("experiment")
     private Experiment experiment;
 
-    @DBRef
     @Field("devices")
     private Set<Device> devices = new HashSet<>();
+
+    @Field("conditions")
+    private List<OperativeCondition> conditions = new ArrayList<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
         return id;
@@ -145,5 +151,19 @@ public class Sampling implements Serializable {
     public void setDevices(Set<Device> devices) {
         this.devices = devices;
     }
+
+    public List<OperativeCondition> getConditions() {
+        return conditions;
+    }
+
+    public Sampling conditions(List<OperativeCondition> conditions) {
+        this.conditions = conditions;
+        return this;
+    }
+
+    public void setConditions(List<OperativeCondition> conditions) {
+        this.conditions = conditions;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 }
