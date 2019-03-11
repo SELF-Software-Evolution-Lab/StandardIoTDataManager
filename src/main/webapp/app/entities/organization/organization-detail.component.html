@@ -1,10 +1,14 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <div *ngIf="organization">
-            <h2><span>Organization</span> {{organization.id}}</h2>
+            <h2><span>Organization:</span> {{organization.name}}</h2>
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
+                <dt><span>Id</span></dt>
+                <dd>
+                    <span>{{organization.id}}</span>
+                </dd>
                 <dt><span>Name</span></dt>
                 <dd>
                     <span>{{organization.name}}</span>
@@ -12,14 +16,6 @@
                 <dt><span>Description</span></dt>
                 <dd>
                     <span>{{organization.description}}</span>
-                </dd>
-                <dt><span>Created</span></dt>
-                <dd>
-                    <span>{{organization.created}}</span>
-                </dd>
-                <dt><span>Created By</span></dt>
-                <dd>
-                    <span>{{organization.createdBy}}</span>
                 </dd>
             </dl>
 
