@@ -27,6 +27,168 @@
                         <a [routerLink]="['/experiment', sampling.experimentId, 'view']">{{sampling.experimentName}}</a>
                     </div>
                 </dd>
+                <dt><span>Operative Conditions</span></dt>
+                <dd>
+                    <div class="table-responsive" >
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th ><span>Variable</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                                <th ><span>Value</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Speed</td>
+                                <td>50 m/s</td>
+                                <td class="text-right">
+                                    <div class="btn-group flex-btn-group-container">
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                                            <span class="d-none d-md-inline">Edit</span>
+                                        </button>
+                                        <button type="submit"
+                                                class="btn btn-danger btn-sm">
+                                            <fa-icon [icon]="'times'"></fa-icon>
+                                            <span class="d-none d-md-inline">Delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Speed</td>
+                                <td>50 m/s</td>
+                                <td class="text-right">
+                                    <div class="btn-group flex-btn-group-container">
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                                            <span class="d-none d-md-inline">Edit</span>
+                                        </button>
+                                        <button type="submit"
+                                                class="btn btn-danger btn-sm">
+                                            <fa-icon [icon]="'times'"></fa-icon>
+                                            <span class="d-none d-md-inline">Delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </dd>
+                <dt><span>Devices Installed</span></dt>
+                <dd>
+                    <div class="table-responsive" >
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th ><span>Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                                <th ><span>name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                                <th ><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>rspbry_1</td>
+                                <td>Raspberry 1</td>
+                                <td>Dispositivos para recoleccion de informacion del sensor</td>
+                                <td class="text-right">
+                                    <div class="btn-group flex-btn-group-container">
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                                            <span class="d-none d-md-inline">Edit</span>
+                                        </button>
+                                        <button type="submit"
+                                                class="btn btn-danger btn-sm">
+                                            <fa-icon [icon]="'times'"></fa-icon>
+                                            <span class="d-none d-md-inline">Delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>rspbry_2</td>
+                                <td>Raspberry 2</td>
+                                <td>Dispositivos para recoleccion de informacion del sensor</td>
+                                <td class="text-right">
+                                    <div class="btn-group flex-btn-group-container">
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                                            <span class="d-none d-md-inline">Edit</span>
+                                        </button>
+                                        <button type="submit"
+                                                class="btn btn-danger btn-sm">
+                                            <fa-icon [icon]="'times'"></fa-icon>
+                                            <span class="d-none d-md-inline">Delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </dd>
+                <dt><span>Sensors sampled</span></dt>
+                <dd>
+                    <div class="table-responsive" >
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th ><span>Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                                <th ><span>Sensor Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                                <th ><span>Device Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                                <th ><span>Potential Frequence</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                                <th ><span>Sampling Frequence</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>acc_1</td>
+                                <td>Accelerometer</td>
+                                <td>rspbry_1</td>
+                                <td>200 Mhz</td>
+                                <td>100 Mhz</td>
+                                <td class="text-right">
+                                    <div class="btn-group flex-btn-group-container">
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                                            <span class="d-none d-md-inline">Edit</span>
+                                        </button>
+                                        <button type="submit"
+                                                class="btn btn-danger btn-sm">
+                                            <fa-icon [icon]="'times'"></fa-icon>
+                                            <span class="d-none d-md-inline">Delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>acc_2</td>
+                                <td>Accelerometer</td>
+                                <td>rspbry_2</td>
+                                <td>200 Mhz</td>
+                                <td>100 Mhz</td>
+                                <td class="text-right">
+                                    <div class="btn-group flex-btn-group-container">
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                                            <span class="d-none d-md-inline">Edit</span>
+                                        </button>
+                                        <button type="submit"
+                                                class="btn btn-danger btn-sm">
+                                            <fa-icon [icon]="'times'"></fa-icon>
+                                            <span class="d-none d-md-inline">Delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </dd>
             </dl>
 
             <button type="submit"
