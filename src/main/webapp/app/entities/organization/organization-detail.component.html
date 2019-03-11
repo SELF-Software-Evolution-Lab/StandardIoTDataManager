@@ -34,6 +34,49 @@
                     class="btn btn-primary">
                 <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
             </button>
+            <br><br>
+            <h3> <fa-icon [icon]="'user'"></fa-icon> &nbsp;<span>Collaborators</span></h3>
+            <br>
+            <div class="table-responsive" *ngIf="users">
+                <table class="table table-striped">
+                    
+                    <thead>
+                    <tr>
+                        <th ><span>ID</span></th>
+                        <th><span>Login</span></th>
+                        <th><span>Email</span> </th>
+                        <th></th>
+                        <th><span>Profiles</span></th>
+                        <th><span>Created Date</span> </th>
+                        <th><span>Last Modified By</span></th>
+                        <th><span>Last Modified Date</span></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of users">
+                            <td>{{user.id}}</td>
+                            <td>{{user.login}}</td>
+                            <td>{{user.email}}</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm"" *ngIf="!user.activated"
+                                    >Deactivated</button>
+                                <button class="btn btn-success btn-sm"*ngIf="user.activated"
+                                        >Activated</button>
+                            </td>
+                            
+                            <td>
+                                <div *ngFor="let authority of user.authorities">
+                                    <span class="badge badge-info">{{ authority }}</span>
+                                </div>
+                            </td>
+                            <td>{{user.createdDate | date:'dd/MM/yy HH:mm'}}</td>
+                            <td>{{user.lastModifiedBy}}</td>
+                            <td>{{user.lastModifiedDate | date:'dd/MM/yy HH:mm'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
         </div>
     </div>
 </div>
