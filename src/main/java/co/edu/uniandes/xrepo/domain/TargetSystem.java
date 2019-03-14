@@ -60,7 +60,7 @@ public class TargetSystem implements Serializable {
     private Organization organization;
 
     @Field("operativeRanges")
-    private List<OperativeRange> operativeRanges= new ArrayList<>();
+    private List<OperativeRange> operativeRanges = new ArrayList<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {

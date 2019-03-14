@@ -1,4 +1,5 @@
 import { Moment } from 'moment';
+import { IOperativeRange } from 'app/shared/model/operative-range.model';
 
 export interface ITargetSystem {
     id?: string;
@@ -8,6 +9,7 @@ export interface ITargetSystem {
     createdBy?: string;
     organizationName?: string;
     organizationId?: string;
+    operativeRanges?: IOperativeRange[];
 }
 
 export class TargetSystem implements ITargetSystem {
@@ -18,6 +20,6 @@ export class TargetSystem implements ITargetSystem {
         public created?: Moment,
         public createdBy?: string,
         public organizationName?: string,
-        public organizationId?: string
+        public operativeRanges?: IOperativeRange[]
     ) {}
 }
