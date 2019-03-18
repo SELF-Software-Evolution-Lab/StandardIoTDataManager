@@ -1,16 +1,17 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { XrepoSharedModule } from 'app/shared';
 import {
     TargetSystemComponent,
-    TargetSystemDetailComponent,
-    TargetSystemUpdateComponent,
-    TargetSystemDeletePopupComponent,
     TargetSystemDeleteDialogComponent,
+    TargetSystemDeletePopupComponent,
+    TargetSystemDetailComponent,
+    targetSystemPopupRoute,
     targetSystemRoute,
-    targetSystemPopupRoute
+    TargetSystemUpdateComponent
 } from './';
+import { OperativeRangeUpdateComponent } from 'app/entities/target-system/operative-range-update.component';
 
 const ENTITY_STATES = [...targetSystemRoute, ...targetSystemPopupRoute];
 
@@ -21,7 +22,8 @@ const ENTITY_STATES = [...targetSystemRoute, ...targetSystemPopupRoute];
         TargetSystemDetailComponent,
         TargetSystemUpdateComponent,
         TargetSystemDeleteDialogComponent,
-        TargetSystemDeletePopupComponent
+        TargetSystemDeletePopupComponent,
+        OperativeRangeUpdateComponent
     ],
     entryComponents: [
         TargetSystemComponent,

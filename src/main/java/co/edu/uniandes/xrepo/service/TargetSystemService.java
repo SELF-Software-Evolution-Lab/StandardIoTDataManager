@@ -1,17 +1,20 @@
 package co.edu.uniandes.xrepo.service;
 
-import co.edu.uniandes.xrepo.domain.TargetSystem;
-import co.edu.uniandes.xrepo.repository.TargetSystemRepository;
-import co.edu.uniandes.xrepo.service.dto.TargetSystemDTO;
-import co.edu.uniandes.xrepo.service.mapper.TargetSystemMapper;
+import java.time.Instant;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import co.edu.uniandes.xrepo.domain.TargetSystem;
+import co.edu.uniandes.xrepo.domain.User;
+import co.edu.uniandes.xrepo.repository.TargetSystemRepository;
+import co.edu.uniandes.xrepo.security.SecurityUtils;
+import co.edu.uniandes.xrepo.service.dto.TargetSystemDTO;
+import co.edu.uniandes.xrepo.service.mapper.TargetSystemMapper;
 
 /**
  * Service Implementation for managing TargetSystem.
@@ -24,10 +27,13 @@ public class TargetSystemService {
     private final TargetSystemRepository targetSystemRepository;
 
     private final TargetSystemMapper targetSystemMapper;
+    private final UserService userService;
 
-    public TargetSystemService(TargetSystemRepository targetSystemRepository, TargetSystemMapper targetSystemMapper) {
+    public TargetSystemService(TargetSystemRepository targetSystemRepository, TargetSystemMapper targetSystemMapper,
+                               UserService userService) {
         this.targetSystemRepository = targetSystemRepository;
         this.targetSystemMapper = targetSystemMapper;
+        this.userService = userService;
     }
 
     /**
@@ -39,6 +45,11 @@ public class TargetSystemService {
     public TargetSystemDTO save(TargetSystemDTO targetSystemDTO) {
         log.debug("Request to save TargetSystem : {}", targetSystemDTO);
         TargetSystem targetSystem = targetSystemMapper.toEntity(targetSystemDTO);
+        if (targetSystem.getId() == null){
+            targetSystem.setCreated(Instant.now());
+            Optional<User> creator = userService.getUserWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin().get());
+            targetSystem.setCreatedBy(creator.get().getFirstName() + " " +creator.get().getLastName());
+        }
         targetSystem = targetSystemRepository.save(targetSystem);
         return targetSystemMapper.toDto(targetSystem);
     }

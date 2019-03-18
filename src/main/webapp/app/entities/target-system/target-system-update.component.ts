@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
@@ -10,6 +10,7 @@ import { ITargetSystem } from 'app/shared/model/target-system.model';
 import { TargetSystemService } from './target-system.service';
 import { IOrganization } from 'app/shared/model/organization.model';
 import { OrganizationService } from 'app/entities/organization';
+import { OperativeRangeService } from 'app/entities/target-system/operative-range.service';
 
 @Component({
     selector: 'jhi-target-system-update',
@@ -26,13 +27,16 @@ export class TargetSystemUpdateComponent implements OnInit {
         protected jhiAlertService: JhiAlertService,
         protected targetSystemService: TargetSystemService,
         protected organizationService: OrganizationService,
-        protected activatedRoute: ActivatedRoute
+        protected operativeRangeService: OperativeRangeService,
+        protected activatedRoute: ActivatedRoute,
+        protected router: Router
     ) {}
 
     ngOnInit() {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ targetSystem }) => {
             this.targetSystem = targetSystem;
+            this.checkNewRanges();
             this.created = this.targetSystem.created != null ? this.targetSystem.created.format(DATE_TIME_FORMAT) : null;
         });
         this.organizationService
@@ -95,5 +99,41 @@ export class TargetSystemUpdateComponent implements OnInit {
 
     trackOrganizationById(index: number, item: IOrganization) {
         return item.id;
+    }
+
+    addRange() {
+        this.operativeRangeService.reset();
+        this.router.navigate([this.router.url, 'operative-range']);
+    }
+
+    editRange(i: number) {
+        this.operativeRangeService.toModify = this.targetSystem.operativeRanges[i];
+        this.operativeRangeService.toModifyIndex = i;
+        this.router.navigate([this.router.url, 'operative-range']);
+    }
+
+    removeRange(i: number) {
+        this.targetSystem.operativeRanges.splice(i, 1);
+    }
+
+    private checkNewRanges() {
+        if (!this.operativeRangeService.newValue) {
+            this.operativeRangeService.reset();
+            return;
+        }
+        if (!this.operativeRangeService.toModify) {
+            // Add new Range
+            this.targetSystem.operativeRanges.push(this.operativeRangeService.newValue);
+        } else {
+            // Range modified
+            const toModifyIndex = this.operativeRangeService.toModifyIndex;
+            const prevRange = this.targetSystem.operativeRanges[toModifyIndex];
+            if (JSON.stringify(prevRange) === JSON.stringify(this.operativeRangeService.toModify)) {
+                this.targetSystem.operativeRanges.splice(toModifyIndex, 1, this.operativeRangeService.newValue);
+            } else {
+                this.jhiAlertService.error("Requested Operative Range doesn't no longer exists", null, null);
+            }
+        }
+        this.operativeRangeService.reset();
     }
 }

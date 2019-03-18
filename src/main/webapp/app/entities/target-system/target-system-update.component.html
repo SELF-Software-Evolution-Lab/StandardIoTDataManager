@@ -4,11 +4,16 @@
             <h2 id="jhi-target-system-heading">Create or edit a Target System</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
-                <div class="form-group" [hidden]="!targetSystem.id">
-                    <label for="id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="targetSystem.id" readonly />
-                </div>
+                <dl class="row-md jh-entity-details" [hidden]="!targetSystem.id">
+                    <dt><span>ID</span></dt>
+                    <dd>
+                        <span>{{targetSystem.id}}</span>
+                    </dd>
+                    <dt><span>Created By</span></dt>
+                    <dd>
+                        <span>{{targetSystem.createdBy}} on {{targetSystem.created}}</span>
+                    </dd>
+                </dl>
                 <div class="form-group">
                     <label class="form-control-label" for="field_name">Name</label>
                     <input type="text" class="form-control" name="name" id="field_name"
@@ -30,35 +35,6 @@
                         [(ngModel)]="targetSystem.description" />
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" for="field_created">Created</label>
-                    <div class="d-flex">
-                        <input id="field_created" type="datetime-local" class="form-control" name="created" [(ngModel)]="created" placeholder="YYYY-MM-DD HH:mm"
-                        required/>
-                    </div>
-                    <div [hidden]="!(editForm.controls.created?.dirty && editForm.controls.created?.invalid)">
-                        <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.created?.errors?.required">
-                        This field is required.
-                        </small>
-                        <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.created?.errors?.ZonedDateTimelocal">
-                            This field should be a date and time.
-                        </small>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="field_createdBy">Created By</label>
-                    <input type="text" class="form-control" name="createdBy" id="field_createdBy"
-                        [(ngModel)]="targetSystem.createdBy" required/>
-                    <div [hidden]="!(editForm.controls.createdBy?.dirty && editForm.controls.createdBy?.invalid)">
-                        <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.createdBy?.errors?.required">
-                        This field is required.
-                        </small>
-                    </div>
-                </div>
-
-                <div class="form-group">
                     <label class="form-control-label" for="field_organization">Organization</label>
                     <select class="form-control" id="field_organization" name="organization" [(ngModel)]="targetSystem.organizationId" required>
                         <option *ngIf="!editForm.value.organization" [ngValue]="null" selected></option>
@@ -76,7 +52,8 @@
             <div >
                 <h4>
                     <span>Operative Ranges</span>
-                    <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-target-system" [routerLink]="['/target-system/new']">
+                    <button id="jh-create-entity" class="btn btn-primary btn-sm float-right"
+                            type="button" (click)="addRange()">
                         <fa-icon [icon]="'plus'"></fa-icon>
                         <span >
             Add Operative Range
@@ -94,20 +71,20 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>Speed</td>
-                            <td>0 m/s</td>
-                            <td>10 m/s</td>
+                        <tr *ngFor="let range of targetSystem.operativeRanges; let i = index">
+                            <td>{{range.varName}}</td>
+                            <td>{{range.minVal}} {{range.unit}}</td>
+                            <td>{{range.maxVal}} {{range.unit}}</td>
                             <td class="text-right">
                                 <div class="btn-group flex-btn-group-container">
-                                    <button type="submit" class="btn btn-primary btn-sm">
+                                    <button type="button" class="btn btn-primary btn-sm" (click)="editRange(i)">
                                         <fa-icon [icon]="'pencil-alt'"></fa-icon>
                                         <span class="d-none d-md-inline">Edit</span>
                                     </button>
-                                    <button type="submit"
-                                            class="btn btn-danger btn-sm">
-                                        <fa-icon [icon]="'times'"></fa-icon>
-                                        <span class="d-none d-md-inline">Delete</span>
+                                    <button type="button"
+                                            class="btn btn-danger btn-sm" (click)="removeRange(i)">
+                                        <fa-icon [icon]="'minus'"></fa-icon>
+                                        <span class="d-none d-md-inline">Remove</span>
                                     </button>
                                 </div>
                             </td>

@@ -2,14 +2,20 @@ package co.edu.uniandes.xrepo.service.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import co.edu.uniandes.xrepo.domain.metadata.OperativeRange;
+import lombok.ToString;
+
 /**
  * A DTO for the TargetSystem entity.
  */
+@ToString
 public class TargetSystemDTO implements Serializable {
 
     private String id;
@@ -20,16 +26,15 @@ public class TargetSystemDTO implements Serializable {
 
     private String description;
 
-    @NotNull
     private Instant created;
 
-    @NotNull
     private String createdBy;
-
 
     private String organizationId;
 
     private String organizationName;
+
+    private List<OperativeRange> operativeRanges = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -87,6 +92,14 @@ public class TargetSystemDTO implements Serializable {
         this.organizationName = organizationName;
     }
 
+    public List<OperativeRange> getOperativeRanges() {
+        return operativeRanges;
+    }
+
+    public void setOperativeRanges(List<OperativeRange> operativeRanges) {
+        this.operativeRanges = operativeRanges;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -108,16 +121,4 @@ public class TargetSystemDTO implements Serializable {
         return Objects.hashCode(getId());
     }
 
-    @Override
-    public String toString() {
-        return "TargetSystemDTO{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", description='" + getDescription() + "'" +
-            ", created='" + getCreated() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", organization=" + getOrganizationId() +
-            ", organization='" + getOrganizationName() + "'" +
-            "}";
-    }
 }

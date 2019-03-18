@@ -9,7 +9,7 @@ export interface ITargetSystem {
     createdBy?: string;
     organizationName?: string;
     organizationId?: string;
-    operativeRanges?: IOperativeRange[];
+    operativeRanges: IOperativeRange[];
 }
 
 export class TargetSystem implements ITargetSystem {
@@ -20,6 +20,6 @@ export class TargetSystem implements ITargetSystem {
         public created?: Moment,
         public createdBy?: string,
         public organizationName?: string,
-        public operativeRanges?: IOperativeRange[]
+        public operativeRanges: IOperativeRange[] = []
     ) {}
 }
