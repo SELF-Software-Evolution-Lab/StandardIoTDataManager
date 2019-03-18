@@ -1,8 +1,9 @@
 package co.edu.uniandes.xrepo.domain;
 
-
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -54,6 +55,9 @@ public class Experiment implements Serializable {
     @DBRef
     @Field("system")
     private TargetSystem system;
+
+    @Field("tags")
+    private List<String> tags = new ArrayList<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
@@ -141,6 +145,20 @@ public class Experiment implements Serializable {
     public void setSystem(TargetSystem targetSystem) {
         this.system = targetSystem;
     }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public Experiment tags(List<String> tags) {
+        this.tags = tags;
+        return this;
+    }
+
+    public void setList(List<String> tags) {
+        this.tags = tags;
+    }
+    
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
 }

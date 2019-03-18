@@ -46,6 +46,10 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "tags",
+            "fieldType": "String[]"
         }
     ],
     "dto": "mapstruct",
