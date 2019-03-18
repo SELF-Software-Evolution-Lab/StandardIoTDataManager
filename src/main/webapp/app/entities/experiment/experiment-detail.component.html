@@ -31,6 +31,10 @@
                         <a [routerLink]="['/target-system', experiment.systemId, 'view']">{{experiment.systemName}}</a>
                     </div>
                 </dd>
+                <dt><span>Tags</span></dt>
+                <dd *ngFor="let tag of experiment.tags">
+                    {{tag}}
+                </dd>
             </dl>
 
             <button type="submit"

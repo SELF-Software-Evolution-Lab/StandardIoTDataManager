@@ -9,6 +9,7 @@ export interface IExperiment {
     createdBy?: string;
     systemName?: string;
     systemId?: string;
+    tags?: string[];
 }
 
 export class Experiment implements IExperiment {
@@ -20,6 +21,7 @@ export class Experiment implements IExperiment {
         public created?: Moment,
         public createdBy?: string,
         public systemName?: string,
-        public systemId?: string
+        public systemId?: string,
+        public tags?: string[]
     ) {}
 }
