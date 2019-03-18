@@ -32,12 +32,6 @@
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/tag', tag.id, 'edit']"
-                                class="btn btn-primary btn-sm">
-                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
-                            <span class="d-none d-md-inline">Edit</span>
-                        </button>
-                        <button type="submit"
                                 [routerLink]="['/', 'tag', { outlets: { popup: tag.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
