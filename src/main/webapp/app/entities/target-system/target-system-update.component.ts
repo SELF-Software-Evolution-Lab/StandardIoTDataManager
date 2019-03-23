@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -10,7 +10,8 @@ import { ITargetSystem } from 'app/shared/model/target-system.model';
 import { TargetSystemService } from './target-system.service';
 import { IOrganization } from 'app/shared/model/organization.model';
 import { OrganizationService } from 'app/entities/organization';
-import { OperativeRangeService } from 'app/entities/target-system/operative-range.service';
+import { OperativeRangeModalService } from './operative-range-modal.service';
+import { IOperativeRange } from 'app/shared/model/operative-range.model';
 
 @Component({
     selector: 'jhi-target-system-update',
@@ -23,11 +24,13 @@ export class TargetSystemUpdateComponent implements OnInit {
     organizations: IOrganization[];
     created: string;
 
+    modalRef: EventEmitter<IOperativeRange>;
+
     constructor(
         protected jhiAlertService: JhiAlertService,
         protected targetSystemService: TargetSystemService,
         protected organizationService: OrganizationService,
-        protected operativeRangeService: OperativeRangeService,
+        protected operativeRangeModalService: OperativeRangeModalService,
         protected activatedRoute: ActivatedRoute,
         protected router: Router
     ) {}
@@ -36,7 +39,6 @@ export class TargetSystemUpdateComponent implements OnInit {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ targetSystem }) => {
             this.targetSystem = targetSystem;
-            this.checkNewRanges();
             this.created = this.targetSystem.created != null ? this.targetSystem.created.format(DATE_TIME_FORMAT) : null;
         });
         this.organizationService
@@ -102,38 +104,30 @@ export class TargetSystemUpdateComponent implements OnInit {
     }
 
     addRange() {
-        this.operativeRangeService.reset();
-        this.router.navigate([this.router.url, 'operative-range']);
+        this.modalRef = this.operativeRangeModalService.openToCreate();
+        this.modalRef.subscribe(range => {
+            if (range) {
+                this.targetSystem.operativeRanges.push(range);
+            }
+        });
     }
 
     editRange(i: number) {
-        this.operativeRangeService.toModify = this.targetSystem.operativeRanges[i];
-        this.operativeRangeService.toModifyIndex = i;
-        this.router.navigate([this.router.url, 'operative-range']);
+        this.modalRef = this.operativeRangeModalService.openToEdit(this.targetSystem.operativeRanges[i]);
+        this.modalRef.subscribe(range => {
+            console.log('rango retornado edit', range);
+            if (range) {
+                const prevRange = this.targetSystem.operativeRanges[i];
+                if (JSON.stringify(prevRange) === JSON.stringify(range)) {
+                    this.targetSystem.operativeRanges.splice(i, 1, range);
+                } else {
+                    this.jhiAlertService.error("Requested Operative Range doesn't no longer exists", null, null);
+                }
+            }
+        });
     }
 
     removeRange(i: number) {
         this.targetSystem.operativeRanges.splice(i, 1);
-    }
-
-    private checkNewRanges() {
-        if (!this.operativeRangeService.newValue) {
-            this.operativeRangeService.reset();
-            return;
-        }
-        if (!this.operativeRangeService.toModify) {
-            // Add new Range
-            this.targetSystem.operativeRanges.push(this.operativeRangeService.newValue);
-        } else {
-            // Range modified
-            const toModifyIndex = this.operativeRangeService.toModifyIndex;
-            const prevRange = this.targetSystem.operativeRanges[toModifyIndex];
-            if (JSON.stringify(prevRange) === JSON.stringify(this.operativeRangeService.toModify)) {
-                this.targetSystem.operativeRanges.splice(toModifyIndex, 1, this.operativeRangeService.newValue);
-            } else {
-                this.jhiAlertService.error("Requested Operative Range doesn't no longer exists", null, null);
-            }
-        }
-        this.operativeRangeService.reset();
     }
 }

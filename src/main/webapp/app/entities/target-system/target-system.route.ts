@@ -11,7 +11,6 @@ import { TargetSystemComponent } from './target-system.component';
 import { TargetSystemDetailComponent } from './target-system-detail.component';
 import { TargetSystemUpdateComponent } from './target-system-update.component';
 import { TargetSystemDeletePopupComponent } from './target-system-delete-dialog.component';
-import { OperativeRangeUpdateComponent } from 'app/entities/target-system/operative-range-update.component';
 
 @Injectable({ providedIn: 'root' })
 export class TargetSystemResolve implements Resolve<ITargetSystem> {
@@ -56,29 +55,11 @@ export const targetSystemRoute: Routes = [
         canActivate: [UserRouteAccessService]
     },
     {
-        path: 'new/operative-range',
-        component: OperativeRangeUpdateComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'TargetSystems'
-        },
-        canActivate: [UserRouteAccessService]
-    },
-    {
         path: 'new',
         component: TargetSystemUpdateComponent,
         resolve: {
             targetSystem: TargetSystemResolve
         },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'TargetSystems'
-        },
-        canActivate: [UserRouteAccessService]
-    },
-    {
-        path: ':id/edit/operative-range',
-        component: OperativeRangeUpdateComponent,
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'TargetSystems'

@@ -1,46 +1,31 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiAlertService } from 'ng-jhipster';
 import { IOperativeRange, OperativeRange } from 'app/shared/model/operative-range.model';
-import { OperativeRangeService } from 'app/entities/target-system/operative-range.service';
 
 @Component({
     selector: 'jhi-operative-range-update',
     templateUrl: './operative-range-update.component.html'
 })
 export class OperativeRangeUpdateComponent implements OnInit {
-    operativeRange: IOperativeRange;
+    @Input() operativeRange: IOperativeRange;
+    @Input() mode: string;
+    @Output() returnRange: EventEmitter<any> = new EventEmitter();
 
-    isSaving: boolean;
-
-    constructor(
-        protected jhiAlertService: JhiAlertService,
-        protected operativeRangeService: OperativeRangeService,
-        protected activatedRoute: ActivatedRoute
-    ) {}
+    constructor(protected jhiAlertService: JhiAlertService, public activeModal: NgbActiveModal) {}
 
     ngOnInit() {
-        this.isSaving = false;
-        const toModify = this.operativeRangeService.toModify;
-        if (!toModify) {
+        if (!this.operativeRange) {
             this.operativeRange = new OperativeRange();
-        } else {
-            this.operativeRange = new OperativeRange(toModify.varName, toModify.unit, toModify.minVal, toModify.maxVal);
         }
     }
 
-    previousState() {
-        this.operativeRangeService.reset();
-        window.history.back();
-    }
-
     save() {
-        this.isSaving = true;
-        this.operativeRangeService.newValue = this.operativeRange;
-        window.history.back();
+        this.activeModal.dismiss('save operative range');
+        this.returnRange.emit(this.operativeRange);
     }
 
-    protected onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
+    cancel() {
+        this.activeModal.dismiss('cancel operative range');
     }
 }

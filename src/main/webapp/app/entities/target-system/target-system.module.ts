@@ -12,6 +12,7 @@ import {
     TargetSystemUpdateComponent
 } from './';
 import { OperativeRangeUpdateComponent } from 'app/entities/target-system/operative-range-update.component';
+import { OperativeRangeModalService } from 'app/entities/target-system/operative-range-modal.service';
 
 const ENTITY_STATES = [...targetSystemRoute, ...targetSystemPopupRoute];
 
@@ -29,8 +30,10 @@ const ENTITY_STATES = [...targetSystemRoute, ...targetSystemPopupRoute];
         TargetSystemComponent,
         TargetSystemUpdateComponent,
         TargetSystemDeleteDialogComponent,
-        TargetSystemDeletePopupComponent
+        TargetSystemDeletePopupComponent,
+        OperativeRangeUpdateComponent
     ],
+    providers: [OperativeRangeModalService],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class XrepoTargetSystemModule {}
