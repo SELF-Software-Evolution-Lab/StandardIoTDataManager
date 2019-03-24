@@ -60,8 +60,11 @@
         <button type="button" id="cancel-save" class="btn btn-secondary" (click)="cancel()">
             <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
         </button>
-        <button type="submit" id="save-entity" class="btn btn-primary" [disabled]="editForm.form.invalid || isSaving">
+        <button type="submit" id="save-entity" class="btn btn-primary" [hidden]="mode!='Add'" [disabled]="editForm.form.invalid">
             <fa-icon [icon]="'plus'"></fa-icon>&nbsp;<span>Add</span>
+        </button>
+        <button type="submit" id="edit-entity" class="btn btn-primary" [hidden]="mode!='Edit'" [disabled]="editForm.form.invalid">
+            <fa-icon [icon]="'plus'"></fa-icon>&nbsp;<span>Save</span>
         </button>
     </div>
 </form>

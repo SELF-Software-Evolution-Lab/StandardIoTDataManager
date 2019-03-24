@@ -115,14 +115,8 @@ export class TargetSystemUpdateComponent implements OnInit {
     editRange(i: number) {
         this.modalRef = this.operativeRangeModalService.openToEdit(this.targetSystem.operativeRanges[i]);
         this.modalRef.subscribe(range => {
-            console.log('rango retornado edit', range);
             if (range) {
-                const prevRange = this.targetSystem.operativeRanges[i];
-                if (JSON.stringify(prevRange) === JSON.stringify(range)) {
-                    this.targetSystem.operativeRanges.splice(i, 1, range);
-                } else {
-                    this.jhiAlertService.error("Requested Operative Range doesn't no longer exists", null, null);
-                }
+                this.targetSystem.operativeRanges[i] = range;
             }
         });
     }

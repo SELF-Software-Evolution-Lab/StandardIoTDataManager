@@ -29,7 +29,7 @@ export class OperativeRangeModalService {
 
     openToCreate(): EventEmitter<IOperativeRange> {
         const modalRef = this._open();
-        modalRef.componentInstance.mode = 'Add ';
+        modalRef.componentInstance.mode = 'Add';
         return modalRef.componentInstance.returnRange;
     }
 
@@ -41,7 +41,7 @@ export class OperativeRangeModalService {
             operativeRange.minVal,
             operativeRange.maxVal
         );
-        modalRef.componentInstance.mode = 'Edit ';
+        modalRef.componentInstance.mode = 'Edit';
         return modalRef.componentInstance.returnRange;
     }
 }
