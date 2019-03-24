@@ -42,6 +42,10 @@
         {
             "fieldName": "endTime",
             "fieldType": "Instant"
+        },
+        {
+            "fieldName": "tags",
+            "fieldType": "String[]"
         }
     ],
     "dto": "mapstruct",

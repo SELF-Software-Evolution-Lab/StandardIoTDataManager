@@ -21,6 +21,10 @@
                 <dd>
                     <span>{{sampling.endTime}}</span>
                 </dd>
+                <dt><span>Tags</span></dt>
+                <dd *ngFor="let tag of sampling.tags">
+                    {{tag}}
+                </dd>
                 <dt><span>Experiment</span></dt>
                 <dd>
                     <div *ngIf="sampling.experimentId">

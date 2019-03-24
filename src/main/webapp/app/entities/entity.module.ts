@@ -23,6 +23,10 @@ import { RouterModule } from '@angular/router';
             {
                 path: 'sample',
                 loadChildren: './sample/sample.module#XrepoSampleModule'
+            },
+            {
+                path: 'tag',
+                loadChildren: './tag/tag.module#XrepoTagModule'
             }
             /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
         ])

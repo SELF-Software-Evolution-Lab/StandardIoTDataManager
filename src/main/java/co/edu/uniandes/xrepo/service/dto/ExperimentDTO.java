@@ -2,6 +2,7 @@ package co.edu.uniandes.xrepo.service.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
@@ -32,6 +33,8 @@ public class ExperimentDTO implements Serializable {
     private String systemId;
 
     private String systemName;
+
+    private List<String> tags;
 
     public String getId() {
         return id;
@@ -95,6 +98,14 @@ public class ExperimentDTO implements Serializable {
 
     public void setSystemName(String targetSystemName) {
         this.systemName = targetSystemName;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     @Override

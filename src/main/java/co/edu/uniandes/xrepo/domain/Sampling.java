@@ -65,6 +65,9 @@ public class Sampling implements Serializable {
     @Field("conditions")
     private List<OperativeCondition> conditions = new ArrayList<>();
 
+    @Field("tags")
+    private List<String> tags = new ArrayList<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
         return id;
@@ -164,6 +167,21 @@ public class Sampling implements Serializable {
     public void setConditions(List<OperativeCondition> conditions) {
         this.conditions = conditions;
     }
+
+    
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public Sampling tags(List<String> tags) {
+        this.tags = tags;
+        return this;
+    }
+
+    public void setList(List<String> tags) {
+        this.tags = tags;
+    }
+    
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 }

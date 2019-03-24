@@ -10,6 +10,7 @@ export interface ISampling {
     experimentName?: string;
     experimentId?: string;
     devices?: IDevice[];
+    tags?: string[];
 }
 
 export class Sampling implements ISampling {
@@ -21,6 +22,7 @@ export class Sampling implements ISampling {
         public endTime?: Moment,
         public experimentName?: string,
         public experimentId?: string,
-        public devices?: IDevice[]
+        public devices?: IDevice[],
+        public tags?: string[]
     ) {}
 }

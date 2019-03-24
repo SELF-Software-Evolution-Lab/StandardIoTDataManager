@@ -10,6 +10,8 @@ import { IExperiment } from 'app/shared/model/experiment.model';
 import { ExperimentService } from './experiment.service';
 import { ITargetSystem } from 'app/shared/model/target-system.model';
 import { TargetSystemService } from 'app/entities/target-system';
+import { TagService } from 'app/entities/tag';
+import { ITag } from 'app/shared/model/tag.model';
 
 @Component({
     selector: 'jhi-experiment-update',
@@ -21,17 +23,19 @@ export class ExperimentUpdateComponent implements OnInit {
 
     systems: ITargetSystem[];
     created: string;
-
+    tags: String[] = [];
     constructor(
         protected dataUtils: JhiDataUtils,
         protected jhiAlertService: JhiAlertService,
         protected experimentService: ExperimentService,
         protected targetSystemService: TargetSystemService,
-        protected activatedRoute: ActivatedRoute
+        protected activatedRoute: ActivatedRoute,
+        protected tagService: TagService
     ) {}
 
     ngOnInit() {
         this.isSaving = false;
+        this.loadAllTags();
         this.activatedRoute.data.subscribe(({ experiment }) => {
             this.experiment = experiment;
             this.created = this.experiment.created != null ? this.experiment.created.format(DATE_TIME_FORMAT) : null;
@@ -108,5 +112,20 @@ export class ExperimentUpdateComponent implements OnInit {
 
     trackTargetSystemById(index: number, item: ITargetSystem) {
         return item.id;
+    }
+
+    loadAllTags() {
+        this.tagService
+            .query({})
+            .subscribe((res: HttpResponse<ITag[]>) => this.todosTags(res.body), (res: HttpErrorResponse) => this.onError(res.message));
+    }
+
+    protected todosTags(data: ITag[]) {
+        console.log(data);
+        const lista: String[] = [];
+        data.forEach(element => {
+            lista.push(element.name);
+        });
+        this.tags = lista;
     }
 }
