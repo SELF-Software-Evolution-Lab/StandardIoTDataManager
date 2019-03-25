@@ -1,5 +1,6 @@
 package co.edu.uniandes.xrepo.service;
 
+import java.time.Instant;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -9,7 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import co.edu.uniandes.xrepo.domain.Experiment;
+import co.edu.uniandes.xrepo.domain.User;
 import co.edu.uniandes.xrepo.repository.ExperimentRepository;
+import co.edu.uniandes.xrepo.security.SecurityUtils;
 import co.edu.uniandes.xrepo.service.dto.ExperimentDTO;
 import co.edu.uniandes.xrepo.service.mapper.ExperimentMapper;
 
@@ -24,10 +27,13 @@ public class ExperimentService {
     private final ExperimentRepository experimentRepository;
 
     private final ExperimentMapper experimentMapper;
+    private final UserService userService;
 
-    public ExperimentService(ExperimentRepository experimentRepository, ExperimentMapper experimentMapper) {
+    public ExperimentService(ExperimentRepository experimentRepository, ExperimentMapper experimentMapper,
+                             UserService userService) {
         this.experimentRepository = experimentRepository;
         this.experimentMapper = experimentMapper;
+        this.userService = userService;
     }
 
     /**
@@ -39,6 +45,11 @@ public class ExperimentService {
     public ExperimentDTO save(ExperimentDTO experimentDTO) {
         log.debug("Request to save Experiment : {}", experimentDTO);
         Experiment experiment = experimentMapper.toEntity(experimentDTO);
+        if (experiment.getId() == null) {
+            experiment.setCreated(Instant.now());
+            Optional<User> creator = userService.getUserWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin().get());
+            experiment.setCreatedBy(creator.get().getFirstName() + " " +creator.get().getLastName());
+        }
         experiment = experimentRepository.save(experiment);
         return experimentMapper.toDto(experiment);
     }

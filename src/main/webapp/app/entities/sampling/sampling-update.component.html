@@ -74,6 +74,141 @@
                     </small>
                 </div>
             </div>
+            <hr/>
+            <div>
+                <h4>
+                    <span>Operative Conditions</span>
+                    <button id="jh-create-entity" class="btn btn-primary btn-sm float-right"
+                            type="button" (click)="addCondition()">
+                        <fa-icon [icon]="'plus'"></fa-icon>
+                        <span >
+            Add Operative Condition
+            </span>
+                    </button>
+                </h4>
+                <div class="table-responsive" >
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th ><span>Variable</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                            <th ><span>Value</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let condition of sampling.operativeConditions; let i = index">
+                            <td>{{condition.varName}}</td>
+                            <td>{{condition.value}} {{condition.unit}}</td>
+                            <td class="text-right">
+                                <div class="btn-group flex-btn-group-container">
+                                    <button type="button" class="btn btn-primary btn-sm" (click)="editCondition(i)">
+                                        <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                                        <span class="d-none d-md-inline">Edit</span>
+                                    </button>
+                                    <button type="button"
+                                            class="btn btn-danger btn-sm" (click)="removeCondition(i)">
+                                        <fa-icon [icon]="'minus'"></fa-icon>
+                                        <span class="d-none d-md-inline">Remove</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <div>
+                <h4>
+                    <span>Installed Devices</span>
+                    <button id="jh-create-device" class="btn btn-primary btn-sm float-right"
+                            type="button" (click)="addDevice()">
+                        <fa-icon [icon]="'plus'"></fa-icon>
+                        <span >
+            Add Device
+            </span>
+                    </button>
+                </h4>
+                <div class="table-responsive" >
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th><span>Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                            <th><span>Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let device of sampling.devices; let i = index">
+                            <td>{{device.internalId}}</td>
+                            <td>{{device.name}}</td>
+                            <td class="text-right">
+                                <div class="btn-group flex-btn-group-container">
+                                    <button type="button" class="btn btn-primary btn-sm" (click)="editDevice(i)">
+                                        <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                                        <span class="d-none d-md-inline">Edit</span>
+                                    </button>
+                                    <button type="button"
+                                            class="btn btn-danger btn-sm" (click)="removeDevice(i)">
+                                        <fa-icon [icon]="'minus'"></fa-icon>
+                                        <span class="d-none d-md-inline">Remove</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <div>
+                <h4>
+                    <span>Sampled Sensors</span>
+                    <button id="jh-create-sensor" class="btn btn-primary btn-sm float-right"
+                            type="button" (click)="addSensor()">
+                        <fa-icon [icon]="'plus'"></fa-icon>
+                        <span >
+            Add Sensor
+            </span>
+                    </button>
+                </h4>
+                <div class="table-responsive" >
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th><span>Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                            <th><span>Sensor Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                            <th><span>Device</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                            <th><span>Potential Frequency</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                            <th><span>Sampling Frequency</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let sensor of samplingSensors()">
+                            <td>{{sensor.internalId}}</td>
+                            <td>{{sensor.sensorType}}</td>
+                            <td>{{sensor.deviceName}}</td>
+                            <td>{{sensor.potentialFreq}}</td>
+                            <td>{{sensor.samplingFreq}}</td>
+                            <td class="text-right">
+                                <div class="btn-group flex-btn-group-container">
+                                    <button type="button" class="btn btn-primary btn-sm" (click)="editSensor(sensor)">
+                                        <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                                        <span class="d-none d-md-inline">Edit</span>
+                                    </button>
+                                    <button type="button"
+                                            class="btn btn-danger btn-sm" (click)="removeSensor(sensor)">
+                                        <fa-icon [icon]="'minus'"></fa-icon>
+                                        <span class="d-none d-md-inline">Remove</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>

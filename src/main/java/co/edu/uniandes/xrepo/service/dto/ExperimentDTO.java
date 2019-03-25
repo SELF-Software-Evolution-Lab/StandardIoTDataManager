@@ -23,12 +23,9 @@ public class ExperimentDTO implements Serializable {
 
     private String notes;
 
-    @NotNull
     private Instant created;
 
-    @NotNull
     private String createdBy;
-
 
     private String systemId;
 

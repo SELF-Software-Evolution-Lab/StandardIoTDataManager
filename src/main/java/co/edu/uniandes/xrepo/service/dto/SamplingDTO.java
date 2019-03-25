@@ -3,10 +3,16 @@ package co.edu.uniandes.xrepo.service.dto;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import co.edu.uniandes.xrepo.domain.Device;
+import co.edu.uniandes.xrepo.domain.Sensor;
+import co.edu.uniandes.xrepo.domain.metadata.OperativeCondition;
 
 /**
  * A DTO for the Sampling entity.
@@ -25,12 +31,19 @@ public class SamplingDTO implements Serializable {
 
     private Instant endTime;
 
-
     private String experimentId;
 
     private String experimentName;
 
     private List<String> tags;
+
+    private List<Device> devices;
+
+    private List<Sensor> sensors;
+
+    private List<OperativeCondition> conditions;
+
+    private Map<String, Set<String>> deviceSensor;
 
     public String getId() {
         return id;
@@ -94,6 +107,38 @@ public class SamplingDTO implements Serializable {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public List<Device> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(List<Device> devices) {
+        this.devices = devices;
+    }
+
+    public List<OperativeCondition> getConditions() {
+        return conditions;
+    }
+
+    public void setConditions(List<OperativeCondition> conditions) {
+        this.conditions = conditions;
+    }
+
+    public List<Sensor> getSensors() {
+        return sensors;
+    }
+
+    public void setSensors(List<Sensor> sensors) {
+        this.sensors = sensors;
+    }
+
+    public Map<String, Set<String>> getDeviceSensor() {
+        return deviceSensor;
+    }
+
+    public void setDeviceSensor(Map<String, Set<String>> deviceSensor) {
+        this.deviceSensor = deviceSensor;
     }
 
     @Override

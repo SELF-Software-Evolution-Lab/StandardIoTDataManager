@@ -1,0 +1,59 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{mode}} an Operative Condition</h4>
+    <button aria-label="Close" data-dismiss="modal" class="close" type="button" (click)="cancel()"><span aria-hidden="true">x</span>
+    </button>
+</div>
+<form name="editForm" role="form" (ngSubmit)="save()" #editForm="ngForm">
+    <div class="modal-body">
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <div>
+                    <div class="form-group">
+                        <label class="form-control-label" for="field_variable">Variable Name</label>
+                        <input type="text" class="form-control" name="variable" id="field_variable"
+                               [(ngModel)]="operativeCondition.varName" required/>
+                        <div [hidden]="!(editForm.controls.varName?.dirty && editForm.controls.varName?.invalid)">
+                            <small class="form-text text-danger"
+                                   [hidden]="!editForm.controls.varName?.errors?.required">
+                                This field is required.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label" for="field_unit">Unit</label>
+                        <input type="text" class="form-control" name="unit" id="field_unit"
+                               [(ngModel)]="operativeCondition.unit" required/>
+                        <div [hidden]="!(editForm.controls.unit?.dirty && editForm.controls.unit?.invalid)">
+                            <small class="form-text text-danger"
+                                   [hidden]="!editForm.controls.unit?.errors?.required">
+                                This field is required.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label" for="field_val">Value</label>
+                        <input type="text" class="form-control" name="val" id="field_val"
+                               [(ngModel)]="operativeCondition.value" required />
+                        <div [hidden]="!(editForm.controls.val?.dirty && editForm.controls.val?.invalid)">
+                            <small class="form-text text-danger"
+                                   [hidden]="!editForm.controls.val?.errors?.required">
+                                This field is required.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" id="cancel-save" class="btn btn-secondary" (click)="cancel()">
+            <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" id="save-entity" class="btn btn-primary" [hidden]="mode!='Add'" [disabled]="editForm.form.invalid">
+            <fa-icon [icon]="'plus'"></fa-icon>&nbsp;<span>Add</span>
+        </button>
+        <button type="submit" id="edit-entity" class="btn btn-primary" [hidden]="mode!='Edit'" [disabled]="editForm.form.invalid">
+            <fa-icon [icon]="'plus'"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>

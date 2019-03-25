@@ -12,6 +12,8 @@ import { IExperiment } from 'app/shared/model/experiment.model';
 import { ExperimentService } from 'app/entities/experiment';
 import { TagService } from 'app/entities/tag';
 import { ITag } from 'app/shared/model/tag.model';
+import { OperativeConditionModalService } from 'app/entities/sampling/operative-condition-modal.service';
+import { ISensor } from 'app/shared/model/sensor.model';
 
 @Component({
     selector: 'jhi-sampling-update',
@@ -32,7 +34,8 @@ export class SamplingUpdateComponent implements OnInit {
         protected samplingService: SamplingService,
         protected experimentService: ExperimentService,
         protected activatedRoute: ActivatedRoute,
-        protected tagService: TagService
+        protected tagService: TagService,
+        protected operativeConditionModalService: OperativeConditionModalService
     ) {}
 
     ngOnInit() {
@@ -131,5 +134,34 @@ export class SamplingUpdateComponent implements OnInit {
             lista.push(element.name);
         });
         this.tags = lista;
+    }
+
+    addCondition() {}
+
+    editCondition(i: number) {}
+
+    removeCondition(i: number) {}
+
+    addDevice() {}
+
+    editDevice(i: number) {}
+
+    removeDevice(i: number) {}
+
+    addSensor() {}
+
+    editSensor(ssrDvc: ISensor) {}
+
+    removeSensor(ssrDvc: ISensor) {}
+
+    samplingSensors(): Array<ISensor> {
+        let sampSensors: Array<ISensor>;
+        sampSensors = [];
+        for (const device of this.sampling.devices) {
+            for (const sensor of device.sensors) {
+                sampSensors.push(sensor);
+            }
+        }
+        return sampSensors;
     }
 }

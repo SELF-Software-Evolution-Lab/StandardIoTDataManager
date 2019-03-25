@@ -3,10 +3,8 @@ package co.edu.uniandes.xrepo.domain;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -44,8 +42,6 @@ public class Device implements Serializable {
     @Field("specs")
     private Map<String, String> specs = new HashMap<>();
 
-    @Field("sensor")
-    private Set<Sensor> sensors = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getInternalId() {
         return internalId;
@@ -84,19 +80,6 @@ public class Device implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Set<Sensor> getSensors() {
-        return sensors;
-    }
-
-    public Device sensors(Set<Sensor> sensors) {
-        this.sensors = sensors;
-        return this;
-    }
-
-    public void setSensors(Set<Sensor> sensors) {
-        this.sensors = sensors;
     }
 
     public Map<String, String> getSpecs() {

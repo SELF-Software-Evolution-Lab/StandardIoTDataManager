@@ -4,8 +4,10 @@ package co.edu.uniandes.xrepo.domain;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
@@ -61,6 +63,12 @@ public class Sampling implements Serializable {
 
     @Field("devices")
     private Set<Device> devices = new HashSet<>();
+
+    @Field("sensor")
+    private Set<Sensor> sensors = new HashSet<>();
+
+    @Field("device_sensor")
+    private Map<String, Set<String>> deviceSensor = new HashMap<>();
 
     @Field("conditions")
     private List<OperativeCondition> conditions = new ArrayList<>();
@@ -168,7 +176,19 @@ public class Sampling implements Serializable {
         this.conditions = conditions;
     }
 
-    
+    public Set<Sensor> getSensors() {
+        return sensors;
+    }
+
+    public Sampling sensors(Set<Sensor> sensors) {
+        this.sensors = sensors;
+        return this;
+    }
+
+    public void setSensors(Set<Sensor> sensors) {
+        this.sensors = sensors;
+    }
+
     public List<String> getTags() {
         return tags;
     }

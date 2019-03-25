@@ -11,6 +11,8 @@ import {
     samplingRoute,
     SamplingUpdateComponent
 } from './';
+import { OperativeConditionUpdateComponent } from 'app/entities/sampling/operative-condition-update.component';
+import { OperativeConditionModalService } from 'app/entities/sampling/operative-condition-modal.service';
 
 const ENTITY_STATES = [...samplingRoute, ...samplingPopupRoute];
 
@@ -21,9 +23,11 @@ const ENTITY_STATES = [...samplingRoute, ...samplingPopupRoute];
         SamplingDetailComponent,
         SamplingUpdateComponent,
         SamplingDeleteDialogComponent,
-        SamplingDeletePopupComponent
+        SamplingDeletePopupComponent,
+        OperativeConditionUpdateComponent
     ],
     entryComponents: [SamplingComponent, SamplingUpdateComponent, SamplingDeleteDialogComponent, SamplingDeletePopupComponent],
+    providers: [OperativeConditionModalService],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class XrepoSamplingModule {}
