@@ -153,15 +153,4 @@ export class SamplingUpdateComponent implements OnInit {
     editSensor(ssrDvc: ISensor) {}
 
     removeSensor(ssrDvc: ISensor) {}
-
-    samplingSensors(): Array<ISensor> {
-        let sampSensors: Array<ISensor>;
-        sampSensors = [];
-        for (const device of this.sampling.devices) {
-            for (const sensor of device.sensors) {
-                sampSensors.push(sensor);
-            }
-        }
-        return sampSensors;
-    }
 }

@@ -12,6 +12,7 @@ export interface ISampling {
     experimentName?: string;
     experimentId?: string;
     devices?: IDevice[];
+    sensors?: ISensor[];
     tags?: string[];
     operativeConditions?: IOperativeCondition[];
 }
