@@ -15,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
 
@@ -200,14 +202,18 @@ public class SamplingResourceIntTest {
         samplingRepository.save(sampling);
 
         // Get the sampling
-        restSamplingMockMvc.perform(get("/api/samplings/{id}", sampling.getId()))
+        MvcResult mvcResult = restSamplingMockMvc.perform(get("/api/samplings/{id}", sampling.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(sampling.getId()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.notes").value(DEFAULT_NOTES.toString()))
             .andExpect(jsonPath("$.startTime").value(DEFAULT_START_TIME.toString()))
-            .andExpect(jsonPath("$.endTime").value(DEFAULT_END_TIME.toString()));
+            .andExpect(jsonPath("$.endTime").value(DEFAULT_END_TIME.toString()))
+            .andReturn();
+
+        System.out.println(mvcResult.getResponse().getContentAsString());
+
     }
 
     @Test

@@ -43,8 +43,6 @@ public class SamplingDTO implements Serializable {
 
     private List<OperativeCondition> conditions;
 
-    private Map<String, Set<String>> deviceSensor;
-
     public String getId() {
         return id;
     }
@@ -131,14 +129,6 @@ public class SamplingDTO implements Serializable {
 
     public void setSensors(List<Sensor> sensors) {
         this.sensors = sensors;
-    }
-
-    public Map<String, Set<String>> getDeviceSensor() {
-        return deviceSensor;
-    }
-
-    public void setDeviceSensor(Map<String, Set<String>> deviceSensor) {
-        this.deviceSensor = deviceSensor;
     }
 
     @Override
