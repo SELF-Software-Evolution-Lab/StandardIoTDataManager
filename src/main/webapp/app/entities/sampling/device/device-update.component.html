@@ -1,0 +1,58 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{mode}} a Device</h4>
+    <button aria-label="Close" data-dismiss="modal" class="close" type="button" (click)="cancel()"><span aria-hidden="true">x</span>
+    </button>
+</div>
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+    <div class="modal-body">
+        <div class="row justify-content-center">
+            <div class="col-11">
+                <div>
+                    <div class="form-group">
+                        <label class="form-control-label" for="field_internalId">Internal Id</label>
+                        <input type="text" class="form-control" name="internalId" id="field_internalId"
+                            [(ngModel)]="device.internalId" required/>
+                        <div [hidden]="!(editForm.controls.internalId?.dirty && editForm.controls.internalId?.invalid)">
+                            <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.internalId?.errors?.required">
+                            This field is required.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label" for="field_name">Name</label>
+                        <input type="text" class="form-control" name="name" id="field_name"
+                            [(ngModel)]="device.name" required maxlength="30"/>
+                        <div [hidden]="!(editForm.controls.name?.dirty && editForm.controls.name?.invalid)">
+                            <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.name?.errors?.required">
+                            This field is required.
+                            </small>
+                            <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.name?.errors?.maxlength">
+                            This field cannot be longer than 30 characters.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label" for="field_description">Description</label>
+                        <input type="text" class="form-control" name="description" id="field_description"
+                            [(ngModel)]="device.description" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" id="cancel-save" class="btn btn-secondary" (click)="cancel()">
+            <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" id="save-entity" class="btn btn-primary" [hidden]="mode!='Add'" [disabled]="editForm.form.invalid">
+            <fa-icon [icon]="'plus'"></fa-icon>&nbsp;<span>Add</span>
+        </button>
+        <button type="submit" id="edit-entity" class="btn btn-primary" [hidden]="mode!='Edit'" [disabled]="editForm.form.invalid">
+            <fa-icon [icon]="'plus'"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -12,8 +12,12 @@ import { IExperiment } from 'app/shared/model/experiment.model';
 import { ExperimentService } from 'app/entities/experiment';
 import { TagService } from 'app/entities/tag';
 import { ITag } from 'app/shared/model/tag.model';
-import { OperativeConditionModalService } from 'app/entities/sampling/operative-condition-modal.service';
+import { OperativeConditionModalService } from 'app/entities/sampling/operative-condition/operative-condition-modal.service';
 import { ISensor } from 'app/shared/model/sensor.model';
+import { IOperativeCondition } from 'app/shared/model/operative-condition.model';
+import { DeviceModalService } from 'app/entities/sampling/device/device-modal.service';
+import { IDevice } from 'app/shared/model/device.model';
+import { SensorModalService } from 'app/entities/sampling/sensor/sensor-modal.service';
 
 @Component({
     selector: 'jhi-sampling-update',
@@ -28,6 +32,10 @@ export class SamplingUpdateComponent implements OnInit {
     endTime: string;
     tags: String[] = [];
 
+    conditionModalRes: EventEmitter<IOperativeCondition>;
+    deviceModalRes: EventEmitter<IDevice>;
+    sensorModalRes: EventEmitter<ISensor>;
+
     constructor(
         protected dataUtils: JhiDataUtils,
         protected jhiAlertService: JhiAlertService,
@@ -35,7 +43,9 @@ export class SamplingUpdateComponent implements OnInit {
         protected experimentService: ExperimentService,
         protected activatedRoute: ActivatedRoute,
         protected tagService: TagService,
-        protected operativeConditionModalService: OperativeConditionModalService
+        protected operativeConditionModalService: OperativeConditionModalService,
+        protected deviceModalService: DeviceModalService,
+        protected sensorModalService: SensorModalService
     ) {}
 
     ngOnInit() {
@@ -45,6 +55,15 @@ export class SamplingUpdateComponent implements OnInit {
             this.sampling = sampling;
             this.startTime = this.sampling.startTime != null ? this.sampling.startTime.format(DATE_TIME_FORMAT) : null;
             this.endTime = this.sampling.endTime != null ? this.sampling.endTime.format(DATE_TIME_FORMAT) : null;
+            if (!this.sampling.conditions) {
+                this.sampling.conditions = [];
+            }
+            if (!this.sampling.devices) {
+                this.sampling.devices = [];
+            }
+            if (!this.sampling.sensors) {
+                this.sampling.sensors = [];
+            }
         });
         this.experimentService
             .query({ filter: 'sampling-is-null' })
@@ -71,18 +90,6 @@ export class SamplingUpdateComponent implements OnInit {
                 },
                 (res: HttpErrorResponse) => this.onError(res.message)
             );
-    }
-
-    byteSize(field) {
-        return this.dataUtils.byteSize(field);
-    }
-
-    openFile(contentType, field) {
-        return this.dataUtils.openFile(contentType, field);
-    }
-
-    setFileData(event, entity, field, isImage) {
-        this.dataUtils.setFileData(event, entity, field, isImage);
     }
 
     previousState() {
@@ -136,21 +143,69 @@ export class SamplingUpdateComponent implements OnInit {
         this.tags = lista;
     }
 
-    addCondition() {}
+    addCondition() {
+        this.conditionModalRes = this.operativeConditionModalService.openToCreate();
+        this.conditionModalRes.subscribe(condition => {
+            if (condition) {
+                this.sampling.conditions.push(condition);
+            }
+        });
+    }
 
-    editCondition(i: number) {}
+    editCondition(i: number) {
+        this.conditionModalRes = this.operativeConditionModalService.openToEdit(this.sampling.conditions[i]);
+        this.conditionModalRes.subscribe(condition => {
+            if (condition) {
+                this.sampling.conditions[i] = condition;
+            }
+        });
+    }
 
-    removeCondition(i: number) {}
+    removeCondition(i: number) {
+        this.sampling.conditions.splice(i, 1);
+    }
 
-    addDevice() {}
+    addDevice() {
+        this.deviceModalRes = this.deviceModalService.openToCreate();
+        this.deviceModalRes.subscribe(device => {
+            if (device) {
+                this.sampling.devices.push(device);
+            }
+        });
+    }
 
-    editDevice(i: number) {}
+    editDevice(i: number) {
+        this.deviceModalRes = this.deviceModalService.openToEdit(this.sampling.devices[i]);
+        this.deviceModalRes.subscribe(device => {
+            if (device) {
+                this.sampling.devices[i] = device;
+            }
+        });
+    }
 
-    removeDevice(i: number) {}
+    removeDevice(i: number) {
+        this.sampling.devices.splice(i, 1);
+    }
 
-    addSensor() {}
+    addSensor() {
+        this.sensorModalRes = this.sensorModalService.openToCreate();
+        this.sensorModalRes.subscribe(sensor => {
+            if (sensor) {
+                this.sampling.sensors.push(sensor);
+            }
+        });
+    }
 
-    editSensor(ssrDvc: ISensor) {}
+    editSensor(i: number) {
+        this.sensorModalRes = this.sensorModalService.openToCreate();
+        this.sensorModalRes.subscribe(sensor => {
+            if (sensor) {
+                this.sampling.sensors[i] = sensor;
+            }
+        });
+    }
 
-    removeSensor(ssrDvc: ISensor) {}
+    removeSensor(i: number) {
+        this.sampling.sensors.splice(i, 1);
+    }
 }

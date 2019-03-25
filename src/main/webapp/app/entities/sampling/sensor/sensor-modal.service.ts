@@ -1,10 +1,10 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { IOperativeCondition, OperativeCondition } from 'app/shared/model/operative-condition.model';
-import { OperativeConditionUpdateComponent } from 'app/entities/sampling/operative-condition-update.component';
+import { SensorUpdateComponent } from 'app/entities/sampling/sensor/sensor-update.component';
+import { ISensor, Sensor } from 'app/shared/model/sensor.model';
 
 @Injectable()
-export class OperativeConditionModalService {
+export class SensorModalService {
     private isOpen = false;
 
     constructor(private modalService: NgbModal) {}
@@ -14,7 +14,7 @@ export class OperativeConditionModalService {
             return;
         }
         this.isOpen = true;
-        const modalRef = this.modalService.open(OperativeConditionUpdateComponent);
+        const modalRef = this.modalService.open(SensorUpdateComponent);
         modalRef.result.then(
             result => {
                 this.isOpen = false;
@@ -26,19 +26,15 @@ export class OperativeConditionModalService {
         return modalRef;
     }
 
-    openToCreate(): EventEmitter<IOperativeCondition> {
+    openToCreate(): EventEmitter<ISensor> {
         const modalRef = this._open();
         modalRef.componentInstance.mode = 'Add';
         return modalRef.componentInstance.returnCondition;
     }
 
-    openToEdit(operativeCondition: IOperativeCondition): EventEmitter<IOperativeCondition> {
+    openToEdit(sensor: ISensor): EventEmitter<ISensor> {
         const modalRef = this._open();
-        modalRef.componentInstance.operativeCondition = new OperativeCondition(
-            operativeCondition.varName,
-            operativeCondition.unit,
-            operativeCondition.value
-        );
+        modalRef.componentInstance.sensor = new Sensor(sensor.internalId, sensor.sensorType, sensor.potentialFreq, sensor.samplingFreq);
         modalRef.componentInstance.mode = 'Edit';
         return modalRef.componentInstance.returnCondition;
     }

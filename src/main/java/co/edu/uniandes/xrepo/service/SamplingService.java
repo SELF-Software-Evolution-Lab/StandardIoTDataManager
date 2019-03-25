@@ -1,5 +1,6 @@
 package co.edu.uniandes.xrepo.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -9,8 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import co.edu.uniandes.xrepo.domain.Sampling;
+import co.edu.uniandes.xrepo.domain.Sensor;
 import co.edu.uniandes.xrepo.repository.SamplingRepository;
 import co.edu.uniandes.xrepo.service.dto.SamplingDTO;
+import co.edu.uniandes.xrepo.service.dto.SensorDTO;
 import co.edu.uniandes.xrepo.service.mapper.SamplingMapper;
 
 /**

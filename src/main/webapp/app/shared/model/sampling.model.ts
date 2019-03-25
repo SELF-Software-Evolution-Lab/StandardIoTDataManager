@@ -14,7 +14,7 @@ export interface ISampling {
     devices?: IDevice[];
     sensors?: ISensor[];
     tags?: string[];
-    operativeConditions?: IOperativeCondition[];
+    conditions?: IOperativeCondition[];
 }
 
 export class Sampling implements ISampling {
@@ -28,7 +28,7 @@ export class Sampling implements ISampling {
         public experimentId?: string,
         public devices?: IDevice[],
         public tags?: string[],
-        public operativeConditions?: IOperativeCondition[],
+        public conditions: IOperativeCondition[] = [],
         public sensors?: ISensor[]
     ) {}
 }

@@ -9,7 +9,7 @@ import co.edu.uniandes.xrepo.service.dto.SamplingDTO;
 /**
  * Mapper for the entity Sampling and its DTO SamplingDTO.
  */
-@Mapper(componentModel = "spring", uses = {ExperimentMapper.class})
+@Mapper(componentModel = "spring", uses = {ExperimentMapper.class, SensorMapper.class})
 public interface SamplingMapper extends EntityMapper<SamplingDTO, Sampling> {
 
     @Mapping(source = "experiment.id", target = "experimentId")

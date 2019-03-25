@@ -1,5 +1,5 @@
 <div class="row justify-content-center">
-    <div class="col-8">
+    <div class="col-10">
         <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
             <h2 id="jhi-sampling-heading">Create or edit a Sampling</h2>
             <div>
@@ -90,13 +90,13 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th ><span>Variable</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-                            <th ><span>Value</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                            <th><span>Variable</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                            <th><span>Value</span> <fa-icon [icon]="'sort'"></fa-icon></th>
                             <th></th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let condition of sampling.operativeConditions; let i = index">
+                        <tr *ngFor="let condition of sampling.conditions; let i = index">
                             <td>{{condition.varName}}</td>
                             <td>{{condition.value}} {{condition.unit}}</td>
                             <td class="text-right">
@@ -105,8 +105,7 @@
                                         <fa-icon [icon]="'pencil-alt'"></fa-icon>
                                         <span class="d-none d-md-inline">Edit</span>
                                     </button>
-                                    <button type="button"
-                                            class="btn btn-danger btn-sm" (click)="removeCondition(i)">
+                                    <button type="button" class="btn btn-danger btn-sm" (click)="removeCondition(i)">
                                         <fa-icon [icon]="'minus'"></fa-icon>
                                         <span class="d-none d-md-inline">Remove</span>
                                     </button>
@@ -148,8 +147,7 @@
                                         <fa-icon [icon]="'pencil-alt'"></fa-icon>
                                         <span class="d-none d-md-inline">Edit</span>
                                     </button>
-                                    <button type="button"
-                                            class="btn btn-danger btn-sm" (click)="removeDevice(i)">
+                                    <button type="button" class="btn btn-danger btn-sm" (click)="removeDevice(i)">
                                         <fa-icon [icon]="'minus'"></fa-icon>
                                         <span class="d-none d-md-inline">Remove</span>
                                     </button>
@@ -185,7 +183,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let sensor of sampling.sensors">
+                        <tr *ngFor="let sensor of sampling.sensors; let i = index">
                             <td>{{sensor.internalId}}</td>
                             <td>{{sensor.sensorType}}</td>
                             <td>{{sensor.deviceName}}</td>
@@ -193,12 +191,11 @@
                             <td>{{sensor.samplingFreq}}</td>
                             <td class="text-right">
                                 <div class="btn-group flex-btn-group-container">
-                                    <button type="button" class="btn btn-primary btn-sm" (click)="editSensor(sensor)">
+                                    <button type="button" class="btn btn-primary btn-sm" (click)="editSensor(i)">
                                         <fa-icon [icon]="'pencil-alt'"></fa-icon>
                                         <span class="d-none d-md-inline">Edit</span>
                                     </button>
-                                    <button type="button"
-                                            class="btn btn-danger btn-sm" (click)="removeSensor(sensor)">
+                                    <button type="button" class="btn btn-danger btn-sm" (click)="removeSensor(i)">
                                         <fa-icon [icon]="'minus'"></fa-icon>
                                         <span class="d-none d-md-inline">Remove</span>
                                     </button>

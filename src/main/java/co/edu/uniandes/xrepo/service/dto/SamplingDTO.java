@@ -39,7 +39,7 @@ public class SamplingDTO implements Serializable {
 
     private List<Device> devices;
 
-    private List<Sensor> sensors;
+    private List<SensorDTO> sensors;
 
     private List<OperativeCondition> conditions;
 
@@ -123,11 +123,11 @@ public class SamplingDTO implements Serializable {
         this.conditions = conditions;
     }
 
-    public List<Sensor> getSensors() {
+    public List<SensorDTO> getSensors() {
         return sensors;
     }
 
-    public void setSensors(List<Sensor> sensors) {
+    public void setSensors(List<SensorDTO> sensors) {
         this.sensors = sensors;
     }
 
