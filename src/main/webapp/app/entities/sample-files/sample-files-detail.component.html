@@ -1,0 +1,38 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="sampleFiles">
+            <h2><span>Sample Files</span> {{sampleFiles.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Path</span></dt>
+                <dd>
+                    <div *ngIf="sampleFiles.path">
+                        <a (click)="openFile(sampleFiles.pathContentType, sampleFiles.path)">open</a>
+                        {{sampleFiles.pathContentType}}, {{byteSize(sampleFiles.path)}}
+                    </div>
+                </dd>
+                <dt><span>Name</span></dt>
+                <dd>
+                    <span>{{sampleFiles.name}}</span>
+                </dd>
+                <dt><span>Size</span></dt>
+                <dd>
+                    <span>{{sampleFiles.size}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/sample-files', sampleFiles.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

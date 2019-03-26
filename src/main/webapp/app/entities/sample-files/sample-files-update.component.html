@@ -1,0 +1,52 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-sample-files-heading">Create or edit a Sample Files</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!sampleFiles.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="sampleFiles.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_path">Path</label>
+                    <div>
+                        <div *ngIf="sampleFiles.path" class="form-text text-danger clearfix">
+                            <a class="pull-left" (click)="openFile(sampleFiles.pathContentType, sampleFiles.path)">open</a><br>
+                            <span class="pull-left">{{sampleFiles.pathContentType}}, {{byteSize(sampleFiles.path)}}</span>
+                            <button type="button" (click)="sampleFiles.path=null;sampleFiles.pathContentType=null;"
+                                    class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_path" (change)="setFileData($event, sampleFiles, 'path', false)"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="path" id="field_path"
+                        [(ngModel)]="sampleFiles.path" />
+                    <input type="hidden" class="form-control" name="pathContentType" id="field_pathContentType"
+                        [(ngModel)]="sampleFiles.pathContentType" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_name">Name</label>
+                    <input type="text" class="form-control" name="name" id="field_name"
+                        [(ngModel)]="sampleFiles.name" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_size">Size</label>
+                    <input type="number" class="form-control" name="size" id="field_size"
+                        [(ngModel)]="sampleFiles.size" />
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
