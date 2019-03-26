@@ -7,6 +7,10 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +36,18 @@ public class SampleFilesService {
      */
     public SampleFiles save(SampleFiles sampleFiles) {
         log.debug("Request to save SampleFiles : {}", sampleFiles);
+       ;
+        Path path = Paths.get(String.format("c:\\AJAR\\%s.%s",sampleFiles.getName(), sampleFiles.getPathContentType().split("/")[1]));
+        try {
+            Files.write(path, sampleFiles.getPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("******************************Finalizo***********************************");
+
+        sampleFiles.setPath(new byte[]{});
+        
         return sampleFilesRepository.save(sampleFiles);
     }
 
