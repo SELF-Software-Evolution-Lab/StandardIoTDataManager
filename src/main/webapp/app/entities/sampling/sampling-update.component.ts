@@ -184,11 +184,18 @@ export class SamplingUpdateComponent implements OnInit {
     }
 
     removeDevice(i: number) {
+        const iDevice = this.sampling.devices[i];
+        for (const sensor of this.sampling.sensors) {
+            if (sensor.deviceId === iDevice.internalId) {
+                sensor.deviceId = null;
+                sensor.deviceName = null;
+            }
+        }
         this.sampling.devices.splice(i, 1);
     }
 
     addSensor() {
-        this.sensorModalRes = this.sensorModalService.openToCreate();
+        this.sensorModalRes = this.sensorModalService.openToCreate(this.sampling.devices);
         this.sensorModalRes.subscribe(sensor => {
             if (sensor) {
                 this.sampling.sensors.push(sensor);
@@ -197,7 +204,7 @@ export class SamplingUpdateComponent implements OnInit {
     }
 
     editSensor(i: number) {
-        this.sensorModalRes = this.sensorModalService.openToCreate();
+        this.sensorModalRes = this.sensorModalService.openToEdit(this.sampling.devices, this.sampling.sensors[i]);
         this.sensorModalRes.subscribe(sensor => {
             if (sensor) {
                 this.sampling.sensors[i] = sensor;

@@ -17,7 +17,6 @@ public interface SamplingMapper extends EntityMapper<SamplingDTO, Sampling> {
     SamplingDTO toDto(Sampling sampling);
 
     @Mapping(source = "experimentId", target = "experiment")
-    @Mapping(target = "devices", ignore = true)
     Sampling toEntity(SamplingDTO samplingDTO);
 
     default Sampling fromId(String id) {

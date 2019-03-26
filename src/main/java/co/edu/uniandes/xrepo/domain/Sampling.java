@@ -62,7 +62,7 @@ public class Sampling implements Serializable {
     private Experiment experiment;
 
     @Field("devices")
-    private Set<Device> devices = new HashSet<>();
+    private List<Device> devices = new ArrayList<>();
 
     @Field("sensor")
     private Set<Sensor> sensors = new HashSet<>();
@@ -150,16 +150,16 @@ public class Sampling implements Serializable {
         this.experiment = experiment;
     }
 
-    public Set<Device> getDevices() {
+    public List<Device> getDevices() {
         return devices;
     }
 
-    public Sampling devices(Set<Device> devices) {
+    public Sampling devices(List<Device> devices) {
         this.devices = devices;
         return this;
     }
 
-    public void setDevices(Set<Device> devices) {
+    public void setDevices(List<Device> devices) {
         this.devices = devices;
     }
 
@@ -201,7 +201,14 @@ public class Sampling implements Serializable {
     public void setList(List<String> tags) {
         this.tags = tags;
     }
-    
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+    public Map<String, Set<String>> getDeviceSensor() {
+        return deviceSensor;
+    }
+
+    public void setDeviceSensor(Map<String, Set<String>> deviceSensor) {
+        this.deviceSensor = deviceSensor;
+    }
+
+// jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 }

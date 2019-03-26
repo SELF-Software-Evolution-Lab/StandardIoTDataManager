@@ -2,6 +2,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { SensorUpdateComponent } from 'app/entities/sampling/sensor/sensor-update.component';
 import { ISensor, Sensor } from 'app/shared/model/sensor.model';
+import { IDevice } from 'app/shared/model/device.model';
 
 @Injectable()
 export class SensorModalService {
@@ -26,15 +27,17 @@ export class SensorModalService {
         return modalRef;
     }
 
-    openToCreate(): EventEmitter<ISensor> {
+    openToCreate(devices: IDevice[]): EventEmitter<ISensor> {
         const modalRef = this._open();
+        modalRef.componentInstance.devices = devices;
         modalRef.componentInstance.mode = 'Add';
         return modalRef.componentInstance.returnCondition;
     }
 
-    openToEdit(sensor: ISensor): EventEmitter<ISensor> {
+    openToEdit(devices: IDevice[], sensor: ISensor): EventEmitter<ISensor> {
         const modalRef = this._open();
         modalRef.componentInstance.sensor = new Sensor(sensor.internalId, sensor.sensorType, sensor.potentialFreq, sensor.samplingFreq);
+        modalRef.componentInstance.devices = devices;
         modalRef.componentInstance.mode = 'Edit';
         return modalRef.componentInstance.returnCondition;
     }
