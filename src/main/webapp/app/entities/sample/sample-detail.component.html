@@ -1,24 +1,49 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <div *ngIf="sample">
-            <h2><span>Sample</span> {{sample.id}}</h2>
+            <h2><span>A Sample of </span> {{sampling.name}}</h2>
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
-                <dt><span>Ts</span></dt>
+                <dt><span>Id</span></dt>
+                <dd>
+                    <span>{{sample.id}}</span>
+                </dd>
+                <dt><span>Sampling</span></dt>
+                <dd>
+                    <div *ngIf="sample.samplingId">
+                        <a [routerLink]="['/sampling', sample.samplingId, 'view']">{{sampling.name}} ({{sample.samplingId}})</a>
+                    </div>
+                </dd>
+                <dt><span>Sensor</span></dt>
+                <dd>
+                    <span>{{sensor.sensorType}} - {{sample.sensorInternalId}}</span>
+                </dd>
+                <dt><span>Timestamp</span></dt>
                 <dd>
                     <span>{{sample.ts}}</span>
                 </dd>
-                <dt><span>Sensor Internal Id</span></dt>
-                <dd>
-                    <span>{{sample.sensorInternalId}}</span>
-                </dd>
-                <dt><span>Sampling Id</span></dt>
-                <dd>
-                    <span>{{sample.samplingId}}</span>
-                </dd>
             </dl>
-
+            <hr/>
+            <h4><span>Measurements</span></h4>
+            <dd>
+                <div class="table-responsive" >
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th><span>Variable</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                            <th><span>Value</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let key of keys(sample.measurements)">
+                            <td>{{key}}</td>
+                            <td>{{sample.measurements[key]}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </dd>
             <button type="submit"
                     (click)="previousState()"
                     class="btn btn-info">

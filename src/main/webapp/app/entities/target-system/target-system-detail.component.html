@@ -1,13 +1,17 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <div *ngIf="targetSystem">
-            <h2><span>Target System</span> {{targetSystem.id}}</h2>
+            <h2><span class="font-weight-bold">Target System:</span> {{targetSystem.name}}</h2>
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
+                <dt><span>Id</span></dt>
+                <dd>
+                    <span>{{targetSystem.id}}</span>
+                </dd>
                 <dt><span>Created By</span></dt>
                 <dd>
-                    <span>{{targetSystem.createdBy}} on {{targetSystem.created}}</span>
+                <span>{{targetSystem.createdBy}} on {{targetSystem.created}}</span>
                 </dd>
                 <dt><span>Name</span></dt>
                 <dd>

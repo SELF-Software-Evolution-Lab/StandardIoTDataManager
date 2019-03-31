@@ -14,10 +14,10 @@
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="ts"><span>Ts</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="sensorInternalId"><span>Sensor Internal Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="id"><span>Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="ts"><span>Timestamp</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="samplingId"><span>Sampling Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="sensorInternalId"><span>Sensor Internal Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -25,8 +25,8 @@
             <tr *ngFor="let sample of samples ;trackBy: trackId">
                 <td><a [routerLink]="['/sample', sample.id, 'view' ]">{{sample.id}}</a></td>
                 <td>{{sample.ts | date:'medium'}}</td>
-                <td>{{sample.sensorInternalId}}</td>
                 <td>{{sample.samplingId}}</td>
+                <td>{{sample.sensorInternalId}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
