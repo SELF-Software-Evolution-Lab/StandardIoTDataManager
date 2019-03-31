@@ -2,7 +2,9 @@ package co.edu.uniandes.xrepo.domain;
 
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
@@ -42,6 +44,15 @@ public class Sample implements Serializable {
 
     @Field("sampling_id")
     private String samplingId;
+
+    /**
+     * K: measure var
+     * V: measured value
+     * {"acceleration_x" -> -0.016,
+     * "acceleration_y" -> 0.999,
+     * "acceleration_z" -> 0.067}
+     */
+    private Map<String, BigDecimal> measurements;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
@@ -91,6 +102,15 @@ public class Sample implements Serializable {
         this.samplingId = samplingId;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+
+    public Map<String, BigDecimal> getMeasurements() {
+        return measurements;
+    }
+
+    public void setMeasurements(Map<String, BigDecimal> measurements) {
+        this.measurements = measurements;
+    }
 
     @Override
     public boolean equals(Object o) {

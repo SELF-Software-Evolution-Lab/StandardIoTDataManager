@@ -1,37 +1,35 @@
 {
-  "generator-jhipster": {
-    "promptValues": {
-      "packageName": "co.edu.uniandes.xrepo"
-    },
-    "jhipsterVersion": "5.8.2",
-    "applicationType": "monolith",
-    "baseName": "xrepo",
-    "packageName": "co.edu.uniandes.xrepo",
-    "packageFolder": "co/edu/uniandes/xrepo",
-    "serverPort": "8080",
-    "authenticationType": "jwt",
-    "cacheProvider": "no",
-    "enableHibernateCache": false,
-    "websocket": false,
-    "databaseType": "mongodb",
-    "devDatabaseType": "mongodb",
-    "prodDatabaseType": "mongodb",
-    "searchEngine": false,
-    "messageBroker": false,
-    "serviceDiscoveryType": false,
-    "buildTool": "gradle",
-    "enableSwaggerCodegen": false,
-    "jwtSecretKey": "ZDgxOGM1MTJmY2VmM2ZjZWE2NWNlN2I2Njk5MDIyNjQ3ZTZjZjQxMzc2ZTdhZTdjMmQwNTg3YWIyNjAzYjEzYzJlYzg0MjU1ODg5N2Q3OTRjNTRkNTRlM2JjN2QwZDA1MTBjOWMxYTdlNjU1ZTYyYTM4ODVkYmIwZTAyZjZmMDg=",
-    "clientFramework": "angularX",
-    "useSass": false,
-    "clientPackageManager": "npm",
-    "testFrameworks": [
-      "cucumber"
-    ],
-    "jhiPrefix": "jhi",
-    "entitySuffix": "",
-    "dtoSuffix": "DTO",
-    "otherModules": [],
-    "enableTranslation": false
-  }
+    "generator-jhipster": {
+        "promptValues": {
+            "packageName": "co.edu.uniandes.xrepo"
+        },
+        "jhipsterVersion": "5.8.2",
+        "applicationType": "monolith",
+        "baseName": "xrepo",
+        "packageName": "co.edu.uniandes.xrepo",
+        "packageFolder": "co/edu/uniandes/xrepo",
+        "serverPort": "8080",
+        "authenticationType": "jwt",
+        "cacheProvider": "no",
+        "enableHibernateCache": false,
+        "websocket": false,
+        "databaseType": "mongodb",
+        "devDatabaseType": "mongodb",
+        "prodDatabaseType": "mongodb",
+        "searchEngine": false,
+        "messageBroker": false,
+        "serviceDiscoveryType": false,
+        "buildTool": "gradle",
+        "enableSwaggerCodegen": true,
+        "jwtSecretKey": "ZDgxOGM1MTJmY2VmM2ZjZWE2NWNlN2I2Njk5MDIyNjQ3ZTZjZjQxMzc2ZTdhZTdjMmQwNTg3YWIyNjAzYjEzYzJlYzg0MjU1ODg5N2Q3OTRjNTRkNTRlM2JjN2QwZDA1MTBjOWMxYTdlNjU1ZTYyYTM4ODVkYmIwZTAyZjZmMDg=",
+        "clientFramework": "angularX",
+        "useSass": false,
+        "clientPackageManager": "npm",
+        "testFrameworks": ["cucumber"],
+        "jhiPrefix": "jhi",
+        "entitySuffix": "",
+        "dtoSuffix": "DTO",
+        "otherModules": [],
+        "enableTranslation": false
+    }
 }

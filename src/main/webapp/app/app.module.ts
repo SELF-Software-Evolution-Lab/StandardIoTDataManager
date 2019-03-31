@@ -18,17 +18,12 @@ import { XrepoHomeModule } from './home/home.module';
 import { XrepoAccountModule } from './account/account.module';
 import { XrepoEntityModule } from './entities/entity.module';
 import * as moment from 'moment';
-import { FormsModule } from '@angular/forms';
-import { NgSelectModule } from '@ng-select/ng-select';
-
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ErrorComponent } from './layouts';
 
 @NgModule({
     imports: [
         BrowserModule,
-        NgSelectModule,
-        FormsModule,
         Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-' }),
         NgJhipsterModule.forRoot({
             // set below to true to make alerts look like toast
