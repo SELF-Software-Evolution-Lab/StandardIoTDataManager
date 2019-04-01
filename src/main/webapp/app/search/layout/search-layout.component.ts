@@ -7,7 +7,9 @@ import { Component } from '@angular/core';
 export class SearchLayoutComponent {
     searchModules = [{ name: 'Samples', value: 'SAMPLE' }, { name: 'Experiments', value: 'EXPERIMENT' }];
 
-    onChange($event) {
-        console.log($event);
+    moduleSelection: 'SAMPLE';
+
+    onChange(event) {
+        this.moduleSelection = event.value;
     }
 }

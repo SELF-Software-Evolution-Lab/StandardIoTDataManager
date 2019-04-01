@@ -4,8 +4,4 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
     selector: 'jhi-search-sample',
     templateUrl: './search-sample.component.html'
 })
-export class SearchSampleComponent implements OnInit, OnDestroy {
-    ngOnDestroy(): void {}
-
-    ngOnInit(): void {}
-}
+export class SearchSampleComponent {}
