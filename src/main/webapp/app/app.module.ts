@@ -23,6 +23,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ErrorComponent } from './layouts';
+import { XrepoSearchModule } from 'app/search/search.module';
 
 @NgModule({
     imports: [
@@ -38,6 +39,7 @@ import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent
         XrepoSharedModule.forRoot(),
         XrepoCoreModule,
         XrepoHomeModule,
+        XrepoSearchModule,
         XrepoAccountModule,
         // jhipster-needle-angular-add-module JHipster will add new module here
         XrepoEntityModule,
