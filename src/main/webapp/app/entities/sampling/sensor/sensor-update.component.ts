@@ -13,7 +13,7 @@ export class SensorUpdateComponent implements OnInit {
     @Input() devices: IDevice[];
     @Input() mode: string;
     @Output() returnCondition: EventEmitter<any> = new EventEmitter();
-    private selectedDevice: IDevice;
+    selectedDevice: IDevice;
 
     constructor(protected jhiAlertService: JhiAlertService, public activeModal: NgbActiveModal) {}
 
