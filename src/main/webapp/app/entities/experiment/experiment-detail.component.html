@@ -1,7 +1,7 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <div *ngIf="experiment">
-            <h2><span class="font-weight-bold">Experiment:</span> {{experiment.id}}</h2>
+            <h2><span class="font-weight-bold">Experiment:</span> {{experiment.name}}</h2>
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
@@ -32,8 +32,12 @@
                     </div>
                 </dd>
                 <dt><span>Tags</span></dt>
-                <dd *ngFor="let tag of experiment.tags">
-                    {{tag}}
+                <dd>
+                    <ul class="list-unstyled">
+                        <li *ngFor="let tag of experiment.tags">
+                            <span class="badge badge-info">{{ tag }}</span>
+                        </li>
+                    </ul>
                 </dd>
             </dl>
 

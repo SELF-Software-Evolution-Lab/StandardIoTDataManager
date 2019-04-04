@@ -26,8 +26,12 @@
                     <span>{{sampling.endTime}}</span>
                 </dd>
                 <dt><span>Tags</span></dt>
-                <dd *ngFor="let tag of sampling.tags">
-                    {{tag}}
+                <dd>
+                    <ul class="list-unstyled">
+                        <li *ngFor="let tag of sampling.tags">
+                            <span class="badge badge-info">{{ tag }}</span>
+                        </li>
+                    </ul>
                 </dd>
                 <dt><span>Experiment</span></dt>
                 <dd>

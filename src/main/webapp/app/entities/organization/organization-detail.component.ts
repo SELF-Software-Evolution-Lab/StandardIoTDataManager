@@ -20,22 +20,11 @@ export class OrganizationDetailComponent implements OnInit {
     ngOnInit() {
         this.activatedRoute.data.subscribe(({ organization }) => {
             this.organization = organization;
-            this.loadAllUsers();
         });
     }
 
     previousState() {
         window.history.back();
-    }
-
-    loadAllUsers() {
-        console.log('probando');
-        this.userService
-            .query()
-            .subscribe(
-                (res: HttpResponse<User[]>) => this.onSuccessUsers(res.body, res.headers),
-                (res: HttpResponse<any>) => this.onErrorUsers(res.body)
-            );
     }
 
     private onSuccessUsers(data, headers) {
