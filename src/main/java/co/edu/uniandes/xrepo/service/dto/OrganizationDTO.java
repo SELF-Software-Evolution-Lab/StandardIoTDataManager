@@ -20,10 +20,8 @@ public class OrganizationDTO implements Serializable {
 
     private String description;
 
-    @NotNull
     private Instant created;
 
-    @NotNull
     private String createdBy;
 
 

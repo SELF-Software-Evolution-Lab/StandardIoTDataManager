@@ -1,5 +1,6 @@
 package co.edu.uniandes.xrepo.service;
 
+import java.time.Instant;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -9,7 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import co.edu.uniandes.xrepo.domain.Organization;
+import co.edu.uniandes.xrepo.domain.User;
 import co.edu.uniandes.xrepo.repository.OrganizationRepository;
+import co.edu.uniandes.xrepo.security.SecurityUtils;
 import co.edu.uniandes.xrepo.service.dto.OrganizationDTO;
 import co.edu.uniandes.xrepo.service.mapper.OrganizationMapper;
 
@@ -25,9 +28,13 @@ public class OrganizationService {
 
     private final OrganizationMapper organizationMapper;
 
-    public OrganizationService(OrganizationRepository organizationRepository, OrganizationMapper organizationMapper) {
+    private final UserService userService;
+
+    public OrganizationService(OrganizationRepository organizationRepository, OrganizationMapper organizationMapper,
+                               UserService userService) {
         this.organizationRepository = organizationRepository;
         this.organizationMapper = organizationMapper;
+        this.userService = userService;
     }
 
     /**
@@ -39,6 +46,11 @@ public class OrganizationService {
     public OrganizationDTO save(OrganizationDTO organizationDTO) {
         log.debug("Request to save Organization : {}", organizationDTO);
         Organization organization = organizationMapper.toEntity(organizationDTO);
+        if (organization.getId() == null){
+            organization.setCreated(Instant.now());
+            Optional<User> creator = userService.getUserWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin().get());
+            organization.setCreatedBy(creator.get().getFirstName() + " " +creator.get().getLastName());
+        }
         organization = organizationRepository.save(organization);
         return organizationMapper.toDto(organization);
     }
