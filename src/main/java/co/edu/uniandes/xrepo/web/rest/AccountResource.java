@@ -45,38 +45,6 @@ public class AccountResource {
     }
 
     /**
-     * POST  /register : register the user.
-     *
-     * @param managedUserVM the managed user View Model
-     * @throws InvalidPasswordException 400 (Bad Request) if the password is incorrect
-     * @throws EmailAlreadyUsedException 400 (Bad Request) if the email is already used
-     * @throws LoginAlreadyUsedException 400 (Bad Request) if the login is already used
-     */
-    @PostMapping("/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
-        if (!checkPasswordLength(managedUserVM.getPassword())) {
-            throw new InvalidPasswordException();
-        }
-        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
-        mailService.sendActivationEmail(user);
-    }
-
-    /**
-     * GET  /activate : activate the registered user.
-     *
-     * @param key the activation key
-     * @throws RuntimeException 500 (Internal Server Error) if the user couldn't be activated
-     */
-    @GetMapping("/activate")
-    public void activateAccount(@RequestParam(value = "key") String key) {
-        Optional<User> user = userService.activateRegistration(key);
-        if (!user.isPresent()) {
-            throw new InternalServerErrorException("No user was found for this activation key");
-        }
-    }
-
-    /**
      * GET  /authenticate : check if the user is authenticated, and return its login.
      *
      * @param request the HTTP request
