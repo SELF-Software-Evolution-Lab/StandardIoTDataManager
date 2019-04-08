@@ -1,19 +1,26 @@
 package co.edu.uniandes.xrepo.web.rest;
+
 import co.edu.uniandes.xrepo.service.SamplesFilesService;
 import co.edu.uniandes.xrepo.web.rest.errors.BadRequestAlertException;
 import co.edu.uniandes.xrepo.web.rest.util.HeaderUtil;
 import co.edu.uniandes.xrepo.service.dto.SamplesFilesDTO;
 import io.github.jhipster.web.util.ResponseUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
 
 /**
  * REST controller for managing SamplesFiles.
@@ -28,30 +35,73 @@ public class SamplesFilesResource {
 
     private final SamplesFilesService samplesFilesService;
 
-    private static String UPLOADED_FOLDER = "F://temp//";
-
-
     public SamplesFilesResource(SamplesFilesService samplesFilesService) {
         this.samplesFilesService = samplesFilesService;
     }
 
     /**
-     * POST  /samples-files : Create a new samplesFiles.
+     * POST /samples-files : Create a new samplesFiles.
      *
      * @param samplesFilesDTO the samplesFilesDTO to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new samplesFilesDTO, or with status 400 (Bad Request) if the samplesFiles has already an ID
+     * @return the ResponseEntity with status 201 (Created) and with body the new
+     *         samplesFilesDTO, or with status 400 (Bad Request) if the samplesFiles
+     *         has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/samples-files")
-    public ResponseEntity<SamplesFilesDTO> createSamplesFiles(@RequestBody SamplesFilesDTO samplesFilesDTO) throws URISyntaxException {
+    public ResponseEntity<SamplesFilesDTO> createSamplesFiles(@RequestBody SamplesFilesDTO samplesFilesDTO)
+            throws URISyntaxException {
         log.debug("REST request to save SamplesFiles : {}", samplesFilesDTO);
         if (samplesFilesDTO.getId() != null) {
             throw new BadRequestAlertException("A new samplesFiles cannot already have an ID", ENTITY_NAME, "idexists");
         }
         SamplesFilesDTO result = samplesFilesService.save(samplesFilesDTO);
         return ResponseEntity.created(new URI("/api/samples-files/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
+    }
+
+    /**
+     * POST /samples-files : Create a new samplesFiles.
+     *
+     * @param samplesFilesDTO the samplesFilesDTO to create
+     * @return the ResponseEntity with status 201 (Created) and with body the new
+     *         samplesFilesDTO, or with status 400 (Bad Request) if the samplesFiles
+     *         has already an ID
+     * @throws URISyntaxException if the Location URI syntax is incorrect
+     */
+    @PostMapping("/samples-files-2")
+    public ResponseEntity<SamplesFilesDTO> createSamplesFiles2(@RequestPart MultipartFile file) throws URISyntaxException {
+                
+        File fileTemp = new File(file.getOriginalFilename());
+        log.debug("REST request to save archivo : {};{};{};{}", file.getName(), file.getOriginalFilename(), file.getSize(), fileTemp.getName());
+        
+        SamplesFilesDTO result = new SamplesFilesDTO();
+        try {
+            
+            file.transferTo(new File("C:\\AJAR\\SamplesFiles\\" + fileTemp.getName()));
+            
+            SamplesFilesDTO samplesFilesDTO2 = new SamplesFilesDTO();
+            samplesFilesDTO2.setName(fileTemp.getName());
+            samplesFilesDTO2.setContentType(file.getContentType());
+            samplesFilesDTO2.setSize(BigDecimal.valueOf(file.getSize()));
+            samplesFilesDTO2.setPath("C:\\AJAR\\SamplesFiles\\" + fileTemp.getName());
+            samplesFilesDTO2.setCreateDateTime(LocalDate.now());
+            samplesFilesDTO2.setState(1);
+            samplesFilesDTO2.setResult("");
+
+            result = samplesFilesService.save(samplesFilesDTO2);
+
+           
+
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.created(new URI("/api/samples-files/" + result.getId()))
+        .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+        .body(result);
     }
 
     /**
