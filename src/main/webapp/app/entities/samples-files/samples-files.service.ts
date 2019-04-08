@@ -25,6 +25,16 @@ export class SamplesFilesService {
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
+    create2(file: File): Observable<EntityResponseType> {
+        const formData: FormData = new FormData();
+        formData.append('file', file);
+        console.log('formulario:');
+        console.log(formData);
+        return this.http
+            .post<ISamplesFiles>(this.resourceUrl + '-2', formData, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+    }
+
     update(samplesFiles: ISamplesFiles): Observable<EntityResponseType> {
         const copy = this.convertDateFromClient(samplesFiles);
         return this.http

@@ -16,6 +16,7 @@ export class SamplesFilesUpdateComponent implements OnInit {
     isSaving: boolean;
     createDateTimeDp: any;
     updateDateTimeDp: any;
+    file: File;
 
     constructor(protected samplesFilesService: SamplesFilesService, protected activatedRoute: ActivatedRoute) {}
 
@@ -35,7 +36,7 @@ export class SamplesFilesUpdateComponent implements OnInit {
         if (this.samplesFiles.id !== undefined) {
             this.subscribeToSaveResponse(this.samplesFilesService.update(this.samplesFiles));
         } else {
-            this.subscribeToSaveResponse(this.samplesFilesService.create(this.samplesFiles));
+            this.subscribeToSaveResponse(this.samplesFilesService.create2(this.file));
         }
     }
 
@@ -50,5 +51,16 @@ export class SamplesFilesUpdateComponent implements OnInit {
 
     protected onSaveError() {
         this.isSaving = false;
+    }
+
+    handleFileInput(files: FileList) {
+        console.log(files);
+        if (files && files[0]) {
+            console.log('cargo archivo');
+            console.log(files[0]);
+            this.file = files[0];
+        } else {
+            console.log('Nada de nada');
+        }
     }
 }
