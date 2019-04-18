@@ -2,6 +2,9 @@ package co.edu.uniandes.xrepo.repository;
 
 import co.edu.uniandes.xrepo.domain.SamplesFiles;
 import org.springframework.data.mongodb.repository.Query;
+
+import java.util.List;
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,5 +15,7 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface SamplesFilesRepository extends MongoRepository<SamplesFiles, String> {
+
+    List<SamplesFiles> findByState(int state);
 
 }
