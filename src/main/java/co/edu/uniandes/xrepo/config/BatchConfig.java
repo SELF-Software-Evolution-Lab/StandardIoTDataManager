@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import co.edu.uniandes.xrepo.domain.Sample;
 import co.edu.uniandes.xrepo.repository.SampleRepository;
@@ -69,8 +70,11 @@ public class BatchConfig {
 			public JobLauncher getJobLauncher() {
 				final SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
 				jobLauncher.setJobRepository(getJobRepository());
-				final SimpleAsyncTaskExecutor simpleAsyncTaskExecutor = new SimpleAsyncTaskExecutor();
-				jobLauncher.setTaskExecutor(simpleAsyncTaskExecutor);
+				ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+				taskExecutor.setCorePoolSize(2);
+				taskExecutor.setMaxPoolSize(4);
+				taskExecutor.afterPropertiesSet();
+				jobLauncher.setTaskExecutor(taskExecutor);
 				try {
 					jobLauncher.afterPropertiesSet();
 				} catch (Exception e) {
