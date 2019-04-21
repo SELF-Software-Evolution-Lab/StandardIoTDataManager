@@ -25,7 +25,7 @@ import co.edu.uniandes.xrepo.domain.SamplesFiles;
 import co.edu.uniandes.xrepo.repository.SampleRepository;
 import co.edu.uniandes.xrepo.repository.SamplesFilesRepository;
 
-@Component
+//@Component
 public class ProcessingFiles {
 
     private final Logger log = LoggerFactory.getLogger(ProcessingFiles.class);
@@ -36,7 +36,7 @@ public class ProcessingFiles {
         this.samplesFilesRepository = samplesFilesRepository;
         this.sampleRepository = sampleRepository;
     }
-    @Scheduled(fixedRate = 60000)
+    //@Scheduled(fixedRate = 60000)
     public void scheduleTaskWithFixedRate() {
        
         List<SamplesFiles> samplesFiles = samplesFilesRepository.findByState(1);
