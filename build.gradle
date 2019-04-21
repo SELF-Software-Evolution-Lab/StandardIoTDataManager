@@ -196,6 +196,7 @@ dependencies {
         exclude module: 'mapstruct'
     }
     compile "org.xerial:sqlite-jdbc"
+    compile "org.postgresql:postgresql"
     compile "io.springfox:springfox-bean-validators"
     compile "org.mapstruct:mapstruct-jdk8:${mapstruct_version}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"

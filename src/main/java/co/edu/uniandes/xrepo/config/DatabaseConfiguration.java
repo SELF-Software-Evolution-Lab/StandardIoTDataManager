@@ -73,17 +73,19 @@ public class DatabaseConfiguration {
         return mongobee;
     }
 
-    @Value("classpath:org/springframework/batch/core/schema-drop-sqlite.sql")
+    @Value("classpath:org/springframework/batch/core/schema-drop-postgresql.sql")
     private Resource dropReopsitoryTables;
  
-    @Value("classpath:org/springframework/batch/core/schema-sqlite.sql")
+    @Value("classpath:org/springframework/batch/core/schema-postgresql.sql")
     private Resource dataReopsitorySchema;
     
     @Bean(name="batchDataSource")
     public DataSource batchDataSource(){
         return DataSourceBuilder.create()
-                .url("jdbc:sqlite:c:/AJAR/batchDB.sqlite")
-                .driverClassName("org.sqlite.JDBC")
+                .url("jdbc:postgresql://localhost:5432/batch_processing")
+                .driverClassName("org.postgresql.Driver")
+                .username("postgres")
+                .password("postgres")
                 .build();          
     }
     @Bean
