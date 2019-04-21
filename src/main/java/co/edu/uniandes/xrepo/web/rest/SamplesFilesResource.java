@@ -85,16 +85,18 @@ public class SamplesFilesResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/samples-files-2")
-    public ResponseEntity<SamplesFilesDTO> createSamplesFiles2(@RequestPart MultipartFile file) throws URISyntaxException {
-                
+    public ResponseEntity<SamplesFilesDTO> createSamplesFiles2(@RequestPart MultipartFile file)
+            throws URISyntaxException {
+
         File fileTemp = new File(file.getOriginalFilename());
-        log.debug("REST request to save archivo : {};{};{};{}", file.getName(), file.getOriginalFilename(), file.getSize(), fileTemp.getName());
-        
+        log.debug("REST request to save archivo : {};{};{};{}", file.getName(), file.getOriginalFilename(),
+                file.getSize(), fileTemp.getName());
+
         SamplesFilesDTO result = new SamplesFilesDTO();
         try {
-            
+
             file.transferTo(new File("C:\\AJAR\\SamplesFiles\\" + fileTemp.getName()));
-            
+
             SamplesFilesDTO samplesFilesDTO2 = new SamplesFilesDTO();
             samplesFilesDTO2.setName(fileTemp.getName());
             samplesFilesDTO2.setContentType(file.getContentType());
@@ -123,35 +125,37 @@ public class SamplesFilesResource {
         }
 
         return ResponseEntity.created(new URI("/api/samples-files/" + result.getId()))
-        .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-        .body(result);
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
     }
 
     /**
-     * PUT  /samples-files : Updates an existing samplesFiles.
+     * PUT /samples-files : Updates an existing samplesFiles.
      *
      * @param samplesFilesDTO the samplesFilesDTO to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated samplesFilesDTO,
-     * or with status 400 (Bad Request) if the samplesFilesDTO is not valid,
-     * or with status 500 (Internal Server Error) if the samplesFilesDTO couldn't be updated
+     * @return the ResponseEntity with status 200 (OK) and with body the updated
+     *         samplesFilesDTO, or with status 400 (Bad Request) if the
+     *         samplesFilesDTO is not valid, or with status 500 (Internal Server
+     *         Error) if the samplesFilesDTO couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/samples-files")
-    public ResponseEntity<SamplesFilesDTO> updateSamplesFiles(@RequestBody SamplesFilesDTO samplesFilesDTO) throws URISyntaxException {
+    public ResponseEntity<SamplesFilesDTO> updateSamplesFiles(@RequestBody SamplesFilesDTO samplesFilesDTO)
+            throws URISyntaxException {
         log.debug("REST request to update SamplesFiles : {}", samplesFilesDTO);
         if (samplesFilesDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         SamplesFilesDTO result = samplesFilesService.save(samplesFilesDTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, samplesFilesDTO.getId().toString()))
-            .body(result);
+                .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, samplesFilesDTO.getId().toString()))
+                .body(result);
     }
 
     /**
-     * GET  /samples-files : get all the samplesFiles.
+     * GET /samples-files : get all the samplesFiles.
      *
-     * @return the ResponseEntity with status 200 (OK) and the list of samplesFiles in body
+     * @return the ResponseEntity with status 200 (OK) and the list of samplesFiles
+     *         in body
      */
     @GetMapping("/samples-files")
     public List<SamplesFilesDTO> getAllSamplesFiles() {
