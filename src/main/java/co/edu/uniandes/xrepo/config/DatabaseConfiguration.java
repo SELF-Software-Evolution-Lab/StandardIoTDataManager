@@ -1,18 +1,16 @@
 package co.edu.uniandes.xrepo.config;
 
-import io.github.jhipster.config.JHipsterConstants;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.sql.DataSource;
+
 import com.github.mongobee.Mongobee;
 import com.mongodb.MongoClient;
-import io.github.jhipster.domain.util.JSR310DateConverters.DateToZonedDateTimeConverter;
-import io.github.jhipster.domain.util.JSR310DateConverters.ZonedDateTimeToDateConverter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.launch.support.SimpleJobLauncher;
-import org.springframework.batch.core.repository.JobRepository;
-import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
-import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
@@ -30,14 +28,11 @@ import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventL
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.sql.DataSource;
+import io.github.jhipster.config.JHipsterConstants;
+import io.github.jhipster.domain.util.JSR310DateConverters.DateToZonedDateTimeConverter;
+import io.github.jhipster.domain.util.JSR310DateConverters.ZonedDateTimeToDateConverter;
 
 @Configuration
 @EnableMongoRepositories("co.edu.uniandes.xrepo.repository")
@@ -85,7 +80,7 @@ public class DatabaseConfiguration {
     private Resource dataReopsitorySchema;
     
     @Bean(name="batchDataSource")
-    public DataSource batchDataSource(){          
+    public DataSource batchDataSource(){
         return DataSourceBuilder.create()
                 .url("jdbc:sqlite:c:/AJAR/batchDB.sqlite")
                 .driverClassName("org.sqlite.JDBC")
@@ -104,26 +99,6 @@ public class DatabaseConfiguration {
         DataSourceInitializer initializer = new DataSourceInitializer();
         initializer.setDataSource(dataSource);
         initializer.setDatabasePopulator(databasePopulator);
- 
         return initializer;
-    }
-
-    private JobRepository getJobRepository() throws Exception {
-        JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
-        factory.setDataSource(batchDataSource());
-        factory.setTransactionManager(getTransactionManager());
-        factory.afterPropertiesSet();
-        return (JobRepository) factory.getObject();
-    }
- 
-    private PlatformTransactionManager getTransactionManager() {
-        return new ResourcelessTransactionManager();
-    }
- 
-    public JobLauncher getJobLauncher() throws Exception {
-        SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
-        jobLauncher.setJobRepository(getJobRepository());
-        jobLauncher.afterPropertiesSet();
-        return jobLauncher;
     }
 }
