@@ -65,7 +65,21 @@ public class BatchConfig {
 
 	@Bean
 	BatchConfigurer configurer(@Qualifier("batchDataSource") DataSource dataSource) {
-		return new DefaultBatchConfigurer(dataSource);
+		return new DefaultBatchConfigurer(dataSource) {
+			@Override
+			public JobLauncher getJobLauncher() {
+				final SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
+				jobLauncher.setJobRepository(getJobRepository());
+				final SimpleAsyncTaskExecutor simpleAsyncTaskExecutor = new SimpleAsyncTaskExecutor();
+				jobLauncher.setTaskExecutor(simpleAsyncTaskExecutor);
+				try {
+					jobLauncher.afterPropertiesSet();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return jobLauncher;
+			}
+		};
 	}
 
 	@Bean
