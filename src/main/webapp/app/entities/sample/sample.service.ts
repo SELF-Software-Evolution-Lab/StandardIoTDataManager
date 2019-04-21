@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
+import { DATE_FORMAT } from 'app/shared/constants/input.constants';
 import { map } from 'rxjs/operators';
 
 import { SERVER_API_URL } from 'app/app.constants';
@@ -50,6 +51,7 @@ export class SampleService {
 
     protected convertDateFromClient(sample: ISample): ISample {
         const copy: ISample = Object.assign({}, sample, {
+            dateTime: sample.dateTime != null && sample.dateTime.isValid() ? sample.dateTime.toJSON() : null,
             ts: sample.ts != null && sample.ts.isValid() ? sample.ts.toJSON() : null
         });
         return copy;
@@ -57,6 +59,7 @@ export class SampleService {
 
     protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
         if (res.body) {
+            res.body.dateTime = res.body.dateTime != null ? moment(res.body.dateTime) : null;
             res.body.ts = res.body.ts != null ? moment(res.body.ts) : null;
         }
         return res;
@@ -65,6 +68,7 @@ export class SampleService {
     protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
         if (res.body) {
             res.body.forEach((sample: ISample) => {
+                sample.dateTime = sample.dateTime != null ? moment(sample.dateTime) : null;
                 sample.ts = sample.ts != null ? moment(sample.ts) : null;
             });
         }

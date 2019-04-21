@@ -5,14 +5,17 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.util.CloseableIterator;
 import org.springframework.stereotype.Service;
 
 import co.edu.uniandes.xrepo.domain.Sample;
 import co.edu.uniandes.xrepo.repository.ExperimentRepository;
 import co.edu.uniandes.xrepo.repository.SamplingRepository;
 import co.edu.uniandes.xrepo.service.dto.SampleSearchParametersDTO;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class SearchEngineService {
 
     private final SamplingRepository samplingRepository;
@@ -44,6 +47,9 @@ public class SearchEngineService {
         }
 
         Query query = new Query(params.asCriteria());
+        CloseableIterator<Sample> stream = mongoTemplate.stream(query, Sample.class);
+        stream.forEachRemaining(sample -> log.info(sample.toString()));
+        stream.close();
         return mongoTemplate.count(query, Sample.class);
     }
 }

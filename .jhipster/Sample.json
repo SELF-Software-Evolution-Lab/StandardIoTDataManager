@@ -4,6 +4,13 @@
     "relationships": [],
     "fields": [
         {
+            "fieldName": "dateTime",
+            "fieldType": "Instant",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
             "fieldName": "ts",
             "fieldType": "Instant",
             "fieldValidateRules": [
@@ -18,9 +25,23 @@
         {
             "fieldName": "samplingId",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "experimentId",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "targetSystemId",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
         }
     ],
-    "dto": "no",
+    "dto": "mapstruct",
     "searchEngine": false,
     "service": "serviceClass",
     "entityTableName": "sample",

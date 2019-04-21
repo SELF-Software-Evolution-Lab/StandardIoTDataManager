@@ -1,73 +1,37 @@
-package co.edu.uniandes.xrepo.domain;
-
-
-import java.io.Serializable;
+package co.edu.uniandes.xrepo.service.dto;
 import java.math.BigDecimal;
 import java.time.Instant;
+import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
 /**
- * A Sample.
+ * A DTO for the Sample entity.
  */
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
-@Document(collection = "sample")
-@TypeAlias("xrepo:sample")
-public class Sample implements Serializable {
+public class SampleDTO implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
-    @Id
     private String id;
 
     @NotNull
-    @Field("date_time")
     private LocalDateTime dateTime;
 
     @NotNull
-    @Field("ts")
     private Instant ts;
 
-    @Field("sensor_internal_id")
     private String sensorInternalId;
 
-    @Field("sampling_id")
     private String samplingId;
 
     @NotNull
-    @Field("experiment_id")
     private String experimentId;
 
     @NotNull
-    @Field("target_system_id")
     private String targetSystemId;
 
-    /**
-     * K: measure var
-     * V: measured value
-     * {"acceleration_x" -> -0.016,
-     * "acceleration_y" -> 0.999,
-     * "acceleration_z" -> 0.067}
-     */
     private Map<String, BigDecimal> measurements;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
         return id;
     }
@@ -80,22 +44,12 @@ public class Sample implements Serializable {
         return dateTime;
     }
 
-    public Sample dateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
-        return this;
-    }
-
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
 
     public Instant getTs() {
         return ts;
-    }
-
-    public Sample ts(Instant ts) {
-        this.ts = ts;
-        return this;
     }
 
     public void setTs(Instant ts) {
@@ -106,22 +60,12 @@ public class Sample implements Serializable {
         return sensorInternalId;
     }
 
-    public Sample sensorInternalId(String sensorInternalId) {
-        this.sensorInternalId = sensorInternalId;
-        return this;
-    }
-
     public void setSensorInternalId(String sensorInternalId) {
         this.sensorInternalId = sensorInternalId;
     }
 
     public String getSamplingId() {
         return samplingId;
-    }
-
-    public Sample samplingId(String samplingId) {
-        this.samplingId = samplingId;
-        return this;
     }
 
     public void setSamplingId(String samplingId) {
@@ -132,11 +76,6 @@ public class Sample implements Serializable {
         return experimentId;
     }
 
-    public Sample experimentId(String experimentId) {
-        this.experimentId = experimentId;
-        return this;
-    }
-
     public void setExperimentId(String experimentId) {
         this.experimentId = experimentId;
     }
@@ -145,15 +84,9 @@ public class Sample implements Serializable {
         return targetSystemId;
     }
 
-    public Sample targetSystemId(String targetSystemId) {
-        this.targetSystemId = targetSystemId;
-        return this;
-    }
-
     public void setTargetSystemId(String targetSystemId) {
         this.targetSystemId = targetSystemId;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     public Map<String, BigDecimal> getMeasurements() {
         return measurements;
@@ -171,15 +104,29 @@ public class Sample implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Sample sample = (Sample) o;
-        if (sample.getId() == null || getId() == null) {
+
+        SampleDTO sampleDTO = (SampleDTO) o;
+        if (sampleDTO.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), sample.getId());
+        return Objects.equals(getId(), sampleDTO.getId());
     }
 
     @Override
     public int hashCode() {
         return Objects.hashCode(getId());
+    }
+
+    @Override
+    public String toString() {
+        return "SampleDTO{" +
+            "id=" + getId() +
+            ", dateTime='" + getDateTime() + "'" +
+            ", ts='" + getTs() + "'" +
+            ", sensorInternalId='" + getSensorInternalId() + "'" +
+            ", samplingId='" + getSamplingId() + "'" +
+            ", experimentId='" + getExperimentId() + "'" +
+            ", targetSystemId='" + getTargetSystemId() + "'" +
+            "}";
     }
 }
