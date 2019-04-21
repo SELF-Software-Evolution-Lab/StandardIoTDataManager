@@ -10,7 +10,9 @@ import org.springframework.batch.core.configuration.annotation.DefaultBatchConfi
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
@@ -21,10 +23,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 import co.edu.uniandes.xrepo.domain.Sample;
 import co.edu.uniandes.xrepo.repository.SampleRepository;
-import co.edu.uniandes.xrepo.repository.SamplesFilesRepository;
 import co.edu.uniandes.xrepo.task.fieldsmapper.SampleFieldSetMapper;
 import co.edu.uniandes.xrepo.task.listener.JobCompletionListener;
 import co.edu.uniandes.xrepo.task.step.Writer;
@@ -39,13 +41,10 @@ public class BatchConfig {
 
 	@Autowired
 	public StepBuilderFactory stepBuilderFactory;
-	
+
 	@Autowired
 	public SampleRepository sampleRepository;
 
-	@Autowired
-	public SamplesFilesRepository sampleFilesRepository;
-	
 	@Bean
 	public Job processJob() {
 		return jobBuilderFactory.get("processJob").incrementer(new RunIdIncrementer()).listener(listener())
@@ -54,8 +53,8 @@ public class BatchConfig {
 
 	@Bean
 	public Step orderStep1() {
-		return stepBuilderFactory.get("orderStep1").<Sample, Sample>chunk(1).reader(itemReader(OVERRIDDEN_BY_EXPRESSION)).writer(new Writer(sampleRepository))
-				.build();
+		return stepBuilderFactory.get("orderStep1").<Sample, Sample>chunk(1)
+				.reader(itemReader(OVERRIDDEN_BY_EXPRESSION)).writer(new Writer(sampleRepository)).build();
 	}
 
 	@Bean
@@ -102,7 +101,6 @@ public class BatchConfig {
         lineMapper.setLineTokenizer(lineTokenizer);
         lineMapper.setFieldSetMapper(new SampleFieldSetMapper());
         return lineMapper;
-    }
-
+	}
 }
 
