@@ -77,7 +77,7 @@ public class SampleResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final SampleResource sampleResource = new SampleResource(sampleService);
+        final SampleResource sampleResource = new SampleResource(sampleService, searchEngineService);
         this.restSampleMockMvc = MockMvcBuilders.standaloneSetup(sampleResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

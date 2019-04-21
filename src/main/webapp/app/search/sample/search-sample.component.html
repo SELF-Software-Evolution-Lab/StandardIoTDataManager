@@ -27,6 +27,7 @@
                 <ng-select labelForId="select_tags" [multiple]="true"
                            [items]="tags | async"
                            bindLabel="name"
+                           bindValue="name"
                            [(ngModel)]="selectedTags">
                 </ng-select>
             </div>
@@ -47,7 +48,9 @@
                                type="datetime-local"
                                class="form-control"
                                name="startTime"
-                               placeholder="YYYY-MM-DD HH:mm"/>
+                               placeholder="YYYY-MM-DD HH:mm"
+                               [(ngModel)]="selectedFromDate"
+                        />
                     </div>
                     <div class="d-flex col-1">
                         <label for="field_endTime">to</label>
@@ -57,7 +60,9 @@
                                type="datetime-local"
                                class="form-control"
                                name="startTime"
-                               placeholder="YYYY-MM-DD HH:mm"/>
+                               placeholder="YYYY-MM-DD HH:mm"
+                               [(ngModel)]="selectedToDate"
+                        />
                     </div>
                 </div>
             </div>
@@ -80,8 +85,22 @@
 </div>
 <div class="row">
     <div class="col">
+        <div class="form-group row">
+            <label id="select_sensor" class="col-lg-3 col-form-label">From Sensors</label>
+            <div class="col-lg-7">
+                <ng-select labelForId="select_sensor" [multiple]="true"
+                           [items]="sensors"
+                           [(ngModel)]="selectedSensors">
+                </ng-select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
         <button id="jh-create-entity"
-                class="btn btn-primary float-right jh-create-entity create-experiment">
+                class="btn btn-primary float-right jh-create-entity create-experiment"
+        (click)="search()">
             <fa-icon [icon]="'search'"></fa-icon>
             <span>Search</span>
         </button>

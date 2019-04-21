@@ -4,6 +4,7 @@ package co.edu.uniandes.xrepo.domain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 
@@ -36,6 +37,10 @@ public class Sample implements Serializable {
     private String id;
 
     @NotNull
+    @Field("date_time")
+    private LocalDateTime dateTime;
+
+    @NotNull
     @Field("ts")
     private Instant ts;
 
@@ -44,6 +49,12 @@ public class Sample implements Serializable {
 
     @Field("sampling_id")
     private String samplingId;
+
+    @Field("experiment_id")
+    private String experimentId;
+
+    @Field("target_system_id")
+    private String targetSystemId;
 
     /**
      * K: measure var
@@ -103,6 +114,30 @@ public class Sample implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public String getExperimentId() {
+        return experimentId;
+    }
+
+    public void setExperimentId(String experimentId) {
+        this.experimentId = experimentId;
+    }
+
+    public String getTargetSystemId() {
+        return targetSystemId;
+    }
+
+    public void setTargetSystemId(String targetSystemId) {
+        this.targetSystemId = targetSystemId;
+    }
 
     public Map<String, BigDecimal> getMeasurements() {
         return measurements;

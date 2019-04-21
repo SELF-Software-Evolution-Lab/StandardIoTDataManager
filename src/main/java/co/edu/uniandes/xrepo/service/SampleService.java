@@ -9,7 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import co.edu.uniandes.xrepo.domain.Sample;
+import co.edu.uniandes.xrepo.domain.Sampling;
 import co.edu.uniandes.xrepo.repository.SampleRepository;
+import co.edu.uniandes.xrepo.repository.SamplingRepository;
 
 /**
  * Service Implementation for managing Sample.
@@ -20,6 +22,7 @@ public class SampleService {
     private final Logger log = LoggerFactory.getLogger(SampleService.class);
 
     private final SampleRepository sampleRepository;
+    private final SamplingRepository samplingRepository;
 
     public SampleService(SampleRepository sampleRepository) {
         this.sampleRepository = sampleRepository;

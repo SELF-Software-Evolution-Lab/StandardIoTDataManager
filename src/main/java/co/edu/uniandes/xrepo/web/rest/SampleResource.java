@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.uniandes.xrepo.domain.Sample;
 import co.edu.uniandes.xrepo.service.SampleService;
+import co.edu.uniandes.xrepo.service.SearchEngineService;
+import co.edu.uniandes.xrepo.service.dto.SampleSearchParametersDTO;
 import co.edu.uniandes.xrepo.web.rest.errors.BadRequestAlertException;
 import co.edu.uniandes.xrepo.web.rest.util.HeaderUtil;
 import co.edu.uniandes.xrepo.web.rest.util.PaginationUtil;
@@ -42,8 +44,11 @@ public class SampleResource {
 
     private final SampleService sampleService;
 
-    public SampleResource(SampleService sampleService) {
+    private final SearchEngineService searchEngineService;
+
+    public SampleResource(SampleService sampleService, SearchEngineService searchEngineService) {
         this.sampleService = sampleService;
+        this.searchEngineService = searchEngineService;
     }
 
     /**
@@ -64,6 +69,13 @@ public class SampleResource {
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
+
+    @PostMapping("/samples/data")
+    public ResponseEntity<Long> preSearchSample(@RequestBody SampleSearchParametersDTO searchParametersDTO) {
+        long l = searchEngineService.preSearchSamples(searchParametersDTO);
+        return ResponseEntity.ok().body(l);
+    }
+
 
     /**
      * PUT  /samples : Updates an existing sample.
