@@ -46,6 +46,9 @@ public class SamplesFiles implements Serializable {
     @Field("update_date_time")
     private LocalDate updateDateTime;
 
+    @Field("records_processed")
+    private Integer recordsProcessed;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
         return id;
@@ -157,6 +160,19 @@ public class SamplesFiles implements Serializable {
 
     public void setUpdateDateTime(LocalDate updateDateTime) {
         this.updateDateTime = updateDateTime;
+    }
+    
+    public Integer getRecordsProcessed() {
+        return recordsProcessed;
+    }
+
+    public SamplesFiles recordsProcessed(Integer recordsProcessed) {
+        this.recordsProcessed = recordsProcessed;
+        return this;
+    }
+
+    public void setRecordsProcessed(Integer recordsProcessed) {
+        this.recordsProcessed = recordsProcessed;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

@@ -2,6 +2,7 @@ package co.edu.uniandes.xrepo.config;
 
 import javax.sql.DataSource;
 
+import org.springframework.batch.core.ChunkListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
@@ -23,13 +24,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import co.edu.uniandes.xrepo.domain.Sample;
 import co.edu.uniandes.xrepo.repository.SampleRepository;
 import co.edu.uniandes.xrepo.task.fieldsmapper.SampleFieldSetMapper;
 import co.edu.uniandes.xrepo.task.listener.JobCompletionListener;
+import co.edu.uniandes.xrepo.task.listener.StepChunkListener;
 import co.edu.uniandes.xrepo.task.step.Writer;
 
 @Configuration
@@ -55,12 +56,17 @@ public class BatchConfig {
 	@Bean
 	public Step orderStep1() {
 		return stepBuilderFactory.get("orderStep1").<Sample, Sample>chunk(1)
-				.reader(itemReader(OVERRIDDEN_BY_EXPRESSION)).writer(new Writer(sampleRepository)).build();
+				.reader(itemReader(OVERRIDDEN_BY_EXPRESSION)).writer(new Writer(sampleRepository)).listener(chunkListener()).build();
 	}
 
 	@Bean
 	public JobExecutionListener listener() {
 		return new JobCompletionListener();
+	}
+
+	@Bean
+	public ChunkListener chunkListener() {
+		return new StepChunkListener();
 	}
 
 	@Bean
