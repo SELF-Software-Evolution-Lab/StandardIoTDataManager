@@ -16,8 +16,6 @@ public class Writer implements ItemWriter<Sample> {
 	@Override
 	public void write(List<? extends Sample> samples) throws Exception {
 		for (Sample sample : samples) {
-            System.out.println("Writing the data 9" + sample.getSamplingId());
-            System.out.println("Hola" + sample.getSensorInternalId());
             sampleRepository.save(sample);
 		}
 	}
