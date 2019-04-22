@@ -10,6 +10,7 @@ export interface ISamplesFiles {
     result?: string;
     createDateTime?: Moment;
     updateDateTime?: Moment;
+    recordsProcessed?: number;
 }
 
 export class SamplesFiles implements ISamplesFiles {
@@ -22,6 +23,7 @@ export class SamplesFiles implements ISamplesFiles {
         public state?: number,
         public result?: string,
         public createDateTime?: Moment,
-        public updateDateTime?: Moment
+        public updateDateTime?: Moment,
+        public recordsProcessed?: number
     ) {}
 }

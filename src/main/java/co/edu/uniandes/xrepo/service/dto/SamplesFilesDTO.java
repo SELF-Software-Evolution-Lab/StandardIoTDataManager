@@ -27,6 +27,7 @@ public class SamplesFilesDTO implements Serializable {
 
     private LocalDate updateDateTime;
 
+    private Integer recordsProcessed;
 
     public String getId() {
         return id;
@@ -98,6 +99,14 @@ public class SamplesFilesDTO implements Serializable {
 
     public void setUpdateDateTime(LocalDate updateDateTime) {
         this.updateDateTime = updateDateTime;
+    }
+
+    public Integer getRecordsProcessed() {
+        return recordsProcessed;
+    }
+
+    public void setRecordsProcessed(Integer recordsProcessed) {
+        this.recordsProcessed = recordsProcessed;
     }
 
     @Override
