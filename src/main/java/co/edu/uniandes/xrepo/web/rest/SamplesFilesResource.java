@@ -114,7 +114,8 @@ public class SamplesFilesResource {
             e.printStackTrace();
         }
 
-        JobParameters jobParameters = new JobParametersBuilder().addLong("time", System.currentTimeMillis()).addString("filePath", "C:\\AJAR\\SamplesFiles\\" + fileTemp.getName())
+        JobParameters jobParameters = new JobParametersBuilder().addLong("time", System.currentTimeMillis())
+        .addString("filePath", "C:\\AJAR\\SamplesFiles\\" + fileTemp.getName()).addString("SampleFileId", result.getId())
                 .toJobParameters();
         try {
             jobLauncher.run(processJob, jobParameters);
