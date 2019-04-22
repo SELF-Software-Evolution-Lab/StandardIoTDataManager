@@ -47,9 +47,6 @@ public class SearchEngineService {
         }
 
         Query query = new Query(params.asCriteria());
-        CloseableIterator<Sample> stream = mongoTemplate.stream(query, Sample.class);
-        stream.forEachRemaining(sample -> log.info(sample.toString()));
-        stream.close();
         return mongoTemplate.count(query, Sample.class);
     }
 }

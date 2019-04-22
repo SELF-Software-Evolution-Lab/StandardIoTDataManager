@@ -30,6 +30,8 @@ export class SearchSampleComponent implements OnInit {
     private selectedToDate: string;
 
     private searchParameters: SampleSearchParameters;
+    private searchReturned = false;
+    private searchResults: Number = 0;
 
     constructor(
         protected jhiAlertService: JhiAlertService,
@@ -83,10 +85,13 @@ export class SearchSampleComponent implements OnInit {
     }
 
     private onSearchSuccess(res: HttpResponse<Number>) {
+        this.searchReturned = true;
+        this.searchResults = res.body;
         console.log('search success ', res.body);
     }
 
     private onSearchError(res: HttpErrorResponse) {
+        this.searchReturned = false;
         console.log('search error ', res);
     }
 }

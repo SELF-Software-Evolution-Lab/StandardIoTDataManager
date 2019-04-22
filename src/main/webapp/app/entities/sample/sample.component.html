@@ -1,12 +1,6 @@
 <div>
     <h2 id="page-heading">
         <span>Samples</span>
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-sample" [routerLink]="['/sample/new']">
-            <fa-icon [icon]="'plus'"></fa-icon>
-            <span >
-            Create new Sample
-            </span>
-        </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
@@ -14,21 +8,17 @@
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="dateTime"><span>Date Time</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="ts"><span>Ts</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="sensorInternalId"><span>Sensor Internal Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="samplingId"><span>Sampling Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="experimentId"><span>Experiment Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="targetSystemId"><span>Target System Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="sensorInternalId"><span>Sensor Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="samplingId"><span>Sampling</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="experimentId"><span>Experiment</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="targetSystemId"><span>Target System</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let sample of samples ;trackBy: trackId">
-                <td><a [routerLink]="['/sample', sample.id, 'view' ]">{{sample.id}}</a></td>
                 <td>{{sample.dateTime | date:'medium'}}</td>
-                <td>{{sample.ts | date:'medium'}}</td>
                 <td>{{sample.sensorInternalId}}</td>
                 <td>{{sample.samplingId}}</td>
                 <td>{{sample.experimentId}}</td>
@@ -40,12 +30,6 @@
                                 class="btn btn-info btn-sm">
                             <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
-                        </button>
-                        <button type="submit"
-                                [routerLink]="['/sample', sample.id, 'edit']"
-                                class="btn btn-primary btn-sm">
-                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
-                            <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/', 'sample', { outlets: { popup: sample.id + '/delete'} }]"

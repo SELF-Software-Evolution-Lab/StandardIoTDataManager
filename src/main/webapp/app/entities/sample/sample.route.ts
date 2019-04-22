@@ -53,30 +53,6 @@ export const sampleRoute: Routes = [
             pageTitle: 'Samples'
         },
         canActivate: [UserRouteAccessService]
-    },
-    {
-        path: 'new',
-        component: SampleUpdateComponent,
-        resolve: {
-            sample: SampleResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Samples'
-        },
-        canActivate: [UserRouteAccessService]
-    },
-    {
-        path: ':id/edit',
-        component: SampleUpdateComponent,
-        resolve: {
-            sample: SampleResolve
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'Samples'
-        },
-        canActivate: [UserRouteAccessService]
     }
 ];
 
