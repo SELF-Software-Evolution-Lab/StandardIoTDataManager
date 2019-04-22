@@ -15,7 +15,7 @@ public class SampleFieldSetMapper implements FieldSetMapper<Sample> {
         Sample sample = new Sample();
 
         sample.setSamplingId(fieldSet.readString(0));
-        sample.setTs(Instant.ofEpochSecond((long)fieldSet.readDouble(2), (long)Math.rint((fieldSet.readDouble(2) * 1000000000) - (((long)fieldSet.readDouble(2)) * 1000000000))));
+        sample.setTs(Instant.ofEpochSecond(fieldSet.readLong(2) / 10000000, (fieldSet.readLong(2) % 10000000) * 100));
         sample.setSensorInternalId(fieldSet.readString(3));
 
         Map<String, BigDecimal> measurements = new HashMap<String,BigDecimal>();
