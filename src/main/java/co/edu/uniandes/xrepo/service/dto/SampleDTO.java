@@ -7,9 +7,12 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 
+import lombok.ToString;
+
 /**
  * A DTO for the Sample entity.
  */
+@ToString
 public class SampleDTO implements Serializable {
 
     private String id;
@@ -20,15 +23,11 @@ public class SampleDTO implements Serializable {
     @NotNull
     private Instant ts;
 
+    @NotNull
     private String sensorInternalId;
 
+    @NotNull
     private String samplingId;
-
-    @NotNull
-    private String experimentId;
-
-    @NotNull
-    private String targetSystemId;
 
     private Map<String, BigDecimal> measurements;
 
@@ -72,22 +71,6 @@ public class SampleDTO implements Serializable {
         this.samplingId = samplingId;
     }
 
-    public String getExperimentId() {
-        return experimentId;
-    }
-
-    public void setExperimentId(String experimentId) {
-        this.experimentId = experimentId;
-    }
-
-    public String getTargetSystemId() {
-        return targetSystemId;
-    }
-
-    public void setTargetSystemId(String targetSystemId) {
-        this.targetSystemId = targetSystemId;
-    }
-
     public Map<String, BigDecimal> getMeasurements() {
         return measurements;
     }
@@ -117,16 +100,4 @@ public class SampleDTO implements Serializable {
         return Objects.hashCode(getId());
     }
 
-    @Override
-    public String toString() {
-        return "SampleDTO{" +
-            "id=" + getId() +
-            ", dateTime='" + getDateTime() + "'" +
-            ", ts='" + getTs() + "'" +
-            ", sensorInternalId='" + getSensorInternalId() + "'" +
-            ", samplingId='" + getSamplingId() + "'" +
-            ", experimentId='" + getExperimentId() + "'" +
-            ", targetSystemId='" + getTargetSystemId() + "'" +
-            "}";
-    }
 }

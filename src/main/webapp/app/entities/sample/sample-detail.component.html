@@ -9,12 +9,6 @@
                 <dd>
                     <span>{{sample.id}}</span>
                 </dd>
-                <dt><span>Sampling</span></dt>
-                <dd>
-                    <div *ngIf="sample.samplingId">
-                        <a [routerLink]="['/sampling', sample.samplingId, 'view']">{{sampling.name}} ({{sample.samplingId}})</a>
-                    </div>
-                </dd>
                 <dt><span>Sensor</span></dt>
                 <dd>
                     <span>{{sensor.sensorType}} - {{sample.sensorInternalId}}</span>
@@ -27,7 +21,12 @@
                 <dd>
                     <span>{{sample.ts}}</span>
                 </dd>
-
+                <dt><span>Sampling</span></dt>
+                <dd>
+                    <div *ngIf="sample.samplingId">
+                        <a [routerLink]="['/sampling', sample.samplingId, 'view']">{{sampling.name}} ({{sample.samplingId}})</a>
+                    </div>
+                </dd>
                 <dt><span>Experiment Id</span></dt>
                 <dd>
                     <span>{{sample.experimentId}}</span>
