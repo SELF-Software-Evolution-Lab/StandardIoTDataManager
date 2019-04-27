@@ -1,12 +1,19 @@
 package co.edu.uniandes.xrepo.web.rest;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
+import co.edu.uniandes.xrepo.XrepoApp;
+
+import co.edu.uniandes.xrepo.domain.Sample;
+import co.edu.uniandes.xrepo.repository.SampleRepository;
+import co.edu.uniandes.xrepo.service.SampleService;
+import co.edu.uniandes.xrepo.service.SearchEngineService;
+import co.edu.uniandes.xrepo.service.dto.SampleDTO;
+import co.edu.uniandes.xrepo.service.mapper.SampleMapper;
+import co.edu.uniandes.xrepo.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,21 +25,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
 
-import co.edu.uniandes.xrepo.XrepoApp;
-import co.edu.uniandes.xrepo.domain.Sample;
-import co.edu.uniandes.xrepo.repository.SampleRepository;
-import co.edu.uniandes.xrepo.service.SampleService;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
+
 import static co.edu.uniandes.xrepo.web.rest.TestUtil.createFormattingConversionService;
-import co.edu.uniandes.xrepo.web.rest.errors.ExceptionTranslator;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for the SampleResource REST controller.
@@ -43,6 +47,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = XrepoApp.class)
 public class SampleResourceIntTest {
 
+    private static final LocalDateTime DEFAULT_DATE_TIME = LocalDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final LocalDateTime UPDATED_DATE_TIME = LocalDateTime.ofInstant(Instant.now().truncatedTo(ChronoUnit.MILLIS), ZoneOffset.UTC);
+
     private static final Instant DEFAULT_TS = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_TS = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
@@ -52,8 +59,17 @@ public class SampleResourceIntTest {
     private static final String DEFAULT_SAMPLING_ID = "AAAAAAAAAA";
     private static final String UPDATED_SAMPLING_ID = "BBBBBBBBBB";
 
+    private static final String DEFAULT_EXPERIMENT_ID = "AAAAAAAAAA";
+    private static final String UPDATED_EXPERIMENT_ID = "BBBBBBBBBB";
+
+    private static final String DEFAULT_TARGET_SYSTEM_ID = "AAAAAAAAAA";
+    private static final String UPDATED_TARGET_SYSTEM_ID = "BBBBBBBBBB";
+
     @Autowired
     private SampleRepository sampleRepository;
+
+    @Autowired
+    private SampleMapper sampleMapper;
 
     @Autowired
     private SampleService sampleService;
@@ -77,7 +93,7 @@ public class SampleResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final SampleResource sampleResource = new SampleResource(sampleService);
+        final SampleResource sampleResource = new SampleResource(sampleService, Mockito.mock(SearchEngineService.class));
         this.restSampleMockMvc = MockMvcBuilders.standaloneSetup(sampleResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -94,9 +110,12 @@ public class SampleResourceIntTest {
      */
     public static Sample createEntity() {
         Sample sample = new Sample()
+            .dateTime(DEFAULT_DATE_TIME)
             .ts(DEFAULT_TS)
             .sensorInternalId(DEFAULT_SENSOR_INTERNAL_ID)
-            .samplingId(DEFAULT_SAMPLING_ID);
+            .samplingId(DEFAULT_SAMPLING_ID)
+            .experimentId(DEFAULT_EXPERIMENT_ID)
+            .targetSystemId(DEFAULT_TARGET_SYSTEM_ID);
         return sample;
     }
 
@@ -111,18 +130,22 @@ public class SampleResourceIntTest {
         int databaseSizeBeforeCreate = sampleRepository.findAll().size();
 
         // Create the Sample
+        SampleDTO sampleDTO = sampleMapper.toDto(sample);
         restSampleMockMvc.perform(post("/api/samples")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(sample)))
+            .content(TestUtil.convertObjectToJsonBytes(sampleDTO)))
             .andExpect(status().isCreated());
 
         // Validate the Sample in the database
         List<Sample> sampleList = sampleRepository.findAll();
         assertThat(sampleList).hasSize(databaseSizeBeforeCreate + 1);
         Sample testSample = sampleList.get(sampleList.size() - 1);
+        assertThat(testSample.getDateTime()).isEqualTo(DEFAULT_DATE_TIME);
         assertThat(testSample.getTs()).isEqualTo(DEFAULT_TS);
         assertThat(testSample.getSensorInternalId()).isEqualTo(DEFAULT_SENSOR_INTERNAL_ID);
         assertThat(testSample.getSamplingId()).isEqualTo(DEFAULT_SAMPLING_ID);
+        assertThat(testSample.getExperimentId()).isEqualTo(DEFAULT_EXPERIMENT_ID);
+        assertThat(testSample.getTargetSystemId()).isEqualTo(DEFAULT_TARGET_SYSTEM_ID);
     }
 
     @Test
@@ -131,16 +154,35 @@ public class SampleResourceIntTest {
 
         // Create the Sample with an existing ID
         sample.setId("existing_id");
+        SampleDTO sampleDTO = sampleMapper.toDto(sample);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restSampleMockMvc.perform(post("/api/samples")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(sample)))
+            .content(TestUtil.convertObjectToJsonBytes(sampleDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Sample in the database
         List<Sample> sampleList = sampleRepository.findAll();
         assertThat(sampleList).hasSize(databaseSizeBeforeCreate);
+    }
+
+    @Test
+    public void checkDateTimeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = sampleRepository.findAll().size();
+        // set the field null
+        sample.setDateTime(null);
+
+        // Create the Sample, which fails.
+        SampleDTO sampleDTO = sampleMapper.toDto(sample);
+
+        restSampleMockMvc.perform(post("/api/samples")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(sampleDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Sample> sampleList = sampleRepository.findAll();
+        assertThat(sampleList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -150,10 +192,47 @@ public class SampleResourceIntTest {
         sample.setTs(null);
 
         // Create the Sample, which fails.
+        SampleDTO sampleDTO = sampleMapper.toDto(sample);
 
         restSampleMockMvc.perform(post("/api/samples")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(sample)))
+            .content(TestUtil.convertObjectToJsonBytes(sampleDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Sample> sampleList = sampleRepository.findAll();
+        assertThat(sampleList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    public void checkExperimentIdIsRequired() throws Exception {
+        int databaseSizeBeforeTest = sampleRepository.findAll().size();
+        // set the field null
+        sample.setExperimentId(null);
+
+        // Create the Sample, which fails.
+        SampleDTO sampleDTO = sampleMapper.toDto(sample);
+
+        restSampleMockMvc.perform(post("/api/samples")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(sampleDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Sample> sampleList = sampleRepository.findAll();
+        assertThat(sampleList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    public void checkTargetSystemIdIsRequired() throws Exception {
+        int databaseSizeBeforeTest = sampleRepository.findAll().size();
+        // set the field null
+        sample.setTargetSystemId(null);
+
+        // Create the Sample, which fails.
+        SampleDTO sampleDTO = sampleMapper.toDto(sample);
+
+        restSampleMockMvc.perform(post("/api/samples")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(sampleDTO)))
             .andExpect(status().isBadRequest());
 
         List<Sample> sampleList = sampleRepository.findAll();
@@ -170,9 +249,12 @@ public class SampleResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(sample.getId())))
+            .andExpect(jsonPath("$.[*].dateTime").value(hasItem(DEFAULT_DATE_TIME.toString())))
             .andExpect(jsonPath("$.[*].ts").value(hasItem(DEFAULT_TS.toString())))
             .andExpect(jsonPath("$.[*].sensorInternalId").value(hasItem(DEFAULT_SENSOR_INTERNAL_ID.toString())))
-            .andExpect(jsonPath("$.[*].samplingId").value(hasItem(DEFAULT_SAMPLING_ID.toString())));
+            .andExpect(jsonPath("$.[*].samplingId").value(hasItem(DEFAULT_SAMPLING_ID.toString())))
+            .andExpect(jsonPath("$.[*].experimentId").value(hasItem(DEFAULT_EXPERIMENT_ID.toString())))
+            .andExpect(jsonPath("$.[*].targetSystemId").value(hasItem(DEFAULT_TARGET_SYSTEM_ID.toString())));
     }
     
     @Test
@@ -185,9 +267,12 @@ public class SampleResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(sample.getId()))
+            .andExpect(jsonPath("$.dateTime").value(DEFAULT_DATE_TIME.toString()))
             .andExpect(jsonPath("$.ts").value(DEFAULT_TS.toString()))
             .andExpect(jsonPath("$.sensorInternalId").value(DEFAULT_SENSOR_INTERNAL_ID.toString()))
-            .andExpect(jsonPath("$.samplingId").value(DEFAULT_SAMPLING_ID.toString()));
+            .andExpect(jsonPath("$.samplingId").value(DEFAULT_SAMPLING_ID.toString()))
+            .andExpect(jsonPath("$.experimentId").value(DEFAULT_EXPERIMENT_ID.toString()))
+            .andExpect(jsonPath("$.targetSystemId").value(DEFAULT_TARGET_SYSTEM_ID.toString()));
     }
 
     @Test
@@ -200,29 +285,36 @@ public class SampleResourceIntTest {
     @Test
     public void updateSample() throws Exception {
         // Initialize the database
-        sampleService.save(sample);
+        sampleRepository.save(sample);
 
         int databaseSizeBeforeUpdate = sampleRepository.findAll().size();
 
         // Update the sample
         Sample updatedSample = sampleRepository.findById(sample.getId()).get();
         updatedSample
+            .dateTime(UPDATED_DATE_TIME)
             .ts(UPDATED_TS)
             .sensorInternalId(UPDATED_SENSOR_INTERNAL_ID)
-            .samplingId(UPDATED_SAMPLING_ID);
+            .samplingId(UPDATED_SAMPLING_ID)
+            .experimentId(UPDATED_EXPERIMENT_ID)
+            .targetSystemId(UPDATED_TARGET_SYSTEM_ID);
+        SampleDTO sampleDTO = sampleMapper.toDto(updatedSample);
 
         restSampleMockMvc.perform(put("/api/samples")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedSample)))
+            .content(TestUtil.convertObjectToJsonBytes(sampleDTO)))
             .andExpect(status().isOk());
 
         // Validate the Sample in the database
         List<Sample> sampleList = sampleRepository.findAll();
         assertThat(sampleList).hasSize(databaseSizeBeforeUpdate);
         Sample testSample = sampleList.get(sampleList.size() - 1);
+        assertThat(testSample.getDateTime()).isEqualTo(UPDATED_DATE_TIME);
         assertThat(testSample.getTs()).isEqualTo(UPDATED_TS);
         assertThat(testSample.getSensorInternalId()).isEqualTo(UPDATED_SENSOR_INTERNAL_ID);
         assertThat(testSample.getSamplingId()).isEqualTo(UPDATED_SAMPLING_ID);
+        assertThat(testSample.getExperimentId()).isEqualTo(UPDATED_EXPERIMENT_ID);
+        assertThat(testSample.getTargetSystemId()).isEqualTo(UPDATED_TARGET_SYSTEM_ID);
     }
 
     @Test
@@ -230,11 +322,12 @@ public class SampleResourceIntTest {
         int databaseSizeBeforeUpdate = sampleRepository.findAll().size();
 
         // Create the Sample
+        SampleDTO sampleDTO = sampleMapper.toDto(sample);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restSampleMockMvc.perform(put("/api/samples")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(sample)))
+            .content(TestUtil.convertObjectToJsonBytes(sampleDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Sample in the database
@@ -245,7 +338,7 @@ public class SampleResourceIntTest {
     @Test
     public void deleteSample() throws Exception {
         // Initialize the database
-        sampleService.save(sample);
+        sampleRepository.save(sample);
 
         int databaseSizeBeforeDelete = sampleRepository.findAll().size();
 
@@ -271,5 +364,20 @@ public class SampleResourceIntTest {
         assertThat(sample1).isNotEqualTo(sample2);
         sample1.setId(null);
         assertThat(sample1).isNotEqualTo(sample2);
+    }
+
+    @Test
+    public void dtoEqualsVerifier() throws Exception {
+        TestUtil.equalsVerifier(SampleDTO.class);
+        SampleDTO sampleDTO1 = new SampleDTO();
+        sampleDTO1.setId("id1");
+        SampleDTO sampleDTO2 = new SampleDTO();
+        assertThat(sampleDTO1).isNotEqualTo(sampleDTO2);
+        sampleDTO2.setId(sampleDTO1.getId());
+        assertThat(sampleDTO1).isEqualTo(sampleDTO2);
+        sampleDTO2.setId("id2");
+        assertThat(sampleDTO1).isNotEqualTo(sampleDTO2);
+        sampleDTO1.setId(null);
+        assertThat(sampleDTO1).isNotEqualTo(sampleDTO2);
     }
 }

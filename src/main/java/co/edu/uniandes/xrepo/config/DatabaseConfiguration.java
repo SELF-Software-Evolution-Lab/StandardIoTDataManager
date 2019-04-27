@@ -1,6 +1,7 @@
 package co.edu.uniandes.xrepo.config;
 
 import java.net.MalformedURLException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import javax.sql.DataSource;
 import com.github.mongobee.Mongobee;
 import com.mongodb.MongoClient;
 
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +23,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.io.Resource;
+import org.springframework.data.convert.ReadingConverter;
+import org.springframework.data.convert.WritingConverter;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
@@ -43,6 +47,9 @@ public class DatabaseConfiguration {
 
     private final Logger log = LoggerFactory.getLogger(DatabaseConfiguration.class);
 
+    public static final String EPOCH_SECOND_FIELD = "epochSecond";
+    public static final String NANO_FIELD = "nano";
+
     @Bean
     public ValidatingMongoEventListener validatingMongoEventListener() {
         return new ValidatingMongoEventListener(validator());
@@ -58,6 +65,8 @@ public class DatabaseConfiguration {
         List<Converter<?, ?>> converters = new ArrayList<>();
         converters.add(DateToZonedDateTimeConverter.INSTANCE);
         converters.add(ZonedDateTimeToDateConverter.INSTANCE);
+        converters.add(InstantWriterConverter.INSTANCE);
+        converters.add(InstantReaderConverter.INSTANCE);
         return new MongoCustomConversions(converters);
     }
 
@@ -102,5 +111,31 @@ public class DatabaseConfiguration {
         initializer.setDataSource(dataSource);
         initializer.setDatabasePopulator(databasePopulator);
         return initializer;
+    }
+    
+    @WritingConverter
+    enum InstantWriterConverter implements Converter<Instant, Document> {
+
+        INSTANCE;
+
+        @Override
+        public Document convert(Instant instant) {
+            Document document = new Document();
+            document.put(EPOCH_SECOND_FIELD, Long.valueOf(instant.getEpochSecond()));
+            document.put(NANO_FIELD, Long.valueOf(instant.getNano()));
+            return document;
+        }
+    }
+
+    @ReadingConverter
+    enum InstantReaderConverter implements Converter<Document, Instant> {
+
+        INSTANCE;
+
+        @Override
+        public Instant convert(Document document) {
+            return Instant.ofEpochSecond(Long.valueOf(document.get(EPOCH_SECOND_FIELD).toString()),
+                Long.valueOf(document.get(NANO_FIELD).toString()));
+        }
     }
 }

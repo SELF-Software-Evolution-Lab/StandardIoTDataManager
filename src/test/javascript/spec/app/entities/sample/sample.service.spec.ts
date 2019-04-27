@@ -1,7 +1,9 @@
 /* tslint:disable max-line-length */
-import { getTestBed, TestBed } from '@angular/core/testing';
+import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { map, take } from 'rxjs/operators';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { of } from 'rxjs';
+import { take, map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { SampleService } from 'app/entities/sample/sample.service';
@@ -23,13 +25,14 @@ describe('Service Tests', () => {
             httpMock = injector.get(HttpTestingController);
             currentDate = moment();
 
-            elemDefault = new Sample('ID', currentDate, 'AAAAAAA', 'AAAAAAA');
+            elemDefault = new Sample('ID', currentDate, currentDate, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
         });
 
         describe('Service methods', async () => {
             it('should find an element', async () => {
                 const returnedFromService = Object.assign(
                     {
+                        dateTime: currentDate.format(DATE_TIME_FORMAT),
                         ts: currentDate.format(DATE_TIME_FORMAT)
                     },
                     elemDefault
@@ -47,12 +50,14 @@ describe('Service Tests', () => {
                 const returnedFromService = Object.assign(
                     {
                         id: 'ID',
+                        dateTime: currentDate.format(DATE_TIME_FORMAT),
                         ts: currentDate.format(DATE_TIME_FORMAT)
                     },
                     elemDefault
                 );
                 const expected = Object.assign(
                     {
+                        dateTime: currentDate,
                         ts: currentDate
                     },
                     returnedFromService
@@ -68,15 +73,19 @@ describe('Service Tests', () => {
             it('should update a Sample', async () => {
                 const returnedFromService = Object.assign(
                     {
+                        dateTime: currentDate.format(DATE_TIME_FORMAT),
                         ts: currentDate.format(DATE_TIME_FORMAT),
                         sensorInternalId: 'BBBBBB',
-                        samplingId: 'BBBBBB'
+                        samplingId: 'BBBBBB',
+                        experimentId: 'BBBBBB',
+                        targetSystemId: 'BBBBBB'
                     },
                     elemDefault
                 );
 
                 const expected = Object.assign(
                     {
+                        dateTime: currentDate,
                         ts: currentDate
                     },
                     returnedFromService
@@ -92,14 +101,18 @@ describe('Service Tests', () => {
             it('should return a list of Sample', async () => {
                 const returnedFromService = Object.assign(
                     {
+                        dateTime: currentDate.format(DATE_TIME_FORMAT),
                         ts: currentDate.format(DATE_TIME_FORMAT),
                         sensorInternalId: 'BBBBBB',
-                        samplingId: 'BBBBBB'
+                        samplingId: 'BBBBBB',
+                        experimentId: 'BBBBBB',
+                        targetSystemId: 'BBBBBB'
                     },
                     elemDefault
                 );
                 const expected = Object.assign(
                     {
+                        dateTime: currentDate,
                         ts: currentDate
                     },
                     returnedFromService

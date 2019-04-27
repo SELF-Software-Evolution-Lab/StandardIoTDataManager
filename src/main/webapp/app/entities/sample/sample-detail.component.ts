@@ -7,6 +7,8 @@ import { ISampling, Sampling } from 'app/shared/model/sampling.model';
 import { SamplingService } from 'app/entities/sampling';
 import { filter, map } from 'rxjs/operators';
 import { ISensor, Sensor } from 'app/shared/model/sensor.model';
+import { IExperiment } from 'app/shared/model/experiment.model';
+import { ITargetSystem } from 'app/shared/model/target-system.model';
 
 @Component({
     selector: 'jhi-sample-detail',
@@ -17,6 +19,9 @@ export class SampleDetailComponent implements OnInit {
     sample: ISample;
     sampling: ISampling;
     sensor: ISensor;
+
+    experiment: IExperiment;
+    system: ITargetSystem;
 
     constructor(protected activatedRoute: ActivatedRoute, protected samplingService: SamplingService) {}
 

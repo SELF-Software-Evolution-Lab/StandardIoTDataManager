@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.edu.uniandes.xrepo.domain.Sample;
 import co.edu.uniandes.xrepo.service.SampleService;
+import co.edu.uniandes.xrepo.service.SearchEngineService;
+import co.edu.uniandes.xrepo.service.dto.SampleDTO;
+import co.edu.uniandes.xrepo.service.dto.SampleSearchParametersDTO;
 import co.edu.uniandes.xrepo.web.rest.errors.BadRequestAlertException;
 import co.edu.uniandes.xrepo.web.rest.util.HeaderUtil;
 import co.edu.uniandes.xrepo.web.rest.util.PaginationUtil;
@@ -42,47 +44,57 @@ public class SampleResource {
 
     private final SampleService sampleService;
 
-    public SampleResource(SampleService sampleService) {
+    private final SearchEngineService searchEngineService;
+
+    public SampleResource(SampleService sampleService, SearchEngineService searchEngineService) {
         this.sampleService = sampleService;
+        this.searchEngineService = searchEngineService;
     }
 
     /**
      * POST  /samples : Create a new sample.
      *
-     * @param sample the sample to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new sample, or with status 400 (Bad Request) if the sample has already an ID
+     * @param sampleDTO the sampleDTO to create
+     * @return the ResponseEntity with status 201 (Created) and with body the new sampleDTO, or with status 400 (Bad Request) if the sample has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/samples")
-    public ResponseEntity<Sample> createSample(@Valid @RequestBody Sample sample) throws URISyntaxException {
-        log.debug("REST request to save Sample : {}", sample);
-        if (sample.getId() != null) {
+    public ResponseEntity<SampleDTO> createSample(@Valid @RequestBody SampleDTO sampleDTO) throws URISyntaxException {
+        log.debug("REST request to save Sample : {}", sampleDTO);
+        if (sampleDTO.getId() != null) {
             throw new BadRequestAlertException("A new sample cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Sample result = sampleService.save(sample);
+        SampleDTO result = sampleService.save(sampleDTO);
         return ResponseEntity.created(new URI("/api/samples/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
+    @PostMapping("/samples/data")
+    public ResponseEntity<Long> preSearchSample(@RequestBody SampleSearchParametersDTO searchParametersDTO) {
+        long l = searchEngineService.preSearchSamples(searchParametersDTO);
+        return ResponseEntity.ok().body(l);
+    }
+
+
     /**
      * PUT  /samples : Updates an existing sample.
      *
-     * @param sample the sample to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated sample,
-     * or with status 400 (Bad Request) if the sample is not valid,
-     * or with status 500 (Internal Server Error) if the sample couldn't be updated
+     * @param sampleDTO the sampleDTO to update
+     * @return the ResponseEntity with status 200 (OK) and with body the updated sampleDTO,
+     * or with status 400 (Bad Request) if the sampleDTO is not valid,
+     * or with status 500 (Internal Server Error) if the sampleDTO couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/samples")
-    public ResponseEntity<Sample> updateSample(@Valid @RequestBody Sample sample) throws URISyntaxException {
-        log.debug("REST request to update Sample : {}", sample);
-        if (sample.getId() == null) {
+    public ResponseEntity<SampleDTO> updateSample(@Valid @RequestBody SampleDTO sampleDTO) throws URISyntaxException {
+        log.debug("REST request to update Sample : {}", sampleDTO);
+        if (sampleDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Sample result = sampleService.save(sample);
+        SampleDTO result = sampleService.save(sampleDTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, sample.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, sampleDTO.getId().toString()))
             .body(result);
     }
 
@@ -93,9 +105,9 @@ public class SampleResource {
      * @return the ResponseEntity with status 200 (OK) and the list of samples in body
      */
     @GetMapping("/samples")
-    public ResponseEntity<List<Sample>> getAllSamples(Pageable pageable) {
+    public ResponseEntity<List<SampleDTO>> getAllSamples(Pageable pageable) {
         log.debug("REST request to get a page of Samples");
-        Page<Sample> page = sampleService.findAll(pageable);
+        Page<SampleDTO> page = sampleService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/samples");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -103,20 +115,20 @@ public class SampleResource {
     /**
      * GET  /samples/:id : get the "id" sample.
      *
-     * @param id the id of the sample to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the sample, or with status 404 (Not Found)
+     * @param id the id of the sampleDTO to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the sampleDTO, or with status 404 (Not Found)
      */
     @GetMapping("/samples/{id}")
-    public ResponseEntity<Sample> getSample(@PathVariable String id) {
+    public ResponseEntity<SampleDTO> getSample(@PathVariable String id) {
         log.debug("REST request to get Sample : {}", id);
-        Optional<Sample> sample = sampleService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(sample);
+        Optional<SampleDTO> sampleDTO = sampleService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(sampleDTO);
     }
 
     /**
      * DELETE  /samples/:id : delete the "id" sample.
      *
-     * @param id the id of the sample to delete
+     * @param id the id of the sampleDTO to delete
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/samples/{id}")

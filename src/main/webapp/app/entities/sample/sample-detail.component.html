@@ -9,19 +9,31 @@
                 <dd>
                     <span>{{sample.id}}</span>
                 </dd>
+                <dt><span>Sensor</span></dt>
+                <dd>
+                    <span>{{sensor.sensorType}} - {{sample.sensorInternalId}}</span>
+                </dd>
+                <dt><span>Date Time</span></dt>
+                <dd>
+                    <span>{{sample.dateTime}}</span>
+                </dd>
+                <dt><span>Ts</span></dt>
+                <dd>
+                    <span>{{sample.ts}}</span>
+                </dd>
                 <dt><span>Sampling</span></dt>
                 <dd>
                     <div *ngIf="sample.samplingId">
                         <a [routerLink]="['/sampling', sample.samplingId, 'view']">{{sampling.name}} ({{sample.samplingId}})</a>
                     </div>
                 </dd>
-                <dt><span>Sensor</span></dt>
+                <dt><span>Experiment Id</span></dt>
                 <dd>
-                    <span>{{sensor.sensorType}} - {{sample.sensorInternalId}}</span>
+                    <span>{{sample.experimentId}}</span>
                 </dd>
-                <dt><span>Timestamp</span></dt>
+                <dt><span>Target System Id</span></dt>
                 <dd>
-                    <span>{{sample.ts}}</span>
+                    <span>{{sample.targetSystemId}}</span>
                 </dd>
             </dl>
             <hr/>

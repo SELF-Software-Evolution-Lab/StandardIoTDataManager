@@ -6,11 +6,13 @@
 <div class="row">
     <div class="col">
         <div class="form-group row">
-            <label for="select_targetSystem" class="col-lg-3 col-form-label">From Target System</label>
+            <label id="select_targetSystem" class="col-lg-3 col-form-label">From Target System</label>
             <div class="col-lg-7">
-                <ng-select id="select_targetSystem">
-                    <ng-option [value]="true">System 1</ng-option>
-                    <ng-option [value]="false">System 2</ng-option>
+                <ng-select labelForId="select_targetSystem"
+                           [items]="targetSystems | async"
+                           bindLabel="name"
+                           (change)="onChangeTargetSystem($event)"
+                           [(ngModel)]="selectedTargetSystem">
                 </ng-select>
             </div>
         </div>
@@ -19,12 +21,13 @@
 <div class="row">
     <div class="col">
         <div class="form-group row">
-            <label for="select_tags" class="col-lg-3 col-form-label">Marked with Tags</label>
+            <label id="select_tags" class="col-lg-3 col-form-label">Marked with Tags</label>
             <div class="col-lg-7">
-                <ng-select id="select_tags" [multiple]="true">
-                    <ng-option [value]="'failure'">failure</ng-option>
-                    <ng-option [value]="'normal'">normal</ng-option>
-                    <ng-option [value]="'undefined'">undefined</ng-option>
+                <ng-select labelForId="select_tags" [multiple]="true"
+                           [items]="tags | async"
+                           bindLabel="name"
+                           bindValue="name"
+                           [(ngModel)]="selectedTags">
                 </ng-select>
             </div>
         </div>
@@ -37,24 +40,26 @@
             <div class="col-lg-7">
                 <div class="row">
                     <div class="d-flex col-1">
-                        <label for="field_startTime" >from</label>
+                        <label for="field_startTime">from</label>
                     </div>
                     <div class="d-flex col-lg-5">
                         <input id="field_startTime"
                                type="datetime-local"
                                class="form-control"
                                name="startTime"
-                               placeholder="YYYY-MM-DD HH:mm"/>
+                               placeholder="YYYY-MM-DD HH:mm"
+                               [(ngModel)]="selectedFromDate"/>
                     </div>
                     <div class="d-flex col-1">
-                        <label for="field_endTime" >to</label>
+                        <label for="field_endTime">to</label>
                     </div>
                     <div class="d-flex col-lg-5">
                         <input id="field_endTime"
                                type="datetime-local"
                                class="form-control"
                                name="startTime"
-                               placeholder="YYYY-MM-DD HH:mm"/>
+                               placeholder="YYYY-MM-DD HH:mm"
+                               [(ngModel)]="selectedToDate"/>
                     </div>
                 </div>
             </div>
@@ -64,11 +69,24 @@
 <div class="row">
     <div class="col">
         <div class="form-group row">
-            <label for="select_op-condition" class="col-lg-3 col-form-label">With Operative Conditions</label>
+            <label id="select_op-condition" class="col-lg-3 col-form-label">With Operative Conditions</label>
             <div class="col-lg-7">
-                <ng-select id="select_op-condition" [multiple]="true">
-                    <ng-option [value]="'speed'">Speed</ng-option>
-                    <ng-option [value]="'load'">Load</ng-option>
+                <ng-select labelForId="select_op-condition"
+                           [items]="operativeConditions"
+                           (change)="onChangeOperativeCondition($event)">
+                </ng-select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <div class="form-group row">
+            <label id="select_sensor" class="col-lg-3 col-form-label">From Sensors</label>
+            <div class="col-lg-7">
+                <ng-select labelForId="select_sensor" [multiple]="true"
+                           [items]="sensors"
+                           [(ngModel)]="selectedSensors">
                 </ng-select>
             </div>
         </div>
@@ -77,9 +95,22 @@
 <div class="row">
     <div class="col">
         <button id="jh-create-entity"
-                class="btn btn-primary float-right jh-create-entity create-experiment">
+                class="btn btn-primary float-right jh-create-entity create-experiment"
+        (click)="search()">
             <fa-icon [icon]="'search'"></fa-icon>
             <span>Search</span>
         </button>
     </div>
+</div>
+<div *ngIf="searchReturned">
+<div class="row">
+    <div class="col-12">
+        <hr/>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <h4 class="text-center">Search found {{searchResults}} result(s)</h4>
+    </div>
+</div>
 </div>

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { ISample } from 'app/shared/model/sample.model';
@@ -14,6 +15,7 @@ import { SampleService } from './sample.service';
 export class SampleUpdateComponent implements OnInit {
     sample: ISample;
     isSaving: boolean;
+    dateTime: string;
     ts: string;
 
     constructor(protected sampleService: SampleService, protected activatedRoute: ActivatedRoute) {}
@@ -22,6 +24,7 @@ export class SampleUpdateComponent implements OnInit {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ sample }) => {
             this.sample = sample;
+            this.dateTime = this.sample.dateTime != null ? this.sample.dateTime.format(DATE_TIME_FORMAT) : null;
             this.ts = this.sample.ts != null ? this.sample.ts.format(DATE_TIME_FORMAT) : null;
         });
     }
@@ -32,6 +35,7 @@ export class SampleUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
+        this.sample.dateTime = this.dateTime != null ? moment(this.dateTime, DATE_TIME_FORMAT) : null;
         this.sample.ts = this.ts != null ? moment(this.ts, DATE_TIME_FORMAT) : null;
         if (this.sample.id !== undefined) {
             this.subscribeToSaveResponse(this.sampleService.update(this.sample));

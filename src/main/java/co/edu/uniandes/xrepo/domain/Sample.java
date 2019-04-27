@@ -4,6 +4,7 @@ package co.edu.uniandes.xrepo.domain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 
@@ -31,9 +32,13 @@ import lombok.ToString;
 public class Sample implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     private String id;
+
+    @NotNull
+    @Field("date_time")
+    private LocalDateTime dateTime;
 
     @NotNull
     @Field("ts")
@@ -44,6 +49,14 @@ public class Sample implements Serializable {
 
     @Field("sampling_id")
     private String samplingId;
+
+    @NotNull
+    @Field("experiment_id")
+    private String experimentId;
+
+    @NotNull
+    @Field("target_system_id")
+    private String targetSystemId;
 
     /**
      * K: measure var
@@ -61,6 +74,19 @@ public class Sample implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public Sample dateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+        return this;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     public Instant getTs() {
@@ -101,8 +127,33 @@ public class Sample implements Serializable {
     public void setSamplingId(String samplingId) {
         this.samplingId = samplingId;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
+    public String getExperimentId() {
+        return experimentId;
+    }
+
+    public Sample experimentId(String experimentId) {
+        this.experimentId = experimentId;
+        return this;
+    }
+
+    public void setExperimentId(String experimentId) {
+        this.experimentId = experimentId;
+    }
+
+    public String getTargetSystemId() {
+        return targetSystemId;
+    }
+
+    public Sample targetSystemId(String targetSystemId) {
+        this.targetSystemId = targetSystemId;
+        return this;
+    }
+
+    public void setTargetSystemId(String targetSystemId) {
+        this.targetSystemId = targetSystemId;
+    }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     public Map<String, BigDecimal> getMeasurements() {
         return measurements;
