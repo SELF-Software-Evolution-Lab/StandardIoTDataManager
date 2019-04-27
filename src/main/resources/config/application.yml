@@ -129,3 +129,5 @@ jhipster:
 # ===================================================================
 
 # application:
+xrepo:
+    background-task-pool-size: 5
