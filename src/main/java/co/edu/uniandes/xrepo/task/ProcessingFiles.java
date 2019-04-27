@@ -93,7 +93,7 @@ public class ProcessingFiles {
                 // Sampling Id
                 sample.setSamplingId(columns[0]);
                 // Time stamp
-                sample.setTs(Instant.ofEpochSecond((long)Double.parseDouble(columns[2])));
+                sample.setTs(Instant.ofEpochSecond(Long.parseLong(columns[2]) / 10000000, (Long.parseLong(columns[2]) % 10000000) * 100));
                 // Sensor Id
                 sample.setSensorInternalId(columns[3]);
                 // measurements
