@@ -1,17 +1,5 @@
 package co.edu.uniandes.xrepo.web.rest;
 
-import co.edu.uniandes.xrepo.service.SamplesFilesService;
-import co.edu.uniandes.xrepo.web.rest.errors.BadRequestAlertException;
-import co.edu.uniandes.xrepo.web.rest.util.HeaderUtil;
-import co.edu.uniandes.xrepo.service.dto.SamplesFilesDTO;
-import io.github.jhipster.web.util.ResponseUtil;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -21,15 +9,25 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import co.edu.uniandes.xrepo.service.SamplesFilesService;
+import co.edu.uniandes.xrepo.service.dto.SamplesFilesDTO;
+import co.edu.uniandes.xrepo.web.rest.errors.BadRequestAlertException;
+import co.edu.uniandes.xrepo.web.rest.util.HeaderUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing SamplesFiles.
@@ -43,12 +41,6 @@ public class SamplesFilesResource {
     private static final String ENTITY_NAME = "samplesFiles";
 
     private final SamplesFilesService samplesFilesService;
-
-    @Autowired
-    JobLauncher jobLauncher;
-
-    @Autowired
-    Job processJob;
 
     public SamplesFilesResource(SamplesFilesService samplesFilesService) {
         this.samplesFilesService = samplesFilesService;
@@ -111,17 +103,6 @@ public class SamplesFilesResource {
         } catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JobParameters jobParameters = new JobParametersBuilder().addLong("time", System.currentTimeMillis())
-        .addString("filePath", "C:\\AJAR\\SamplesFiles\\" + fileTemp.getName()).addString("SampleFileId", result.getId())
-                .toJobParameters();
-        try {
-            jobLauncher.run(processJob, jobParameters);
-        } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException
-                | JobParametersInvalidException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
