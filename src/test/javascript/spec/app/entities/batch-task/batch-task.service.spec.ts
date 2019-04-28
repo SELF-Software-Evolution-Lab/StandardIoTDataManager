@@ -7,7 +7,7 @@ import { take, map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { BatchTaskService } from 'app/entities/batch-task/batch-task.service';
-import { IBatchTask, BatchTask, TypeTask, StateTask } from 'app/shared/model/batch-task.model';
+import { IBatchTask, BatchTask, TaskType, TaskState } from 'app/shared/model/batch-task.model';
 
 describe('Service Tests', () => {
     describe('BatchTask Service', () => {
@@ -25,7 +25,7 @@ describe('Service Tests', () => {
             httpMock = injector.get(HttpTestingController);
             currentDate = moment();
 
-            elemDefault = new BatchTask('ID', 'AAAAAAA', TypeTask.UNDEFINED, StateTask.PENDING, currentDate, currentDate, currentDate, 0);
+            elemDefault = new BatchTask('ID', 'AAAAAAA', TaskType.UNDEFINED, TaskState.PENDING, currentDate, currentDate, currentDate, 0);
         });
 
         describe('Service methods', async () => {
