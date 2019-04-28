@@ -6,7 +6,10 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -23,6 +26,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import co.edu.uniandes.xrepo.domain.BatchTask;
+import co.edu.uniandes.xrepo.domain.enumeration.StateTask;
+import co.edu.uniandes.xrepo.domain.enumeration.TypeTask;
+import co.edu.uniandes.xrepo.service.BatchTaskService;
 import co.edu.uniandes.xrepo.service.SamplesFilesService;
 import co.edu.uniandes.xrepo.service.dto.SamplesFilesDTO;
 import co.edu.uniandes.xrepo.web.rest.errors.BadRequestAlertException;
@@ -42,8 +49,11 @@ public class SamplesFilesResource {
 
     private final SamplesFilesService samplesFilesService;
 
-    public SamplesFilesResource(SamplesFilesService samplesFilesService) {
+    private final BatchTaskService batchTaskService;
+
+    public SamplesFilesResource(SamplesFilesService samplesFilesService, BatchTaskService batchTaskService) {
         this.samplesFilesService = samplesFilesService;
+        this.batchTaskService = batchTaskService;
     }
 
     /**
@@ -97,6 +107,18 @@ public class SamplesFilesResource {
             samplesFilesDTO2.setCreateDateTime(LocalDate.now());
             samplesFilesDTO2.setState(1);
             samplesFilesDTO2.setResult("");
+            BatchTask tarea = new BatchTask();
+            tarea.progress(0);
+            tarea.setState(StateTask.PENDING);
+            tarea.setType(TypeTask.FILE_LOAD);
+            tarea.setDescription("Process File " + file.getOriginalFilename());
+            tarea.setCreateDate(ZonedDateTime.now());
+            
+            Map<String, String> parameters = new HashMap<String,String>();
+            parameters.put("filePath", "C:\\AJAR\\SamplesFiles\\" + fileTemp.getName());
+
+            tarea.setParameters(parameters);
+            batchTaskService.save(tarea);
 
             result = samplesFilesService.save(samplesFilesDTO2);
 
