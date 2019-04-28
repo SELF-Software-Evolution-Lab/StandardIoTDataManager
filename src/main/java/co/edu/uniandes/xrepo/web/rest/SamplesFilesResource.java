@@ -3,6 +3,7 @@ package co.edu.uniandes.xrepo.web.rest;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import co.edu.uniandes.xrepo.domain.BatchTask;
-import co.edu.uniandes.xrepo.domain.enumeration.StateTask;
-import co.edu.uniandes.xrepo.domain.enumeration.TypeTask;
+import co.edu.uniandes.xrepo.domain.enumeration.TaskState;
+import co.edu.uniandes.xrepo.domain.enumeration.TaskType;
 import co.edu.uniandes.xrepo.service.BatchTaskService;
 import co.edu.uniandes.xrepo.web.rest.util.HeaderUtil;
 
@@ -38,15 +39,7 @@ public class SamplesFilesResource {
     public SamplesFilesResource(BatchTaskService batchTaskService) {
         this.batchTaskService = batchTaskService;
     }
-    /**
-     * POST /samples-files : Create a new samplesFiles.
-     *
-     * @param samplesFilesDTO the samplesFilesDTO to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new
-     *         samplesFilesDTO, or with status 400 (Bad Request) if the samplesFiles
-     *         has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
+
     @PostMapping("/samples-files-2")
     public ResponseEntity<Void> createSamplesFiles2(@RequestPart MultipartFile file)
             throws URISyntaxException {
@@ -61,16 +54,16 @@ public class SamplesFilesResource {
 
             BatchTask tarea = new BatchTask();
             tarea.progress(0);
-            tarea.setState(StateTask.PENDING);
-            tarea.setType(TypeTask.FILE_LOAD);
+            tarea.setState(TaskState.PENDING);
+            tarea.setType(TaskType.FILE_LOAD);
             tarea.setDescription("Process File " + fileTemp.getName());
-            tarea.setCreateDate(ZonedDateTime.now());
+            tarea.setCreateDate(Instant.now());
             
             Map<String, String> parameters = new HashMap<String,String>();
             parameters.put("filePath", "C:\\AJAR\\SamplesFiles\\" + fileTemp.getName());
             parameters.put("fileSize", String.valueOf(file.getSize()));
 
-            tarea.setParameters(parameters);
+            tarea.objectToParameters(parameters);
             tarea = batchTaskService.save(tarea);
             return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, tarea.getId())).build();
         } catch (IllegalStateException e) {

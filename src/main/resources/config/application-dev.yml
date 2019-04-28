@@ -104,3 +104,5 @@ jhipster:
 # ===================================================================
 
 # application:
+xrepo:
+    report-generation-location: ./search-result

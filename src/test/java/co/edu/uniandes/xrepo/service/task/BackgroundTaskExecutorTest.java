@@ -1,5 +1,6 @@
 package co.edu.uniandes.xrepo.service.task;
 
+import co.edu.uniandes.xrepo.domain.enumeration.TaskType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -15,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 
 import co.edu.uniandes.xrepo.domain.BatchTask;
-import co.edu.uniandes.xrepo.domain.enumeration.TypeTask;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -31,8 +31,8 @@ public class BackgroundTaskExecutorTest {
         BackgroundTaskProcessor undefinedProcessor = spy(new BackgroundTaskProcessor() {
 
             @Override
-            public TypeTask getType() {
-                return TypeTask.UNDEFINED;
+            public TaskType getType() {
+                return TaskType.UNDEFINED;
             }
 
             @Override
@@ -44,8 +44,8 @@ public class BackgroundTaskExecutorTest {
         BackgroundTaskProcessor reportProcessor = spy(new BackgroundTaskProcessor() {
 
             @Override
-            public TypeTask getType() {
-                return TypeTask.REPORT;
+            public TaskType getType() {
+                return TaskType.REPORT;
             }
 
             @Override
@@ -57,8 +57,8 @@ public class BackgroundTaskExecutorTest {
         BackgroundTaskProcessor fileLoadProcessor = spy(new BackgroundTaskProcessor() {
 
             @Override
-            public TypeTask getType() {
-                return TypeTask.FILE_LOAD;
+            public TaskType getType() {
+                return TaskType.FILE_LOAD;
             }
 
             @Override
@@ -81,11 +81,11 @@ public class BackgroundTaskExecutorTest {
     }
 
     private List<BatchTask> buildTasks() {
-        return Arrays.asList(new BatchTask(TypeTask.UNDEFINED)
-            , new BatchTask(TypeTask.REPORT)
-            , new BatchTask(TypeTask.FILE_LOAD)
-            , new BatchTask(TypeTask.UNDEFINED)
-            , new BatchTask(TypeTask.UNDEFINED)
+        return Arrays.asList(new BatchTask(TaskType.UNDEFINED)
+            , new BatchTask(TaskType.REPORT)
+            , new BatchTask(TaskType.FILE_LOAD)
+            , new BatchTask(TaskType.UNDEFINED)
+            , new BatchTask(TaskType.UNDEFINED)
         );
     }
 }

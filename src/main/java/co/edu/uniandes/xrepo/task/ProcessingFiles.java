@@ -18,8 +18,8 @@ import org.springframework.stereotype.Service;
 
 import co.edu.uniandes.xrepo.domain.BatchTask;
 import co.edu.uniandes.xrepo.domain.Sample;
-import co.edu.uniandes.xrepo.domain.enumeration.StateTask;
-import co.edu.uniandes.xrepo.domain.enumeration.TypeTask;
+import co.edu.uniandes.xrepo.domain.enumeration.TaskState;
+import co.edu.uniandes.xrepo.domain.enumeration.TaskType;
 import co.edu.uniandes.xrepo.repository.SampleRepository;
 import co.edu.uniandes.xrepo.service.BatchTaskService;
 import co.edu.uniandes.xrepo.service.task.BackgroundTaskProcessor;
@@ -111,14 +111,14 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
     }
 
     @Override
-    public TypeTask getType() {
-        return TypeTask.FILE_LOAD;
+    public TaskType getType() {
+        return TaskType.FILE_LOAD;
     }
 
     @Override
     public void processTask(BatchTask ptpTask) {
-        ptpTask.setStartDate(ZonedDateTime.now());
-        ptpTask.setState(StateTask.PROCESSING);
+        ptpTask.setStartDate(Instant.now());
+        ptpTask.setState(TaskState.PROCESSING);
         batchTaskService.save(ptpTask);
         
         try {
@@ -127,8 +127,8 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        ptpTask.setEndDate(ZonedDateTime.now());
-        ptpTask.setState(StateTask.COMPLETED);
+        ptpTask.setEndDate(Instant.now());
+        ptpTask.setState(TaskState.COMPLETED);
         batchTaskService.save(ptpTask);
     }
 }

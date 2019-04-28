@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import co.edu.uniandes.xrepo.domain.BatchTask;
-import co.edu.uniandes.xrepo.domain.enumeration.TypeTask;
+import co.edu.uniandes.xrepo.domain.enumeration.TaskType;
 
 @Service
 public class NotFoundProcessor implements BackgroundTaskProcessor {
@@ -19,8 +19,8 @@ public class NotFoundProcessor implements BackgroundTaskProcessor {
     }
 
     @Override
-    public TypeTask getType() {
-        return TypeTask.UNDEFINED;
+    public TaskType getType() {
+        return TaskType.UNDEFINED;
     }
 
     @Override

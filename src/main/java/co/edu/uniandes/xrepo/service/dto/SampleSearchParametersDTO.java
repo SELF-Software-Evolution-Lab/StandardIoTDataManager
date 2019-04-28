@@ -1,5 +1,6 @@
 package co.edu.uniandes.xrepo.service.dto;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.query.Criteria;
 
-public class SampleSearchParametersDTO {
+public class SampleSearchParametersDTO implements Serializable {
 
     private List<String> targetSystemId = new ArrayList<>();
 
@@ -22,6 +23,8 @@ public class SampleSearchParametersDTO {
     private LocalDateTime toDateTime;
 
     private List<String> tags = new ArrayList<>();
+
+    private long expectedRecords;
 
     public Criteria asCriteria() {
         final Criteria mainCriteria = new Criteria();
@@ -125,5 +128,13 @@ public class SampleSearchParametersDTO {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public long getExpectedRecords() {
+        return expectedRecords;
+    }
+
+    public void setExpectedRecords(long expectedRecords) {
+        this.expectedRecords = expectedRecords;
     }
 }

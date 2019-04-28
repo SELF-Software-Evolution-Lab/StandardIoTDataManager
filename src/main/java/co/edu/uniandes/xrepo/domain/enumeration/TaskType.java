@@ -1,8 +1,8 @@
 package co.edu.uniandes.xrepo.domain.enumeration;
 
 /**
- * The TypeTask enumeration.
+ * The TaskType enumeration.
  */
-public enum TypeTask {
+public enum TaskType {
     UNDEFINED, REPORT, FILE_LOAD
 }

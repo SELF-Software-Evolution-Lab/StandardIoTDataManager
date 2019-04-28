@@ -1,7 +1,7 @@
 package co.edu.uniandes.xrepo.service;
 
 import co.edu.uniandes.xrepo.domain.BatchTask;
-import co.edu.uniandes.xrepo.domain.enumeration.StateTask;
+import co.edu.uniandes.xrepo.domain.enumeration.TaskState;
 import co.edu.uniandes.xrepo.repository.BatchTaskRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,6 +79,6 @@ public class BatchTaskService {
      */
     public List<BatchTask> findAllPending() {
         log.debug("Request to get all pending BatchTasks");
-        return batchTaskRepository.findByState(StateTask.PENDING);
+        return batchTaskRepository.findByState(TaskState.PENDING);
     }
 }

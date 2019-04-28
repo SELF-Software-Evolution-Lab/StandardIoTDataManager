@@ -1,12 +1,11 @@
 package co.edu.uniandes.xrepo.service.task;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import co.edu.uniandes.xrepo.domain.BatchTask;
-import co.edu.uniandes.xrepo.domain.enumeration.StateTask;
+import co.edu.uniandes.xrepo.domain.enumeration.TaskState;
 import co.edu.uniandes.xrepo.service.BatchTaskService;
 
 /**
@@ -22,12 +21,12 @@ public class BackgroundTaskProvider {
     }
 
     public void markTaskAsSubmitted(BatchTask task) {
-        task.setState(StateTask.SUMMITED);
+        task.setState(TaskState.SUBMITTED);
         taskBatchService.save(task);
     }
 
     public void markTaskAsError(BatchTask errorTask) {
-        errorTask.setState(StateTask.ERROR);
+        errorTask.setState(TaskState.ERROR);
         taskBatchService.save(errorTask);
     }
 

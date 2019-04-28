@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import co.edu.uniandes.xrepo.domain.BatchTask;
-import co.edu.uniandes.xrepo.domain.enumeration.TypeTask;
+import co.edu.uniandes.xrepo.domain.enumeration.TaskType;
 
 @Service
 public class BackgroundTaskExecutor {
@@ -32,7 +32,7 @@ public class BackgroundTaskExecutor {
         this.taskProcessors = taskProcessors;
         this.provider = provider;
         processorNotFound = this.taskProcessors.stream()
-            .filter(processor -> processor.getType().equals(TypeTask.UNDEFINED))
+            .filter(processor -> processor.getType().equals(TaskType.UNDEFINED))
             .findFirst().get();
     }
 

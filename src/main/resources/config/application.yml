@@ -131,3 +131,4 @@ jhipster:
 # application:
 xrepo:
     background-task-pool-size: 5
+    report-generation-max-records-online: 200

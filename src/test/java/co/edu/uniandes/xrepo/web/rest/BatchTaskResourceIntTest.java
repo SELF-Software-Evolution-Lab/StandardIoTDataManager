@@ -25,6 +25,7 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.ZoneOffset;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 
@@ -35,8 +36,8 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import co.edu.uniandes.xrepo.domain.enumeration.TypeTask;
-import co.edu.uniandes.xrepo.domain.enumeration.StateTask;
+import co.edu.uniandes.xrepo.domain.enumeration.TaskType;
+import co.edu.uniandes.xrepo.domain.enumeration.TaskState;
 /**
  * Test class for the BatchTaskResource REST controller.
  *
@@ -49,17 +50,17 @@ public class BatchTaskResourceIntTest {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
-    private static final TypeTask DEFAULT_TYPE = TypeTask.UNDEFINED;
-    private static final TypeTask UPDATED_TYPE = TypeTask.REPORT;
+    private static final TaskType DEFAULT_TYPE = TaskType.UNDEFINED;
+    private static final TaskType UPDATED_TYPE = TaskType.REPORT;
 
-    private static final StateTask DEFAULT_STATE = StateTask.PENDING;
-    private static final StateTask UPDATED_STATE = StateTask.PROCESSING;
+    private static final TaskState DEFAULT_STATE = TaskState.PENDING;
+    private static final TaskState UPDATED_STATE = TaskState.PROCESSING;
 
-    private static final ZonedDateTime DEFAULT_START_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_START_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final Instant DEFAULT_START_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_START_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final ZonedDateTime DEFAULT_END_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_END_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final Instant DEFAULT_END_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_END_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final Integer DEFAULT_PROGRESS = 1;
     private static final Integer UPDATED_PROGRESS = 2;
@@ -174,8 +175,8 @@ public class BatchTaskResourceIntTest {
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
             .andExpect(jsonPath("$.[*].state").value(hasItem(DEFAULT_STATE.toString())))
-            .andExpect(jsonPath("$.[*].startDate").value(hasItem(sameInstant(DEFAULT_START_DATE))))
-            .andExpect(jsonPath("$.[*].endDate").value(hasItem(sameInstant(DEFAULT_END_DATE))))
+            .andExpect(jsonPath("$.[*].startDate").value(DEFAULT_START_DATE.toString()))
+            .andExpect(jsonPath("$.[*].endDate").value(DEFAULT_END_DATE.toString()))
             .andExpect(jsonPath("$.[*].progress").value(hasItem(DEFAULT_PROGRESS)));
     }
     
@@ -192,8 +193,8 @@ public class BatchTaskResourceIntTest {
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
             .andExpect(jsonPath("$.state").value(DEFAULT_STATE.toString()))
-            .andExpect(jsonPath("$.startDate").value(sameInstant(DEFAULT_START_DATE)))
-            .andExpect(jsonPath("$.endDate").value(sameInstant(DEFAULT_END_DATE)))
+            .andExpect(jsonPath("$.startDate").value(DEFAULT_START_DATE.toString()))
+            .andExpect(jsonPath("$.endDate").value(DEFAULT_END_DATE.toString()))
             .andExpect(jsonPath("$.progress").value(DEFAULT_PROGRESS));
     }
 

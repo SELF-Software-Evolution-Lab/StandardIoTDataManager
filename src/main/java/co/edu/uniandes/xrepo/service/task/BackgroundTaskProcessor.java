@@ -1,11 +1,11 @@
 package co.edu.uniandes.xrepo.service.task;
 
 import co.edu.uniandes.xrepo.domain.BatchTask;
-import co.edu.uniandes.xrepo.domain.enumeration.TypeTask;
+import co.edu.uniandes.xrepo.domain.enumeration.TaskType;
 
 public interface BackgroundTaskProcessor {
 
-    TypeTask getType();
+    TaskType getType();
 
     void processTask(BatchTask ptpTask);
 }
