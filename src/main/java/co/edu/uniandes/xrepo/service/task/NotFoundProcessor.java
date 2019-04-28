@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import co.edu.uniandes.xrepo.service.task.BackgroundTaskProvider.Task;
-import co.edu.uniandes.xrepo.service.task.BackgroundTaskProvider.Task.TaskType;
+import co.edu.uniandes.xrepo.domain.BatchTask;
+import co.edu.uniandes.xrepo.domain.enumeration.TypeTask;
 
 @Service
 public class NotFoundProcessor implements BackgroundTaskProcessor {
@@ -19,12 +19,12 @@ public class NotFoundProcessor implements BackgroundTaskProcessor {
     }
 
     @Override
-    public TaskType getType() {
-        return TaskType.UNDEFINED;
+    public TypeTask getType() {
+        return TypeTask.UNDEFINED;
     }
 
     @Override
-    public void processTask(Task ptpTask) {
+    public void processTask(BatchTask ptpTask) {
         log.error("Pending task cannot be processed, no processor found for type {}", ptpTask.getType());
         taskProvider.markTaskAsError(ptpTask);
     }

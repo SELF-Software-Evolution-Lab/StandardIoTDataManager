@@ -7,11 +7,11 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.util.CloseableIterator;
 import org.springframework.stereotype.Service;
 
+import co.edu.uniandes.xrepo.domain.BatchTask;
 import co.edu.uniandes.xrepo.domain.Sample;
+import co.edu.uniandes.xrepo.domain.enumeration.TypeTask;
 import co.edu.uniandes.xrepo.service.dto.SampleSearchParametersDTO;
 import co.edu.uniandes.xrepo.service.task.BackgroundTaskProcessor;
-import co.edu.uniandes.xrepo.service.task.BackgroundTaskProvider;
-import co.edu.uniandes.xrepo.service.task.BackgroundTaskProvider.Task.TaskType;
 
 @Service
 public class ReportTaskProcessor implements BackgroundTaskProcessor {
@@ -32,12 +32,12 @@ public class ReportTaskProcessor implements BackgroundTaskProcessor {
     }
 
     @Override
-    public TaskType getType() {
-        return TaskType.REPORT;
+    public TypeTask getType() {
+        return TypeTask.REPORT;
     }
 
     @Override
-    public void processTask(BackgroundTaskProvider.Task ptpTask) {
+    public void processTask(BatchTask ptpTask) {
         log.info("Starting ReportService for task {}", ptpTask);
     }
 }

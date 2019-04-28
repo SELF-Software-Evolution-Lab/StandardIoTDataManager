@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import co.edu.uniandes.xrepo.service.task.BackgroundTaskProvider.Task.TaskType;
+import co.edu.uniandes.xrepo.domain.BatchTask;
+import co.edu.uniandes.xrepo.domain.enumeration.TypeTask;
 
 @Service
 public class BackgroundTaskExecutor {
@@ -31,7 +32,7 @@ public class BackgroundTaskExecutor {
         this.taskProcessors = taskProcessors;
         this.provider = provider;
         processorNotFound = this.taskProcessors.stream()
-            .filter(processor -> processor.getType().equals(TaskType.UNDEFINED))
+            .filter(processor -> processor.getType().equals(TypeTask.UNDEFINED))
             .findFirst().get();
     }
 
@@ -43,7 +44,7 @@ public class BackgroundTaskExecutor {
             .forEach(provider::markTaskAsSubmitted);
     }
 
-    private BackgroundTaskProvider.Task sendToPool(final BackgroundTaskProvider.Task pendingToBeProcessed) {
+    private BatchTask sendToPool(final BatchTask pendingToBeProcessed) {
         log.info("Sending task to pool executor: {}", pendingToBeProcessed);
         executorService.submit(
             () -> selectProcessor(pendingToBeProcessed)
@@ -52,7 +53,7 @@ public class BackgroundTaskExecutor {
         return pendingToBeProcessed;
     }
 
-    private BackgroundTaskProcessor selectProcessor(final BackgroundTaskProvider.Task pendingToBeProcessed) {
+    private BackgroundTaskProcessor selectProcessor(final BatchTask pendingToBeProcessed) {
         return taskProcessors.stream()
             .filter(processor -> pendingToBeProcessed.getType().equals(processor.getType()))
             .findFirst()

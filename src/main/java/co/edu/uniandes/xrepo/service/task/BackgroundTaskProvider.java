@@ -1,12 +1,13 @@
 package co.edu.uniandes.xrepo.service.task;
 
-import java.util.Collections;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import co.edu.uniandes.xrepo.domain.BatchTask;
+import co.edu.uniandes.xrepo.domain.enumeration.StateTask;
+import co.edu.uniandes.xrepo.service.BatchTaskService;
 
 /**
  * Hides access to Background Tasks repository
@@ -14,30 +15,23 @@ import lombok.Getter;
 @Service
 public class BackgroundTaskProvider {
 
-    public BackgroundTaskProvider() {
+    BatchTaskService taskBatchService;
 
+    public BackgroundTaskProvider(BatchTaskService taskBatchService) {
+        this.taskBatchService = taskBatchService;
     }
 
-    public void markTaskAsSubmitted(Task task) {
-
+    public void markTaskAsSubmitted(BatchTask task) {
+        task.setState(StateTask.SUMMITED);
+        taskBatchService.save(task);
     }
 
-    public void markTaskAsError(Task errorTask) {
-
+    public void markTaskAsError(BatchTask errorTask) {
+        errorTask.setState(StateTask.ERROR);
+        taskBatchService.save(errorTask);
     }
 
-    public List<Task> listPendingTasks() {
-        return Collections.emptyList();
-    }
-
-    @Getter
-    @AllArgsConstructor
-    public static class Task {
-        public enum TaskType {
-            UNDEFINED, REPORT, FILE_LOAD
-        }
-
-        TaskType type;
-        String parameters;
+    public List<BatchTask> listPendingTasks() {
+        return taskBatchService.findAllPending();
     }
 }
