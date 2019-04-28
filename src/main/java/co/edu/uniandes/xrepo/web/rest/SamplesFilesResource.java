@@ -2,25 +2,15 @@ package co.edu.uniandes.xrepo.web.rest;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,11 +20,7 @@ import co.edu.uniandes.xrepo.domain.BatchTask;
 import co.edu.uniandes.xrepo.domain.enumeration.StateTask;
 import co.edu.uniandes.xrepo.domain.enumeration.TypeTask;
 import co.edu.uniandes.xrepo.service.BatchTaskService;
-import co.edu.uniandes.xrepo.service.SamplesFilesService;
-import co.edu.uniandes.xrepo.service.dto.SamplesFilesDTO;
-import co.edu.uniandes.xrepo.web.rest.errors.BadRequestAlertException;
 import co.edu.uniandes.xrepo.web.rest.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing SamplesFiles.
@@ -47,36 +33,11 @@ public class SamplesFilesResource {
 
     private static final String ENTITY_NAME = "samplesFiles";
 
-    private final SamplesFilesService samplesFilesService;
-
     private final BatchTaskService batchTaskService;
 
-    public SamplesFilesResource(SamplesFilesService samplesFilesService, BatchTaskService batchTaskService) {
-        this.samplesFilesService = samplesFilesService;
+    public SamplesFilesResource(BatchTaskService batchTaskService) {
         this.batchTaskService = batchTaskService;
     }
-
-    /**
-     * POST /samples-files : Create a new samplesFiles.
-     *
-     * @param samplesFilesDTO the samplesFilesDTO to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new
-     *         samplesFilesDTO, or with status 400 (Bad Request) if the samplesFiles
-     *         has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PostMapping("/samples-files")
-    public ResponseEntity<SamplesFilesDTO> createSamplesFiles(@RequestBody SamplesFilesDTO samplesFilesDTO)
-            throws URISyntaxException {
-        log.debug("REST request to save SamplesFiles : {}", samplesFilesDTO);
-        if (samplesFilesDTO.getId() != null) {
-            throw new BadRequestAlertException("A new samplesFiles cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        SamplesFilesDTO result = samplesFilesService.save(samplesFilesDTO);
-        return ResponseEntity.created(new URI("/api/samples-files/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
-    }
-
     /**
      * POST /samples-files : Create a new samplesFiles.
      *
@@ -87,109 +48,37 @@ public class SamplesFilesResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/samples-files-2")
-    public ResponseEntity<SamplesFilesDTO> createSamplesFiles2(@RequestPart MultipartFile file)
+    public ResponseEntity<Void> createSamplesFiles2(@RequestPart MultipartFile file)
             throws URISyntaxException {
 
         File fileTemp = new File(file.getOriginalFilename());
         log.debug("REST request to save archivo : {};{};{};{}", file.getName(), file.getOriginalFilename(),
                 file.getSize(), fileTemp.getName());
 
-        SamplesFilesDTO result = new SamplesFilesDTO();
         try {
 
             file.transferTo(new File("C:\\AJAR\\SamplesFiles\\" + fileTemp.getName()));
 
-            SamplesFilesDTO samplesFilesDTO2 = new SamplesFilesDTO();
-            samplesFilesDTO2.setName(fileTemp.getName());
-            samplesFilesDTO2.setContentType(file.getContentType());
-            samplesFilesDTO2.setSize(BigDecimal.valueOf(file.getSize()));
-            samplesFilesDTO2.setPath("C:\\AJAR\\SamplesFiles\\" + fileTemp.getName());
-            samplesFilesDTO2.setCreateDateTime(LocalDate.now());
-            samplesFilesDTO2.setState(1);
-            samplesFilesDTO2.setResult("");
             BatchTask tarea = new BatchTask();
             tarea.progress(0);
             tarea.setState(StateTask.PENDING);
             tarea.setType(TypeTask.FILE_LOAD);
-            tarea.setDescription("Process File " + file.getOriginalFilename());
+            tarea.setDescription("Process File " + fileTemp.getName());
             tarea.setCreateDate(ZonedDateTime.now());
             
             Map<String, String> parameters = new HashMap<String,String>();
             parameters.put("filePath", "C:\\AJAR\\SamplesFiles\\" + fileTemp.getName());
+            parameters.put("fileSize", String.valueOf(file.getSize()));
 
             tarea.setParameters(parameters);
-            batchTaskService.save(tarea);
-
-            result = samplesFilesService.save(samplesFilesDTO2);
-
+            tarea = batchTaskService.save(tarea);
+            return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, tarea.getId())).build();
         } catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return ResponseEntity.created(new URI("/api/samples-files/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
-    }
-
-    /**
-     * PUT /samples-files : Updates an existing samplesFiles.
-     *
-     * @param samplesFilesDTO the samplesFilesDTO to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated
-     *         samplesFilesDTO, or with status 400 (Bad Request) if the
-     *         samplesFilesDTO is not valid, or with status 500 (Internal Server
-     *         Error) if the samplesFilesDTO couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PutMapping("/samples-files")
-    public ResponseEntity<SamplesFilesDTO> updateSamplesFiles(@RequestBody SamplesFilesDTO samplesFilesDTO)
-            throws URISyntaxException {
-        log.debug("REST request to update SamplesFiles : {}", samplesFilesDTO);
-        if (samplesFilesDTO.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-        SamplesFilesDTO result = samplesFilesService.save(samplesFilesDTO);
-        return ResponseEntity.ok()
-                .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, samplesFilesDTO.getId().toString()))
-                .body(result);
-    }
-
-    /**
-     * GET /samples-files : get all the samplesFiles.
-     *
-     * @return the ResponseEntity with status 200 (OK) and the list of samplesFiles
-     *         in body
-     */
-    @GetMapping("/samples-files")
-    public List<SamplesFilesDTO> getAllSamplesFiles() {
-        log.debug("REST request to get all SamplesFiles");
-        return samplesFilesService.findAll();
-    }
-
-    /**
-     * GET  /samples-files/:id : get the "id" samplesFiles.
-     *
-     * @param id the id of the samplesFilesDTO to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the samplesFilesDTO, or with status 404 (Not Found)
-     */
-    @GetMapping("/samples-files/{id}")
-    public ResponseEntity<SamplesFilesDTO> getSamplesFiles(@PathVariable String id) {
-        log.debug("REST request to get SamplesFiles : {}", id);
-        Optional<SamplesFilesDTO> samplesFilesDTO = samplesFilesService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(samplesFilesDTO);
-    }
-
-    /**
-     * DELETE  /samples-files/:id : delete the "id" samplesFiles.
-     *
-     * @param id the id of the samplesFilesDTO to delete
-     * @return the ResponseEntity with status 200 (OK)
-     */
-    @DeleteMapping("/samples-files/{id}")
-    public ResponseEntity<Void> deleteSamplesFiles(@PathVariable String id) {
-        log.debug("REST request to delete SamplesFiles : {}", id);
-        samplesFilesService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id)).build();
+        return ResponseEntity.status(500).build();
     }
 }

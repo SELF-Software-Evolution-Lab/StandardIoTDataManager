@@ -4,27 +4,21 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import * as moment from 'moment';
-import { ISamplesFiles } from 'app/shared/model/samples-files.model';
 import { SamplesFilesService } from './samples-files.service';
+import { ISamplesFiles } from 'app/shared/model/samples-files.model';
 
 @Component({
     selector: 'jhi-samples-files-update',
     templateUrl: './samples-files-update.component.html'
 })
 export class SamplesFilesUpdateComponent implements OnInit {
-    samplesFiles: ISamplesFiles;
     isSaving: boolean;
-    createDateTimeDp: any;
-    updateDateTimeDp: any;
     file: File;
 
     constructor(protected samplesFilesService: SamplesFilesService, protected activatedRoute: ActivatedRoute) {}
 
     ngOnInit() {
         this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ samplesFiles }) => {
-            this.samplesFiles = samplesFiles;
-        });
     }
 
     previousState() {
@@ -33,11 +27,7 @@ export class SamplesFilesUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
-        if (this.samplesFiles.id !== undefined) {
-            this.subscribeToSaveResponse(this.samplesFilesService.update(this.samplesFiles));
-        } else {
-            this.subscribeToSaveResponse(this.samplesFilesService.create2(this.file));
-        }
+        this.subscribeToSaveResponse(this.samplesFilesService.create2(this.file));
     }
 
     protected subscribeToSaveResponse(result: Observable<HttpResponse<ISamplesFiles>>) {

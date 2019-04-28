@@ -7,28 +7,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import co.edu.uniandes.xrepo.domain.BatchTask;
 import co.edu.uniandes.xrepo.domain.Sample;
-import co.edu.uniandes.xrepo.domain.SamplesFiles;
 import co.edu.uniandes.xrepo.domain.enumeration.StateTask;
 import co.edu.uniandes.xrepo.domain.enumeration.TypeTask;
 import co.edu.uniandes.xrepo.repository.SampleRepository;
-import co.edu.uniandes.xrepo.repository.SamplesFilesRepository;
 import co.edu.uniandes.xrepo.service.BatchTaskService;
 import co.edu.uniandes.xrepo.service.task.BackgroundTaskProcessor;
 
@@ -37,11 +29,9 @@ import co.edu.uniandes.xrepo.service.task.BackgroundTaskProcessor;
 public class ProcessingFiles implements BackgroundTaskProcessor {
 
     private final Logger log = LoggerFactory.getLogger(ProcessingFiles.class);
-    private final SamplesFilesRepository samplesFilesRepository;
     private final SampleRepository sampleRepository;
     private final BatchTaskService batchTaskService;
-    public ProcessingFiles(SamplesFilesRepository samplesFilesRepository, SampleRepository sampleRepository, BatchTaskService batchTaskService) {
-        this.samplesFilesRepository = samplesFilesRepository;
+    public ProcessingFiles(SampleRepository sampleRepository, BatchTaskService batchTaskService) {
         this.sampleRepository = sampleRepository;
         this.batchTaskService = batchTaskService;
     }
@@ -49,7 +39,7 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
     // @Scheduled(fixedRate = 60000)
     public void scheduleTaskWithFixedRate() {
 
-        List<SamplesFiles> samplesFiles = samplesFilesRepository.findByState(1);
+        /*List<SamplesFiles> samplesFiles = samplesFilesRepository.findByState(1);
 
         if ((samplesFiles != null) && !samplesFiles.isEmpty()) {
             SamplesFiles sampleFile = samplesFiles.get(0);
@@ -63,7 +53,7 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
             sampleFile.setState(3);
             samplesFilesRepository.save(sampleFile);
         }
-        log.debug("Processing Files :: Execution Time - {} {}", LocalDateTime.now(), samplesFiles);
+        log.debug("Processing Files :: Execution Time - {} {}", LocalDateTime.now(), samplesFiles);*/
     }
 
     private void proccesFile(String path) {
