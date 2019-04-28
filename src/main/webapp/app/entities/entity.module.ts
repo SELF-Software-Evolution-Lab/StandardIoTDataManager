@@ -31,6 +31,10 @@ import { RouterModule } from '@angular/router';
             {
                 path: 'samples-files',
                 loadChildren: './samples-files/samples-files.module#XrepoSamplesFilesModule'
+            },
+            {
+                path: 'batch-task',
+                loadChildren: './batch-task/batch-task.module#XrepoBatchTaskModule'
             }
             /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
         ])
