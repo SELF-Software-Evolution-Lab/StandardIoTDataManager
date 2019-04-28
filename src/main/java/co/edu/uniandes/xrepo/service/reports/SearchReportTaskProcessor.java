@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.concurrent.atomic.AtomicLong;
@@ -69,6 +71,10 @@ public class SearchReportTaskProcessor implements BackgroundTaskProcessor {
 
         if (!stream.hasNext()) {
             log.error("No data found to generate search report {}", params);
+            batchTaskService.save(
+                task.progress(100).state(COMPLETED).endDate(Instant.now())
+                    .description("No data found to generate search report")
+            );
             return;
         }
 
@@ -85,7 +91,9 @@ public class SearchReportTaskProcessor implements BackgroundTaskProcessor {
 
     private void writeReport(SampleSearchParametersDTO params,
                              CloseableIterator<Sample> stream, BatchTask task) throws IOException {
-        File file = Paths.get(reportLocation, "report.csv").toFile();
+        Path path = Paths.get(reportLocation, "report.csv");
+        Files.createDirectories(path.getParent());
+        File file = path.toFile();
         file.createNewFile();
         final long expectedRecords = params.getExpectedRecords();
         final AtomicLong current = new AtomicLong(0);
