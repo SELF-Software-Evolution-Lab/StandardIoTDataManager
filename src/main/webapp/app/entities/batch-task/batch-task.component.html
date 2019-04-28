@@ -16,7 +16,7 @@
             <th jhiSortBy="startDate"><span>Start Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="endDate"><span>End Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="progress"><span>Progress</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="user.login"><span>User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="user"><span>User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -30,9 +30,7 @@
                 <td>{{batchTask.startDate | date:'medium'}}</td>
                 <td>{{batchTask.endDate | date:'medium'}}</td>
                 <td>{{batchTask.progress}}%</td>
-                <td>
-                    {{batchTask.user?.login}}
-                </td>
+                <td>{{batchTask.user}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
