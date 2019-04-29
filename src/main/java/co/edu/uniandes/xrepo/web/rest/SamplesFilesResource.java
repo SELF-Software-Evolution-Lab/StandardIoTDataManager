@@ -21,6 +21,7 @@ import co.edu.uniandes.xrepo.domain.BatchTask;
 import co.edu.uniandes.xrepo.domain.enumeration.TaskState;
 import co.edu.uniandes.xrepo.domain.enumeration.TaskType;
 import co.edu.uniandes.xrepo.service.BatchTaskService;
+import co.edu.uniandes.xrepo.service.dto.SamplesFilesParametersDTO;
 import co.edu.uniandes.xrepo.web.rest.util.HeaderUtil;
 
 /**
@@ -59,9 +60,10 @@ public class SamplesFilesResource {
             tarea.setDescription("Process File " + fileTemp.getName());
             tarea.setCreateDate(Instant.now());
             
-            Map<String, String> parameters = new HashMap<String,String>();
-            parameters.put("filePath", "C:\\AJAR\\SamplesFiles\\" + fileTemp.getName());
-            parameters.put("fileSize", String.valueOf(file.getSize()));
+            SamplesFilesParametersDTO parameters = new SamplesFilesParametersDTO();
+
+            parameters.setFilePath("C:\\AJAR\\SamplesFiles\\" + fileTemp.getName());
+            parameters.setFileSize(file.getSize());
 
             tarea.objectToParameters(parameters);
             tarea = batchTaskService.save(tarea);
