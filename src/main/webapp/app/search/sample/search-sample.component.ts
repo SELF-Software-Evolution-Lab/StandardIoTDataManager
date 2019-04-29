@@ -32,6 +32,7 @@ export class SearchSampleComponent implements OnInit {
     private searchParameters: SampleSearchParameters;
     private searchReturned = false;
     private searchResults: Number = 0;
+    private batchTaskId = '';
 
     constructor(
         protected jhiAlertService: JhiAlertService,
@@ -81,13 +82,16 @@ export class SearchSampleComponent implements OnInit {
         console.log('search', this.searchParameters);
         this.searchSampleService
             .search(this.searchParameters)
-            .subscribe((res: HttpResponse<Number>) => this.onSearchSuccess(res), (res: HttpErrorResponse) => this.onSearchError(res));
+            .subscribe(
+                (res: HttpResponse<Array<string>>) => this.onSearchSuccess(res),
+                (res: HttpErrorResponse) => this.onSearchError(res)
+            );
     }
 
-    private onSearchSuccess(res: HttpResponse<Number>) {
+    private onSearchSuccess(res: HttpResponse<Array<string>>) {
         this.searchReturned = true;
-        this.searchResults = res.body;
-        console.log('search success ', res.body);
+        this.searchResults = res.body['count'];
+        this.batchTaskId = res.body['batchTaskId'];
     }
 
     private onSearchError(res: HttpErrorResponse) {

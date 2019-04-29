@@ -44,7 +44,32 @@ export const batchTaskRoute: Routes = [
         canActivate: [UserRouteAccessService]
     },
     {
+        path: 'search-report',
+        component: BatchTaskComponent,
+        resolve: {
+            pagingParams: JhiResolvePagingParams
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            defaultSort: 'id,asc',
+            pageTitle: 'BatchTasks'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
         path: ':id/view',
+        component: BatchTaskDetailComponent,
+        resolve: {
+            batchTask: BatchTaskResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'BatchTasks'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'search-report/:id/view',
         component: BatchTaskDetailComponent,
         resolve: {
             batchTask: BatchTaskResolve

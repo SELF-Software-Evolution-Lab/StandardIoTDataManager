@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { ISampleSearchParameters } from 'app/shared/model/sample-search-parameters.model';
@@ -12,10 +11,10 @@ export class SearchSampleService {
 
     constructor(protected http: HttpClient) {}
 
-    search(searchParameters: ISampleSearchParameters): Observable<HttpResponse<Number>> {
+    search(searchParameters: ISampleSearchParameters): Observable<HttpResponse<Array<string>>> {
         const copy = this.convertDateFromClient(searchParameters);
         console.log('to search', this.resourceUrl, copy);
-        return this.http.post<Number>(this.resourceUrl, copy, { observe: 'response' }).pipe();
+        return this.http.post<Array<string>>(this.resourceUrl, copy, { observe: 'response' }).pipe();
     }
 
     protected convertDateFromClient(searchParameters: ISampleSearchParameters): ISampleSearchParameters {

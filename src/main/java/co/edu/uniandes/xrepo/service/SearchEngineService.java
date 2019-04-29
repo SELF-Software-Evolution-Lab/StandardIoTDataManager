@@ -1,5 +1,6 @@
 package co.edu.uniandes.xrepo.service;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +22,8 @@ import co.edu.uniandes.xrepo.security.SecurityUtils;
 import co.edu.uniandes.xrepo.service.dto.SampleSearchParametersDTO;
 import co.edu.uniandes.xrepo.service.reports.SearchReportTaskProcessor;
 import co.edu.uniandes.xrepo.service.util.AsyncDelegator;
+import lombok.Getter;
+import lombok.Setter;
 
 @Service
 public class SearchEngineService {
@@ -54,7 +57,7 @@ public class SearchEngineService {
         this.maxRecords = maxRecords;
     }
 
-    public long preSearchSamples(SampleSearchParametersDTO params) {
+    public SearchResponse preSearchSamples(SampleSearchParametersDTO params) {
 
         List<String> tags = params.getTags();
         if (!tags.isEmpty()) {
@@ -72,15 +75,17 @@ public class SearchEngineService {
 
         Query query = new Query(params.asCriteria());
         log.info("Requesting count for query: {}", query.getQueryObject().toJson());
+        SearchResponse response = new SearchResponse();
         long count = mongoTemplate.count(query, Sample.class);
+        response.setCount(count);
         params.setExpectedRecords(count);
         if (count > maxRecords) {
-            deferReport(params);
+            response.setBatchTaskId(deferReport(params));
         } else {
-            generateOnlineReport(params);
+            response.setBatchTaskId(generateOnlineReport(params));
         }
         log.info("Count returned {}", count);
-        return count;
+        return response;
     }
 
     private String generateOnlineReport(SampleSearchParametersDTO params) {
@@ -108,5 +113,12 @@ public class SearchEngineService {
         deferredTask.objectToParameters(params);
         BatchTask saved = batchTaskService.save(deferredTask);
         return saved.getId();
+    }
+
+    @Setter
+    @Getter
+    public class SearchResponse implements Serializable{
+        private String batchTaskId;
+        private long count;
     }
 }

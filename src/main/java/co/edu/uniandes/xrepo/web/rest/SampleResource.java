@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.uniandes.xrepo.service.SampleService;
 import co.edu.uniandes.xrepo.service.SearchEngineService;
+import co.edu.uniandes.xrepo.service.SearchEngineService.SearchResponse;
 import co.edu.uniandes.xrepo.service.dto.SampleDTO;
 import co.edu.uniandes.xrepo.service.dto.SampleSearchParametersDTO;
 import co.edu.uniandes.xrepo.web.rest.errors.BadRequestAlertException;
@@ -71,8 +72,8 @@ public class SampleResource {
     }
 
     @PostMapping("/samples/data")
-    public ResponseEntity<Long> preSearchSample(@RequestBody SampleSearchParametersDTO searchParametersDTO) {
-        long l = searchEngineService.preSearchSamples(searchParametersDTO);
+    public ResponseEntity<SearchResponse> preSearchSample(@RequestBody SampleSearchParametersDTO searchParametersDTO) {
+        SearchResponse l = searchEngineService.preSearchSamples(searchParametersDTO);
         return ResponseEntity.ok().body(l);
     }
 

@@ -1,17 +1,19 @@
 package co.edu.uniandes.xrepo.service;
 
-import co.edu.uniandes.xrepo.domain.Sample;
-import co.edu.uniandes.xrepo.repository.SampleRepository;
-import co.edu.uniandes.xrepo.service.dto.SampleDTO;
-import co.edu.uniandes.xrepo.service.mapper.SampleMapper;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import co.edu.uniandes.xrepo.domain.Sample;
+import co.edu.uniandes.xrepo.domain.Sampling;
+import co.edu.uniandes.xrepo.repository.SampleRepository;
+import co.edu.uniandes.xrepo.repository.SamplingRepository;
+import co.edu.uniandes.xrepo.service.dto.SampleDTO;
+import co.edu.uniandes.xrepo.service.mapper.SampleMapper;
 
 /**
  * Service Implementation for managing Sample.
@@ -23,11 +25,16 @@ public class SampleService {
 
     private final SampleRepository sampleRepository;
 
+    private final SamplingRepository samplingRepository;
+
     private final SampleMapper sampleMapper;
 
-    public SampleService(SampleRepository sampleRepository, SampleMapper sampleMapper) {
+
+
+    public SampleService(SampleRepository sampleRepository, SampleMapper sampleMapper, SamplingRepository samplingRepository) {
         this.sampleRepository = sampleRepository;
         this.sampleMapper = sampleMapper;
+        this.samplingRepository = samplingRepository;
     }
 
     /**
@@ -39,8 +46,16 @@ public class SampleService {
     public SampleDTO save(SampleDTO sampleDTO) {
         log.debug("Request to save Sample : {}", sampleDTO);
         Sample sample = sampleMapper.toEntity(sampleDTO);
+        completeSample(sample);
         sample = sampleRepository.save(sample);
         return sampleMapper.toDto(sample);
+    }
+
+    private void completeSample(Sample sample) {
+        Optional<Sampling> byId = samplingRepository.findById(sample.getSamplingId());
+        Sampling sampling = byId.orElseThrow(() -> new IllegalArgumentException("Sampling Id " + sample.getSamplingId() + " not found"));
+        sample.setExperimentId(sampling.getExperiment().getId());
+        sample.setTargetSystemId(sampling.getExperiment().getSystem().getId());
     }
 
     /**
