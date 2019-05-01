@@ -3,6 +3,9 @@ package co.edu.uniandes.xrepo.web.rest;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
@@ -10,6 +13,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,8 +41,11 @@ public class SamplesFilesResource {
 
     private final BatchTaskService batchTaskService;
 
-    public SamplesFilesResource(BatchTaskService batchTaskService) {
+    private final String samplesFilesLocation; 
+
+    public SamplesFilesResource(BatchTaskService batchTaskService, @Value("${xrepo.samples-files-location}") String samplesFilesLocation) {
         this.batchTaskService = batchTaskService;
+        this.samplesFilesLocation = samplesFilesLocation;
     }
 
     @PostMapping("/samples-files-2")
@@ -51,7 +58,10 @@ public class SamplesFilesResource {
 
         try {
 
-            file.transferTo(new File("C:\\AJAR\\SamplesFiles\\" + fileTemp.getName()));
+            Path filePath = Paths.get(samplesFilesLocation, fileTemp.getName());
+            
+            Files.createDirectories(filePath.getParent());
+            file.transferTo(filePath.toFile());
 
             BatchTask tarea = new BatchTask();
             tarea.progress(0);
@@ -62,7 +72,7 @@ public class SamplesFilesResource {
             
             SamplesFilesParametersDTO parameters = new SamplesFilesParametersDTO();
 
-            parameters.setFilePath("C:\\AJAR\\SamplesFiles\\" + fileTemp.getName());
+            parameters.setFilePath(filePath.toString());
             parameters.setFileSize(file.getSize());
 
             tarea.objectToParameters(parameters);

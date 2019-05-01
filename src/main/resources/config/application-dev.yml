@@ -106,3 +106,4 @@ jhipster:
 # application:
 xrepo:
     report-generation-location: ./search-result
+    samples-files-location: C:\AJAR\SamplesFiles2
