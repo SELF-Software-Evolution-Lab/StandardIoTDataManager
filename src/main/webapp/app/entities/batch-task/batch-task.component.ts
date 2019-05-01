@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 
-import { IBatchTask } from 'app/shared/model/batch-task.model';
+import { IBatchTask, TaskState } from 'app/shared/model/batch-task.model';
 import { AccountService } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
@@ -43,7 +43,7 @@ export class BatchTaskComponent implements OnInit, OnDestroy {
         this.routeData = this.activatedRoute.data.subscribe(data => {
             this.page = data.pagingParams.page;
             this.previousPage = data.pagingParams.page;
-            this.reverse = data.pagingParams.ascending;
+            this.reverse = data.pagingParams.descending;
             this.predicate = data.pagingParams.predicate;
         });
     }
@@ -53,7 +53,8 @@ export class BatchTaskComponent implements OnInit, OnDestroy {
             .query({
                 page: this.page - 1,
                 size: this.itemsPerPage,
-                sort: this.sort()
+                sort: this.sort(),
+                state: TaskState.COMPLETED
             })
             .subscribe(
                 (res: HttpResponse<IBatchTask[]>) => this.paginateBatchTasks(res.body, res.headers),
@@ -127,5 +128,8 @@ export class BatchTaskComponent implements OnInit, OnDestroy {
 
     protected onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
+    }
+    refresh() {
+        this.loadAll();
     }
 }

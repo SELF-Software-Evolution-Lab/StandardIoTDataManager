@@ -38,7 +38,7 @@ export const batchTaskRoute: Routes = [
         },
         data: {
             authorities: ['ROLE_USER'],
-            defaultSort: 'id,asc',
+            defaultSort: 'id,desc',
             pageTitle: 'BatchTasks'
         },
         canActivate: [UserRouteAccessService]

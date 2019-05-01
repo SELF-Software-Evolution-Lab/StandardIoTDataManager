@@ -31,7 +31,9 @@
                 </dd>
                 <dt><span>Progress</span></dt>
                 <dd>
-                    <span>{{batchTask.progress}}%</span>
+                    <ngb-progressbar type="success" [value]="batchTask.progress">
+                        <span>{{ batchTask.progress }} %</span>
+                    </ngb-progressbar>
                 </dd>
                 <dt><span>User</span></dt>
                 <dd>

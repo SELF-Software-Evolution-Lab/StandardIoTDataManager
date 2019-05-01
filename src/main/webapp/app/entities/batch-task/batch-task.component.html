@@ -1,6 +1,9 @@
 <div>
     <h2 id="page-heading">
         <span>Batch Tasks</span>
+        <button class="btn btn-primary float-right" (click)="refresh()">
+            <fa-icon [icon]="'sync'"></fa-icon> <span>Refresh</span>
+        </button>
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
@@ -12,10 +15,10 @@
             <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="type"><span>Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="state"><span>State</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="progress"><span>Progress</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="createDate"><span>Create Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="startDate"><span>Start Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="endDate"><span>End Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="progress"><span>Progress</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="user"><span>User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
@@ -26,10 +29,12 @@
                 <td>{{batchTask.description}}</td>
                 <td>{{batchTask.type}}</td>
                 <td>{{batchTask.state}}</td>
+                <td><ngb-progressbar type="success" [value]="batchTask.progress">
+                    <span>{{ batchTask.progress }} %</span>
+                </ngb-progressbar></td>
                 <td>{{batchTask.createDate | date:'medium'}}</td>
                 <td>{{batchTask.startDate | date:'medium'}}</td>
                 <td>{{batchTask.endDate | date:'medium'}}</td>
-                <td>{{batchTask.progress}}%</td>
                 <td>{{batchTask.user}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
