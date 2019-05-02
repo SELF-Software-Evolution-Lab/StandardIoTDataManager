@@ -37,7 +37,7 @@ export const experimentRoute: Routes = [
         },
         data: {
             authorities: ['ROLE_USER'],
-            defaultSort: 'id,asc',
+            defaultSort: 'name,asc',
             pageTitle: 'Experiments'
         },
         canActivate: [UserRouteAccessService]
@@ -50,7 +50,7 @@ export const experimentRoute: Routes = [
         },
         data: {
             authorities: ['ROLE_USER'],
-            pageTitle: 'Experiments'
+            pageTitle: 'Experiment Detail'
         },
         canActivate: [UserRouteAccessService]
     },
@@ -62,7 +62,7 @@ export const experimentRoute: Routes = [
         },
         data: {
             authorities: ['ROLE_USER'],
-            pageTitle: 'Experiments'
+            pageTitle: 'New Experiment'
         },
         canActivate: [UserRouteAccessService]
     },
@@ -74,7 +74,7 @@ export const experimentRoute: Routes = [
         },
         data: {
             authorities: ['ROLE_USER'],
-            pageTitle: 'Experiments'
+            pageTitle: 'Edit Experiment'
         },
         canActivate: [UserRouteAccessService]
     }

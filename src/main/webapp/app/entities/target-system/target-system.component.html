@@ -14,23 +14,23 @@
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th><span>ID</span></th>
             <th jhiSortBy="name"><span>Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="organizationName"><span>Organization</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="createdBy"><span>Created By</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="created"><span>Created on</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="createdBy"><span>Created by</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="created"><span>Created at</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let targetSystem of targetSystems ;trackBy: trackId">
-                <td><a [routerLink]="['/target-system', targetSystem.id, 'view' ]">{{targetSystem.id}}</a></td>
                 <td>{{targetSystem.name}}</td>
                 <td>
                     <div *ngIf="targetSystem.organizationId">
                         <a [routerLink]="['../organization', targetSystem.organizationId , 'view' ]" >{{targetSystem.organizationName}}</a>
                     </div>
                 </td>
+                <td>{{targetSystem.description}}</td>
                 <td>{{targetSystem.createdBy}}</td>
                 <td>{{targetSystem.created | date:'medium'}}</td>
                 <td class="text-right">

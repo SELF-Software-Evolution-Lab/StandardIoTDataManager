@@ -14,33 +14,31 @@
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th><span>ID</span></th>
-            <th jhiSortBy="systemName"><span>System</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="name"><span>Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="systemName"><span>System</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th><span>Tags</span></th>
-            <th jhiSortBy="created"><span>Created</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="createdBy"><span>Created By</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="createdBy"><span>Created by</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="created"><span>Created at</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let experiment of experiments ;trackBy: trackId">
-                <td><a [routerLink]="['/experiment', experiment.id, 'view' ]">{{experiment.id}}</a></td>
+                <td>{{experiment.name}}</td>
                 <td>
                     <div *ngIf="experiment.systemId">
                         <a [routerLink]="['../target-system', experiment.systemId , 'view' ]" >{{experiment.systemName}}</a>
                     </div>
                 </td>
-                <td>{{experiment.name}}</td>
                 <td>{{experiment.description}}</td>
                 <td>
                     <div *ngFor="let tag of experiment.tags">
                         <span class="badge badge-info">{{ tag }}</span>
                     </div>
                 </td>
-                <td>{{experiment.created | date:'medium'}}</td>
                 <td>{{experiment.createdBy}}</td>
+                <td>{{experiment.created | date:'medium'}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

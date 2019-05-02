@@ -37,8 +37,8 @@ export const targetSystemRoute: Routes = [
         },
         data: {
             authorities: ['ROLE_USER'],
-            defaultSort: 'id,asc',
-            pageTitle: 'TargetSystems'
+            defaultSort: 'name,asc',
+            pageTitle: 'Target Systems'
         },
         canActivate: [UserRouteAccessService]
     },
@@ -50,7 +50,7 @@ export const targetSystemRoute: Routes = [
         },
         data: {
             authorities: ['ROLE_USER'],
-            pageTitle: 'TargetSystems'
+            pageTitle: 'Target System Detail'
         },
         canActivate: [UserRouteAccessService]
     },
@@ -62,7 +62,7 @@ export const targetSystemRoute: Routes = [
         },
         data: {
             authorities: ['ROLE_USER'],
-            pageTitle: 'TargetSystems'
+            pageTitle: 'New Target System'
         },
         canActivate: [UserRouteAccessService]
     },
@@ -74,7 +74,7 @@ export const targetSystemRoute: Routes = [
         },
         data: {
             authorities: ['ROLE_USER'],
-            pageTitle: 'TargetSystems'
+            pageTitle: 'Edit Target System'
         },
         canActivate: [UserRouteAccessService]
     }

@@ -22,7 +22,7 @@
                 <td>{{batchTask.createDate | date:'medium'}}</td>
                 <td *ngIf="isCompleted(batchTask.state)">
                     <a href="{{locateReport(batchTask.id)}}" target="_blank">
-                        {{batchTask.state}} <fa-icon [icon]="'download'"></fa-icon>
+                        <fa-icon [icon]="'download'"></fa-icon> {{batchTask.state}}
                     </a>
                 </td>
                 <td *ngIf="!isCompleted(batchTask.state)">
