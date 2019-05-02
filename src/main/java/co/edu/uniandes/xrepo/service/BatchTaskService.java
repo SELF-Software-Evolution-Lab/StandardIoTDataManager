@@ -1,17 +1,24 @@
 package co.edu.uniandes.xrepo.service;
 
-import co.edu.uniandes.xrepo.domain.BatchTask;
-import co.edu.uniandes.xrepo.domain.enumeration.TaskState;
-import co.edu.uniandes.xrepo.repository.BatchTaskRepository;
+import java.io.File;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import co.edu.uniandes.xrepo.domain.BatchTask;
+import co.edu.uniandes.xrepo.domain.enumeration.TaskState;
+import co.edu.uniandes.xrepo.domain.enumeration.TaskType;
+import co.edu.uniandes.xrepo.repository.BatchTaskRepository;
+import co.edu.uniandes.xrepo.security.SecurityUtils;
+import co.edu.uniandes.xrepo.service.reports.SearchReportFileLocator;
 
 /**
  * Service Implementation for managing BatchTask.
@@ -22,9 +29,11 @@ public class BatchTaskService {
     private final Logger log = LoggerFactory.getLogger(BatchTaskService.class);
 
     private final BatchTaskRepository batchTaskRepository;
+    private final SearchReportFileLocator reportFileLocator;
 
-    public BatchTaskService(BatchTaskRepository batchTaskRepository) {
+    public BatchTaskService(BatchTaskRepository batchTaskRepository, @Lazy SearchReportFileLocator reportFileLocator) {
         this.batchTaskRepository = batchTaskRepository;
+        this.reportFileLocator = reportFileLocator;
     }
 
     /**
@@ -74,11 +83,28 @@ public class BatchTaskService {
     /**
      * Get all the batchTasks whit state PENDING.
      *
-     * @param pageable the pagination information
      * @return the list of entities
      */
     public List<BatchTask> findAllPending() {
         log.debug("Request to get all pending BatchTasks");
         return batchTaskRepository.findByState(TaskState.PENDING);
+    }
+
+    public Page<BatchTask> findAllSearchReportsByUser(Pageable pageable) {
+        return batchTaskRepository.findByTypeAndUser(TaskType.REPORT, currentUser(), pageable);
+    }
+
+    public File fileFromReport(String id) {
+        Optional<BatchTask> byId = batchTaskRepository.findById(id);
+        BatchTask batchTask = byId.orElseThrow(() -> new NoSuchElementException("Report for id " + id + " wasn't found"));
+        return reportFileLocator.locateReportFile(batchTask);
+    }
+
+    private String currentUser() {
+        Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
+        if (!currentUserLogin.isPresent()) {
+            throw new AccessDeniedException("Current User not found");
+        }
+        return currentUserLogin.get();
     }
 }

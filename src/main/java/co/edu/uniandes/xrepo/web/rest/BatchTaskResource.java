@@ -1,24 +1,36 @@
 package co.edu.uniandes.xrepo.web.rest;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import co.edu.uniandes.xrepo.domain.BatchTask;
 import co.edu.uniandes.xrepo.service.BatchTaskService;
 import co.edu.uniandes.xrepo.web.rest.errors.BadRequestAlertException;
 import co.edu.uniandes.xrepo.web.rest.util.HeaderUtil;
 import co.edu.uniandes.xrepo.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import java.util.List;
-import java.util.Optional;
+import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 
 /**
  * REST controller for managing BatchTask.
@@ -89,6 +101,33 @@ public class BatchTaskResource {
         Page<BatchTask> page = batchTaskService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/batch-tasks");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * GET  /batch-tasks/search-reports : get all the search reports tasks.
+     *
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of search reports in body
+     */
+    @GetMapping("/batch-tasks/search-reports")
+    public ResponseEntity<List<BatchTask>> getAllSearchReportsByUser(Pageable pageable) {
+        log.debug("REST request to get a page of Search Reports");
+        Page<BatchTask> page = batchTaskService.findAllSearchReportsByUser(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/batch-tasks/search-reports");
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/batch-tasks/search-reports/file/{id}")
+    public ResponseEntity<FileSystemResource> getFileFromSearchReport(@PathVariable String id) throws IOException {
+        log.debug("REST request to get a search report");
+        File file = batchTaskService.fileFromReport(id);
+        FileSystemResource fileSystemResource = new FileSystemResource(file);
+
+        return ResponseEntity.ok()
+            .contentLength(fileSystemResource.contentLength())
+            .contentType(MediaType.parseMediaType("text/csv"))
+            .header(CONTENT_DISPOSITION,"attachment; filename="+file.getName())
+            .body(fileSystemResource);
     }
 
     /**

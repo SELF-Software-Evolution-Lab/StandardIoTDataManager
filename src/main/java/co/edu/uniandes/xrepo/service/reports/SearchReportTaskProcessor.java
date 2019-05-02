@@ -9,6 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.slf4j.Logger;
@@ -33,7 +35,10 @@ import co.edu.uniandes.xrepo.service.task.BackgroundTaskProcessor;
 import co.edu.uniandes.xrepo.service.util.AsyncDelegator;
 
 @Service
-public class SearchReportTaskProcessor implements BackgroundTaskProcessor {
+public class SearchReportTaskProcessor implements BackgroundTaskProcessor, SearchReportFileLocator {
+    public static final DateTimeFormatter TIME_FORMATTER_FILE = DateTimeFormatter.ofPattern("YYMMDD.HHmmssn")
+        .withZone(ZoneId.systemDefault());
+
     private final Logger log = LoggerFactory.getLogger(SearchReportTaskProcessor.class);
     private static final ObjectMapper jsonMapper = new ObjectMapper();
 
@@ -72,7 +77,7 @@ public class SearchReportTaskProcessor implements BackgroundTaskProcessor {
         if (!stream.hasNext()) {
             log.error("No data found to generate search report {}", params);
             batchTaskService.save(
-                task.progress(100).state(COMPLETED).endDate(Instant.now())
+                task.progress(100).state(ERROR).endDate(Instant.now())
                     .description("No data found to generate search report")
             );
             return;
@@ -91,7 +96,7 @@ public class SearchReportTaskProcessor implements BackgroundTaskProcessor {
 
     private void writeReport(SampleSearchParametersDTO params,
                              CloseableIterator<Sample> stream, BatchTask task) throws IOException {
-        Path path = Paths.get(reportLocation, "report.csv");
+        Path path = Paths.get(reportLocation, buildReportName(task));
         Files.createDirectories(path.getParent());
         File file = path.toFile();
         file.createNewFile();
@@ -108,9 +113,9 @@ public class SearchReportTaskProcessor implements BackgroundTaskProcessor {
         }
     }
 
-    private void saveTaskProgress(final long expectedRecords, final long addAndGet, final BatchTask task) {
+    private void saveTaskProgress(final long expectedRecords, final long currentRecord, final BatchTask task) {
         asyncDelegator.async(() -> {
-            Long l = Long.valueOf(addAndGet * 100 / expectedRecords);
+            Long l = Long.valueOf(currentRecord * 100 / expectedRecords);
             batchTaskService.save(task.progress(l.intValue()));
         });
     }
@@ -124,5 +129,17 @@ public class SearchReportTaskProcessor implements BackgroundTaskProcessor {
             throw new UncheckedIOException(e);
         }
 
+    }
+
+    public File locateReportFile(BatchTask task) {
+        Path path = Paths.get(reportLocation, buildReportName(task));
+        return path.toFile();
+    }
+
+    private String buildReportName(BatchTask task) {
+        String id = task.getId();
+        String createDate = TIME_FORMATTER_FILE.format(task.getCreateDate());
+        String startDate = TIME_FORMATTER_FILE.format(task.getStartDate());
+        return id + "_" + createDate + "_" + startDate + ".csv";
     }
 }

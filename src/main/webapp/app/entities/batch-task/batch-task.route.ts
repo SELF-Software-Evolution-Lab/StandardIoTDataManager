@@ -12,6 +12,7 @@ import { BatchTaskDetailComponent } from './batch-task-detail.component';
 import { BatchTaskUpdateComponent } from './batch-task-update.component';
 import { BatchTaskDeletePopupComponent } from './batch-task-delete-dialog.component';
 import { IBatchTask } from 'app/shared/model/batch-task.model';
+import { SearchReportComponent } from 'app/entities/batch-task/search-report/search-report.component';
 
 @Injectable({ providedIn: 'root' })
 export class BatchTaskResolve implements Resolve<IBatchTask> {
@@ -45,14 +46,14 @@ export const batchTaskRoute: Routes = [
     },
     {
         path: 'search-report',
-        component: BatchTaskComponent,
+        component: SearchReportComponent,
         resolve: {
             pagingParams: JhiResolvePagingParams
         },
         data: {
             authorities: ['ROLE_USER'],
-            defaultSort: 'id,asc',
-            pageTitle: 'BatchTasks'
+            defaultSort: 'createDate,desc',
+            pageTitle: 'Search Reports'
         },
         canActivate: [UserRouteAccessService]
     },
