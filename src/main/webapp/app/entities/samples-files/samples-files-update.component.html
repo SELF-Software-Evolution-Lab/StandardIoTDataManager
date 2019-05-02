@@ -3,12 +3,10 @@
         <span>Upload Samples Files</span>
     </h2>
     <hr/>
+    <jhi-alert-error></jhi-alert-error>
     <div class="col-12">
         <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
-
             <div>
-                <jhi-alert-error></jhi-alert-error>
-                
                 <div class="form-group">
                     <label class="form-control-label" for="file">File to upload</label>
                     <input type="file" (change)="handleFileInput($event.target.files)" id="file"/>

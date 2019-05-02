@@ -44,13 +44,11 @@ export class SamplesFilesUpdateComponent implements OnInit {
     }
 
     handleFileInput(files: FileList) {
-        console.log(files);
+        // console.log(files);
         if (files && files[0]) {
-            console.log('cargo archivo');
-            console.log(files[0]);
+            // console.log('cargo archivo');
+            // console.log(files[0]);
             this.file = files[0];
-        } else {
-            console.log('Nada de nada');
         }
     }
 }
