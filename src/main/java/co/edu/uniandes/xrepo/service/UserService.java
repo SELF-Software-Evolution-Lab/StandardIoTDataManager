@@ -136,11 +136,10 @@ public class UserService {
         } else {
             user.setLangKey(userDTO.getLangKey());
         }
-        //String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
-        String encryptedPassword = passwordEncoder.encode("pleasechangeme");
+        String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
         user.setPassword(encryptedPassword);
-        //user.setResetKey(RandomUtil.generateResetKey());
-        //user.setResetDate(Instant.now());
+        user.setResetKey(RandomUtil.generateResetKey());
+        user.setResetDate(Instant.now());
         user.setActivated(true);
         if (userDTO.getAuthorities() != null) {
             Set<Authority> authorities = userDTO.getAuthorities().stream()
