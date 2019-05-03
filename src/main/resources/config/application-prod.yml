@@ -30,10 +30,16 @@ spring:
             uri: mongodb://0.0.0.0:27017
             database: xrepo
     mail:
-        host: localhost
-        port: 25
-        username:
-        password:
+        host: smtp.gmail.com
+        port: 587
+        username: experiments.repo@gmail.com
+        password: rHrU0RGdSdmu
+        protocol: smtp
+        tls: true
+        properties.mail.smtp:
+            auth: true
+            starttls.enable: true
+            ssl.trust: smtp.gmail.com
     thymeleaf:
         cache: true
 
@@ -89,16 +95,6 @@ jhipster:
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: xrepo@localhost
         base-url: http://172.24.100.107:8080 # Modify according to your server's URL
-        host: smtp.gmail.com
-        port: 587
-        username: experiments.repo@gmail.com
-        password: rHrU0RGdSdmu
-        protocol: smtp
-        tls: true
-        properties.mail.smtp:
-            auth: true
-            starttls.enable: true
-            ssl.trust: smtp.gmail.com
     metrics:
         logs: # Reports metrics in the logs
             enabled: false
