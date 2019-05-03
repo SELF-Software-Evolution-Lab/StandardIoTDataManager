@@ -17,22 +17,22 @@ import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
     templateUrl: './search-sample.component.html'
 })
 export class SearchSampleComponent implements OnInit {
-    private targetSystems: Observable<ITargetSystem[]>;
-    private tags: Observable<ITag[]>;
-    private operativeConditions: string[];
-    private sensors: string[];
+    targetSystems: Observable<ITargetSystem[]>;
+    tags: Observable<ITag[]>;
+    operativeConditions: string[];
+    sensors: string[];
 
-    private selectedTargetSystem: ITargetSystem;
-    private selectedTags: string[];
-    private selectedSensors: string[];
+    selectedTargetSystem: ITargetSystem;
+    selectedTags: string[];
+    selectedSensors: string[];
 
-    private selectedFromDate: string;
-    private selectedToDate: string;
+    selectedFromDate: string;
+    selectedToDate: string;
 
-    private searchParameters: SampleSearchParameters;
-    private searchReturned = false;
-    private searchResults: Number = 0;
-    private batchTaskId = '';
+    searchParameters: SampleSearchParameters;
+    searchReturned = false;
+    searchResults: Number = 0;
+    batchTaskId = '';
 
     constructor(
         protected jhiAlertService: JhiAlertService,
