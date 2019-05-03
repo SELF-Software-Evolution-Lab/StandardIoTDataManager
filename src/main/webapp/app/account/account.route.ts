@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 
-import { activateRoute, passwordRoute, passwordResetFinishRoute, passwordResetInitRoute, settingsRoute } from './';
+import { activateRoute, passwordRoute, settingsRoute } from './';
 
-const ACCOUNT_ROUTES = [activateRoute, passwordRoute, passwordResetFinishRoute, passwordResetInitRoute, settingsRoute];
+const ACCOUNT_ROUTES = [activateRoute, passwordRoute, settingsRoute];
 
 export const accountState: Routes = [
     {
