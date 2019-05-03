@@ -88,7 +88,7 @@ jhipster:
                 token-validity-in-seconds-for-remember-me: 2592000
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: xrepo@localhost
-        base-url: http://my-server-url-to-change # Modify according to your server's URL
+        base-url: http://172.24.100.107:8080 # Modify according to your server's URL
         host: smtp.gmail.com
         port: 587
         username: experiments.repo@gmail.com
