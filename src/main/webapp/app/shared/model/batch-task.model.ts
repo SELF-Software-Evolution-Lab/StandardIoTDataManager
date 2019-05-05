@@ -25,6 +25,7 @@ export interface IBatchTask {
     endDate?: Moment;
     progress?: number;
     user?: string;
+    parameters?: string;
 }
 
 export class BatchTask implements IBatchTask {
@@ -37,6 +38,7 @@ export class BatchTask implements IBatchTask {
         public startDate?: Moment,
         public endDate?: Moment,
         public progress?: number,
-        public user?: string
+        public user?: string,
+        public parameters?: string
     ) {}
 }
