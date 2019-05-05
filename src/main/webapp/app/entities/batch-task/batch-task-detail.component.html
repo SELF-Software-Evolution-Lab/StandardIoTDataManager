@@ -1,39 +1,52 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <div *ngIf="batchTask">
-            <h2><span>Batch Task</span> {{batchTask.id}}</h2>
+        <div *ngIf="batchTask" [ngSwitch]="batchTask.type">
+            <h2 *ngSwitchCase="taskTypeReport"><span>Search Report</span></h2>
+            <h2 *ngSwitchCase="taskTypeFileLoad"><span>Samples File Load</span></h2>
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
-                <dt><span>Description</span></dt>
+                <dt><span>Id</span></dt>
                 <dd>
-                    <span>{{batchTask.description}}</span>
-                </dd>
-                <dt><span>Type</span></dt>
-                <dd>
-                    <span>{{batchTask.type}}</span>
-                </dd>
-                <dt><span>State</span></dt>
-                <dd>
-                    <span>{{batchTask.state}}</span>
-                </dd>
-                <dt><span>Create Date</span></dt>
-                <dd>
-                    <span>{{batchTask.createDate}}</span>
-                </dd>
-                <dt><span>Start Date</span></dt>
-                <dd>
-                    <span>{{batchTask.startDate}}</span>
-                </dd>
-                <dt><span>End Date</span></dt>
-                <dd>
-                    <span>{{batchTask.endDate}}</span>
+                    <span>{{batchTask.id}}</span>
                 </dd>
                 <dt><span>Progress</span></dt>
                 <dd>
-                    <ngb-progressbar type="success" [value]="batchTask.progress">
-                        <span>{{ batchTask.progress }} %</span>
-                    </ngb-progressbar>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-12">
+                            <ngb-progressbar type="success" [value]="batchTask.progress">
+                                <span>{{ batchTask.progress }} %</span>
+                            </ngb-progressbar>
+                        </div>
+                    </div>
+                </dd>
+                <dt><span>Create Date</span></dt>
+                <dd>
+                    <span>{{batchTask.createDate | date:'medium'}}</span>
+                </dd>
+                <dt><span>Status</span></dt>
+                <dd *ngIf="isError(batchTask.state)" class="text-danger">
+                    <fa-icon [icon]="'exclamation-triangle'"></fa-icon>
+                    <span>{{batchTask.state | titlecase}} - {{batchTask.description}}</span>
+                </dd>
+                <dd *ngIf="!isError(batchTask.state)">
+                    <span>{{batchTask.state | titlecase}}</span>
+                </dd>
+                <dd *ngIf="isCompleted(batchTask.state)">
+                    <a href="{{locateReport(batchTask.id)}}" target="_blank">
+                        <button type="button"
+                                class="btn btn-success">
+                            <fa-icon [icon]="'file-download'"></fa-icon>&nbsp;<span> Download Report</span>
+                        </button>
+                    </a>
+                </dd>
+                <dt><span>Start Date</span></dt>
+                <dd>
+                    <span>{{batchTask.startDate | date:'medium'}}</span>
+                </dd>
+                <dt><span>End Date</span></dt>
+                <dd>
+                    <span>{{batchTask.endDate | date:'medium'}}</span>
                 </dd>
                 <dt><span>User</span></dt>
                 <dd>
@@ -45,12 +58,6 @@
                     (click)="previousState()"
                     class="btn btn-info">
                 <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
-            </button>
-
-            <button type="button"
-                    [routerLink]="['/batch-task', batchTask.id, 'edit']"
-                    class="btn btn-primary">
-                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
             </button>
         </div>
     </div>

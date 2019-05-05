@@ -117,8 +117,9 @@
 </div>
 <div class="row">
     <div class="col-12">
-        <h4 class="text-center">Search found {{searchResults}} result(s)</h4>
-        <h4 class="text-center"><a>{{batchTaskId}}</a></h4>
+        <h5 class="text-center">Search found {{searchResults}} result(s) <br/>
+            <a [routerLink]="['/batch-task', batchTaskId, 'view']">Click here to follow the report progress</a>
+        </h5>
     </div>
 </div>
 </div>
