@@ -139,4 +139,8 @@ export class SearchReportComponent implements OnInit, OnDestroy {
     isError(state: TaskState) {
         return state === TaskState.ERROR;
     }
+
+    refresh() {
+        this.loadAll();
+    }
 }
