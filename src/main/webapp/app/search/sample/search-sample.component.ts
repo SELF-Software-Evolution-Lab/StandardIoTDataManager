@@ -18,7 +18,7 @@ import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 })
 export class SearchSampleComponent implements OnInit {
     targetSystems: Observable<ITargetSystem[]>;
-    tags: Observable<ITag[]>;
+    tags: ITag[];
     operativeConditions: string[];
     sensors: string[];
 
@@ -33,6 +33,7 @@ export class SearchSampleComponent implements OnInit {
     searchReturned = false;
     searchResults: Number = 0;
     batchTaskId = '';
+    tagListDisabled = true;
 
     constructor(
         protected jhiAlertService: JhiAlertService,
@@ -50,13 +51,6 @@ export class SearchSampleComponent implements OnInit {
                 map((response: HttpResponse<ITargetSystem[]>) => response.body)
             )
             .subscribe((res: ITargetSystem[]) => (this.targetSystems = of(res)), (res: HttpErrorResponse) => this.onError(res.message));
-        this.tagService
-            .query()
-            .pipe(
-                filter((mayBeOk: HttpResponse<ITag[]>) => mayBeOk.ok),
-                map((response: HttpResponse<ITag[]>) => response.body)
-            )
-            .subscribe((res: ITag[]) => (this.tags = of(res)), (res: HttpErrorResponse) => this.onError(res.message));
     }
 
     protected onError(errorMessage: string) {
@@ -66,8 +60,24 @@ export class SearchSampleComponent implements OnInit {
     onChangeTargetSystem(selected: ITargetSystem) {
         console.log('selected system ', selected);
         this.operativeConditions = Array.from(new Set(selected.operativeRanges.map(value => value.varName)));
-        console.log('selected tags ', this.selectedTags);
-        console.log('filtered conditions ', this.operativeConditions);
+
+        this.queryTags(selected.id);
+    }
+
+    private queryTags(tsId: string) {
+        this.tagService
+            .listByTargetSystem(tsId)
+            .pipe(
+                filter((mayBeOk: HttpResponse<ITag[]>) => mayBeOk.ok),
+                map((response: HttpResponse<ITag[]>) => response.body)
+            )
+            .subscribe(
+                (res: ITag[]) => {
+                    this.tags = res;
+                    this.tagListDisabled = false;
+                },
+                (res: HttpErrorResponse) => this.onError(res.message)
+            );
     }
 
     onChangeOperativeCondition(selected: string) {
@@ -97,5 +107,19 @@ export class SearchSampleComponent implements OnInit {
     private onSearchError(res: HttpErrorResponse) {
         this.searchReturned = false;
         console.log('search error ', res);
+    }
+
+    tagListCondition(): boolean {
+        return this.tagListDisabled;
+    }
+
+    tagListPlaceHolder() {
+        if (this.tagListDisabled) {
+            return '';
+        } else if (this.tags.length === 0) {
+            return 'No tags found for selected Target System';
+        } else {
+            return 'Select one or more tags';
+        }
     }
 }

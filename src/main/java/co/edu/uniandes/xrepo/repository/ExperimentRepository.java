@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import co.edu.uniandes.xrepo.domain.Experiment;
-import co.edu.uniandes.xrepo.domain.Sampling;
 
 
 /**
@@ -19,4 +18,5 @@ public interface ExperimentRepository extends MongoRepository<Experiment, String
     @Query(value = "{ 'tags' : {$all : ?0 }}")
     List<Experiment> findWithTags(List<String> tagsSearch);
 
+    List<Experiment> findBySystem_Id(String systemId);
 }

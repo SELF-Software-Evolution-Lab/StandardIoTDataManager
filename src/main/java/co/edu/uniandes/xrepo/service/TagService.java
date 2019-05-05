@@ -1,15 +1,24 @@
 package co.edu.uniandes.xrepo.service;
 
-import co.edu.uniandes.xrepo.domain.Tag;
-import co.edu.uniandes.xrepo.repository.TagRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import co.edu.uniandes.xrepo.domain.Experiment;
+import co.edu.uniandes.xrepo.domain.Sampling;
+import co.edu.uniandes.xrepo.domain.Tag;
+import co.edu.uniandes.xrepo.repository.ExperimentRepository;
+import co.edu.uniandes.xrepo.repository.SamplingRepository;
+import co.edu.uniandes.xrepo.repository.TagRepository;
 
 /**
  * Service Implementation for managing Tag.
@@ -21,8 +30,15 @@ public class TagService {
 
     private final TagRepository tagRepository;
 
-    public TagService(TagRepository tagRepository) {
+    private final ExperimentRepository experimentRepository;
+
+    private final SamplingRepository samplingRepository;
+
+    public TagService(TagRepository tagRepository, ExperimentRepository experimentRepository,
+                      SamplingRepository samplingRepository) {
         this.tagRepository = tagRepository;
+        this.experimentRepository = experimentRepository;
+        this.samplingRepository = samplingRepository;
     }
 
     /**
@@ -68,4 +84,23 @@ public class TagService {
         log.debug("Request to delete Tag : {}", id);
         tagRepository.deleteById(id);
     }
+
+    public List<Tag> findByTargetSystem(String tsId) {
+
+        List<Experiment> experimentsBySystem = experimentRepository.findBySystem_Id(tsId);
+
+        List<Sampling> samplings = samplingRepository.findByExperimentIn(experimentsBySystem);
+
+        final Stream<String> experimentsTags = experimentsBySystem.stream()
+            .flatMap(experiment -> experiment.getTags().stream());
+
+        final Stream<String> samplingsTags = samplings.stream().
+            flatMap(sampling -> sampling.getTags().stream());
+
+        Set<Tag> collect = Stream.concat(experimentsTags,
+            samplingsTags).map(tag -> new Tag("", tag)).collect(Collectors.toSet());
+
+        return new ArrayList<>(collect);
+    }
+
 }

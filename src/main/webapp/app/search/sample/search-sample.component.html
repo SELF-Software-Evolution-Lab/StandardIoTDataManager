@@ -24,10 +24,12 @@
             <label id="select_tags" class="col-lg-3 col-form-label">Marked with Tags</label>
             <div class="col-lg-7">
                 <ng-select labelForId="select_tags" [multiple]="true"
-                           [items]="tags | async"
+                           [items]="tags"
                            bindLabel="name"
                            bindValue="name"
-                           [(ngModel)]="selectedTags">
+                           [(ngModel)]="selectedTags"
+                           [disabled]="tagListCondition()"
+                           placeholder="{{tagListPlaceHolder()}}">
                 </ng-select>
             </div>
         </div>

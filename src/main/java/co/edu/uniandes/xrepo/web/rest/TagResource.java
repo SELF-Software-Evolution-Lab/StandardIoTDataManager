@@ -93,6 +93,19 @@ public class TagResource {
     }
 
     /**
+     * GET  /tags : get all the tags used in a target system.
+     *
+     * @param tsId target system id
+     * @return the ResponseEntity with status 200 (OK) and the list of tags in body
+     */
+    @GetMapping("/tags/target-system/{tsId}")
+    public ResponseEntity<List<Tag>> getTagsByTargetSystem(@PathVariable String tsId) {
+        log.debug("REST request to get all tag from target system");
+        List<Tag> tags = tagService.findByTargetSystem(tsId);
+        return ResponseEntity.ok().body(tags);
+    }
+
+    /**
      * GET  /tags/:id : get the "id" tag.
      *
      * @param id the id of the tag to retrieve
