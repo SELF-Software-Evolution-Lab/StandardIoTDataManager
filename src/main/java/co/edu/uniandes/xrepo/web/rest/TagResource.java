@@ -99,9 +99,9 @@ public class TagResource {
      * @return the ResponseEntity with status 200 (OK) and the list of tags in body
      */
     @GetMapping("/tags/target-system/{tsId}")
-    public ResponseEntity<List<Tag>> getTagsByTargetSystem(@PathVariable String tsId) {
+    public ResponseEntity<List<String>> getTagsByTargetSystem(@PathVariable String tsId) {
         log.debug("REST request to get all tag from target system");
-        List<Tag> tags = tagService.findByTargetSystem(tsId);
+        List<String> tags = tagService.findByTargetSystem(tsId);
         return ResponseEntity.ok().body(tags);
     }
 

@@ -36,7 +36,7 @@ export class TagService {
         return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    listByTargetSystem(tsId: string): Observable<EntityArrayResponseType> {
-        return this.http.get<ITag[]>(`${this.resourceUrl}/target-system/${tsId}`, { observe: 'response' });
+    listByTargetSystem(tsId: string): Observable<HttpResponse<string[]>> {
+        return this.http.get<string[]>(`${this.resourceUrl}/target-system/${tsId}`, { observe: 'response' });
     }
 }

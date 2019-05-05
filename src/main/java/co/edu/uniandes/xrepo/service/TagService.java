@@ -85,7 +85,7 @@ public class TagService {
         tagRepository.deleteById(id);
     }
 
-    public List<Tag> findByTargetSystem(String tsId) {
+    public List<String> findByTargetSystem(String tsId) {
 
         final List<Experiment> experimentsBySystem = experimentRepository.findBySystem_Id(tsId);
 
@@ -97,8 +97,8 @@ public class TagService {
         final Stream<String> samplingsTags = samplings.stream().
             flatMap(sampling -> sampling.getTags().stream());
 
-        Set<Tag> collect = Stream.concat(experimentsTags,
-            samplingsTags).map(tag -> new Tag("", tag)).collect(Collectors.toSet());
+        Set<String> collect = Stream.concat(experimentsTags,
+            samplingsTags).collect(Collectors.toSet());
 
         return new ArrayList<>(collect);
     }

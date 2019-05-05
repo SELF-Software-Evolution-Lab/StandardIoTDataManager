@@ -6,7 +6,6 @@ import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
 import { Observable, of } from 'rxjs';
 import { TagService } from 'app/entities/tag';
-import { ITag } from 'app/shared/model/tag.model';
 import { SearchSampleService } from 'app/search/sample/sample-search.service';
 import { SampleSearchParameters } from 'app/shared/model/sample-search-parameters.model';
 import * as moment from 'moment';
@@ -20,13 +19,13 @@ import { ISensor, SelectableSensor } from 'app/shared/model/sensor.model';
 })
 export class SearchSampleComponent implements OnInit {
     targetSystems: Observable<ITargetSystem[]>;
-    tags: ITag[];
+    tags: string[];
     operativeConditions: string[];
     sensors: SelectableSensor[];
 
     selectedTargetSystem: ITargetSystem;
-    selectedTags: ITag[];
-    selectedSensors: SelectableSensor[];
+    selectedTags: string[];
+    selectedSensors: string[];
 
     selectedFromDate: string;
     selectedToDate: string;
@@ -77,13 +76,14 @@ export class SearchSampleComponent implements OnInit {
         this.tagService
             .listByTargetSystem(tsId)
             .pipe(
-                filter((mayBeOk: HttpResponse<ITag[]>) => mayBeOk.ok),
-                map((response: HttpResponse<ITag[]>) => response.body)
+                filter((mayBeOk: HttpResponse<string[]>) => mayBeOk.ok),
+                map((response: HttpResponse<string[]>) => response.body)
             )
             .subscribe(
-                (res: ITag[]) => {
+                (res: string[]) => {
                     this.tags = res;
                     this.tagsDisabled = false;
+                    console.log('Found tags', res);
                 },
                 (res: HttpErrorResponse) => this.onError(res.message)
             );
@@ -103,7 +103,7 @@ export class SearchSampleComponent implements OnInit {
                         this.sensors.push(new SelectableSensor(sensor.internalId, sensor.sensorType));
                     }
                     this.sensorsDisabled = false;
-                    console.log('sensores', this.sensors);
+                    console.log('Found sensors', res);
                 },
                 (res: HttpErrorResponse) => this.onError(res.message)
             );
@@ -115,10 +115,10 @@ export class SearchSampleComponent implements OnInit {
 
     search() {
         this.searchParameters.targetSystemId = [this.selectedTargetSystem.id];
-        // this.searchParameters.tags = this.selectedTags;
+        this.searchParameters.tags = this.selectedTags;
+        this.searchParameters.sensorsId = this.selectedSensors;
         this.searchParameters.fromDateTime = this.selectedFromDate != null ? moment(this.selectedFromDate, DATE_TIME_FORMAT) : null;
         this.searchParameters.toDateTime = this.selectedToDate != null ? moment(this.selectedToDate, DATE_TIME_FORMAT) : null;
-        console.log('search', this.searchParameters);
         this.searchSampleService
             .search(this.searchParameters)
             .subscribe(
@@ -145,6 +145,16 @@ export class SearchSampleComponent implements OnInit {
             return 'No tags found for selected Target System';
         } else {
             return 'Select one or more tags';
+        }
+    }
+
+    sensorListPlaceHolder() {
+        if (this.sensorsDisabled) {
+            return '';
+        } else if (this.sensors.length === 0) {
+            return 'No sensors found for selected Target System';
+        } else {
+            return 'Select one or more sensors';
         }
     }
 }

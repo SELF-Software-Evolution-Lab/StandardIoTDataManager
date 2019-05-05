@@ -75,8 +75,10 @@
             <div class="col-lg-7">
                 <ng-select labelForId="select_sensor" [multiple]="true"
                            [items]="sensors"
+                           bindValue="internalId"
                            [(ngModel)]="selectedSensors"
-                           [disabled]="sensorsDisabled">
+                           [disabled]="sensorsDisabled"
+                           placeholder="{{sensorListPlaceHolder()}}">
                 </ng-select>
             </div>
         </div>
@@ -99,7 +101,12 @@
 </div>
 <div class="row">
     <div class="col">
-
+        <button id="jh-create-entity"
+                class="btn btn-primary float-right jh-create-entity create-experiment"
+                (click)="search()">
+            <fa-icon [icon]="'search'"></fa-icon>
+            <span>Search</span>
+        </button>
     </div>
 </div>
 <div *ngIf="searchReturned">
