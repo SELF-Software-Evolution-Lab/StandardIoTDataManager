@@ -87,9 +87,9 @@ public class TagService {
 
     public List<Tag> findByTargetSystem(String tsId) {
 
-        List<Experiment> experimentsBySystem = experimentRepository.findBySystem_Id(tsId);
+        final List<Experiment> experimentsBySystem = experimentRepository.findBySystem_Id(tsId);
 
-        List<Sampling> samplings = samplingRepository.findByExperimentIn(experimentsBySystem);
+        final List<Sampling> samplings = samplingRepository.findByTargetSystemId(tsId);
 
         final Stream<String> experimentsTags = experimentsBySystem.stream()
             .flatMap(experiment -> experiment.getTags().stream());

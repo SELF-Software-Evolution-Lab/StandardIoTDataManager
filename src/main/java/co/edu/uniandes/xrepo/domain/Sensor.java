@@ -98,11 +98,12 @@ public class Sensor implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Sensor sensor = (Sensor) o;
-        return internalId.equals(sensor.internalId);
+        return internalId.equals(sensor.internalId) &&
+            sensorType.equals(sensor.sensorType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(internalId);
+        return Objects.hash(internalId, sensorType);
     }
 }

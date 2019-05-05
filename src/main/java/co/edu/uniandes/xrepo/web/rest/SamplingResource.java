@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.uniandes.xrepo.service.SamplingService;
 import co.edu.uniandes.xrepo.service.dto.SamplingDTO;
+import co.edu.uniandes.xrepo.service.dto.SensorDTO;
 import co.edu.uniandes.xrepo.web.rest.errors.BadRequestAlertException;
 import co.edu.uniandes.xrepo.web.rest.util.HeaderUtil;
 import co.edu.uniandes.xrepo.web.rest.util.PaginationUtil;
@@ -124,5 +125,12 @@ public class SamplingResource {
         log.debug("REST request to delete Sampling : {}", id);
         samplingService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id)).build();
+    }
+
+    @GetMapping("/samplings/sensors/{tsId}")
+    public ResponseEntity<List<SensorDTO>> getSensorsByTargetSystem(@PathVariable String tsId) {
+        log.debug("REST request to get all sensors from target system");
+        List<SensorDTO> tags = samplingService.findSensorsByTargetSystem(tsId);
+        return ResponseEntity.ok().body(tags);
     }
 }

@@ -8,14 +8,14 @@ import java.util.Objects;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 /**
  * A Sensor.
  */
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString

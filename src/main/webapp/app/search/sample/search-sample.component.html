@@ -21,23 +21,6 @@
 <div class="row">
     <div class="col">
         <div class="form-group row">
-            <label id="select_tags" class="col-lg-3 col-form-label">Marked with Tags</label>
-            <div class="col-lg-7">
-                <ng-select labelForId="select_tags" [multiple]="true"
-                           [items]="tags"
-                           bindLabel="name"
-                           bindValue="name"
-                           [(ngModel)]="selectedTags"
-                           [disabled]="tagListCondition()"
-                           placeholder="{{tagListPlaceHolder()}}">
-                </ng-select>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col">
-        <div class="form-group row">
             <label class="col-lg-3 col-form-label">Sensed between</label>
             <div class="col-lg-7">
                 <div class="row">
@@ -71,11 +54,15 @@
 <div class="row">
     <div class="col">
         <div class="form-group row">
-            <label id="select_op-condition" class="col-lg-3 col-form-label">With Operative Conditions</label>
+            <label id="select_tags" class="col-lg-3 col-form-label">Marked with Tags</label>
             <div class="col-lg-7">
-                <ng-select labelForId="select_op-condition"
-                           [items]="operativeConditions"
-                           (change)="onChangeOperativeCondition($event)">
+                <ng-select labelForId="select_tags" [multiple]="true"
+                           [items]="tags"
+                           bindLabel="name"
+                           bindValue="name"
+                           [(ngModel)]="selectedTags"
+                           [disabled]="tagsDisabled"
+                           placeholder="{{tagListPlaceHolder()}}">
                 </ng-select>
             </div>
         </div>
@@ -88,7 +75,8 @@
             <div class="col-lg-7">
                 <ng-select labelForId="select_sensor" [multiple]="true"
                            [items]="sensors"
-                           [(ngModel)]="selectedSensors">
+                           [(ngModel)]="selectedSensors"
+                           [disabled]="sensorsDisabled">
                 </ng-select>
             </div>
         </div>
@@ -96,12 +84,22 @@
 </div>
 <div class="row">
     <div class="col">
-        <button id="jh-create-entity"
-                class="btn btn-primary float-right jh-create-entity create-experiment"
-        (click)="search()">
-            <fa-icon [icon]="'search'"></fa-icon>
-            <span>Search</span>
-        </button>
+        <div class="form-group row">
+            <label id="select_op-condition" class="col-lg-3 col-form-label">With Operative Conditions</label>
+            <div class="col-lg-7">
+                <ng-select labelForId="select_op-condition"
+                           [items]="operativeConditions"
+                           (change)="onChangeOperativeCondition($event)"
+                           [(ngModel)]="selectedOpCondition"
+                           [disabled]="opCondDisabled">
+                </ng-select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+
     </div>
 </div>
 <div *ngIf="searchReturned">

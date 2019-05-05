@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import co.edu.uniandes.xrepo.domain.Device;
 import co.edu.uniandes.xrepo.domain.Sampling;
+import co.edu.uniandes.xrepo.domain.Sensor;
+import co.edu.uniandes.xrepo.repository.ExperimentRepository;
 import co.edu.uniandes.xrepo.repository.SamplingRepository;
 import co.edu.uniandes.xrepo.service.dto.SamplingDTO;
 import co.edu.uniandes.xrepo.service.dto.SensorDTO;
@@ -30,11 +33,15 @@ public class SamplingService {
 
     private final SamplingRepository samplingRepository;
 
+    private final ExperimentRepository experimentRepository;
+
     private final SamplingMapper samplingMapper;
 
-    public SamplingService(SamplingRepository samplingRepository, SamplingMapper samplingMapper) {
+    public SamplingService(SamplingRepository samplingRepository, SamplingMapper samplingMapper,
+                           ExperimentRepository experimentRepository) {
         this.samplingRepository = samplingRepository;
         this.samplingMapper = samplingMapper;
+        this.experimentRepository = experimentRepository;
     }
 
     /**
@@ -45,10 +52,13 @@ public class SamplingService {
      */
     public SamplingDTO save(SamplingDTO samplingDTO) {
         log.debug("Request to save Sampling : {}", samplingDTO);
-        Sampling sampling = samplingMapper.toEntity(samplingDTO);
+        final Sampling sampling = samplingMapper.toEntity(samplingDTO);
         bindDeviceSensors(samplingDTO, sampling);
-        sampling = samplingRepository.save(sampling);
-        return samplingMapper.toDto(sampling);
+
+        experimentRepository.findById(sampling.getExperiment().getId())
+            .ifPresent(experiment -> sampling.setTargetSystemId(experiment.getSystem().getId()));
+
+        return samplingMapper.toDto(samplingRepository.save(sampling));
     }
 
     private void bindDeviceSensors(SamplingDTO samplingDTO, Sampling sampling) {
@@ -114,5 +124,21 @@ public class SamplingService {
     public void delete(String id) {
         log.debug("Request to delete Sampling : {}", id);
         samplingRepository.deleteById(id);
+    }
+
+    public List<SensorDTO> findSensorsByTargetSystem(String tsId) {
+        return samplingRepository.findByTargetSystemId(tsId).stream()
+            .flatMap(sampling -> sampling.getSensors().stream())
+            .map(sensor -> Sensor.builder()
+                .internalId(sensor.getInternalId())
+                .sensorType(sensor.getSensorType()).build()
+            )
+            .collect(Collectors.toSet())
+            .stream()
+            .map(sensor -> SensorDTO.builder()
+                .internalId(sensor.getInternalId())
+                .sensorType(sensor.getSensorType()).build()
+            )
+            .collect(Collectors.toList());
     }
 }

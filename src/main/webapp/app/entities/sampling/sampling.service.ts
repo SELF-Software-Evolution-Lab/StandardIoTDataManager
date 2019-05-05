@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { ISampling } from 'app/shared/model/sampling.model';
+import { ISensor } from 'app/shared/model/sensor.model';
 
 type EntityResponseType = HttpResponse<ISampling>;
 type EntityArrayResponseType = HttpResponse<ISampling[]>;
@@ -72,5 +73,9 @@ export class SamplingService {
             });
         }
         return res;
+    }
+
+    listSensorsByTargetSystem(tsId: string): Observable<HttpResponse<ISensor[]>> {
+        return this.http.get<ISensor[]>(`${this.resourceUrl}/sensors/${tsId}`, { observe: 'response' });
     }
 }

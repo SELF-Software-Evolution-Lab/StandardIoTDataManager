@@ -57,6 +57,10 @@ public class Sampling implements Serializable {
     @Field("end_time")
     private Instant endTime;
 
+    @NotNull
+    @Field("target_system_id")
+    private String targetSystemId;
+
     @DBRef
     @Field("experiment")
     private Experiment experiment;
@@ -198,7 +202,7 @@ public class Sampling implements Serializable {
         return this;
     }
 
-    public void setList(List<String> tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 
@@ -210,5 +214,13 @@ public class Sampling implements Serializable {
         this.deviceSensor = deviceSensor;
     }
 
-// jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public String getTargetSystemId() {
+        return targetSystemId;
+    }
+
+    public void setTargetSystemId(String targetSystemId) {
+        this.targetSystemId = targetSystemId;
+    }
 }

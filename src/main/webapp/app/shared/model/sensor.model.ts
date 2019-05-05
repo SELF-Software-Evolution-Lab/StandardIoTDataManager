@@ -17,3 +17,11 @@ export class Sensor implements ISensor {
         public deviceName?: string
     ) {}
 }
+
+export class SelectableSensor {
+    label: string;
+
+    constructor(public internalId?: string, public sensorType?: string) {
+        this.label = `${internalId} - ${sensorType}`;
+    }
+}

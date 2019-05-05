@@ -11,6 +11,8 @@ import { SearchSampleService } from 'app/search/sample/sample-search.service';
 import { SampleSearchParameters } from 'app/shared/model/sample-search-parameters.model';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
+import { SamplingService } from 'app/entities/sampling';
+import { ISensor, SelectableSensor } from 'app/shared/model/sensor.model';
 
 @Component({
     selector: 'jhi-search-sample',
@@ -20,25 +22,31 @@ export class SearchSampleComponent implements OnInit {
     targetSystems: Observable<ITargetSystem[]>;
     tags: ITag[];
     operativeConditions: string[];
-    sensors: string[];
+    sensors: SelectableSensor[];
 
     selectedTargetSystem: ITargetSystem;
-    selectedTags: string[];
-    selectedSensors: string[];
+    selectedTags: ITag[];
+    selectedSensors: SelectableSensor[];
 
     selectedFromDate: string;
     selectedToDate: string;
+
+    selectedOpCondition: any;
+
+    opCondDisabled = true;
+    sensorsDisabled = true;
+    tagsDisabled = true;
 
     searchParameters: SampleSearchParameters;
     searchReturned = false;
     searchResults: Number = 0;
     batchTaskId = '';
-    tagListDisabled = true;
 
     constructor(
         protected jhiAlertService: JhiAlertService,
         protected targetSystemService: TargetSystemService,
         protected tagService: TagService,
+        protected samplingService: SamplingService,
         protected searchSampleService: SearchSampleService
     ) {}
 
@@ -62,6 +70,7 @@ export class SearchSampleComponent implements OnInit {
         this.operativeConditions = Array.from(new Set(selected.operativeRanges.map(value => value.varName)));
 
         this.queryTags(selected.id);
+        this.querySensors(selected.id);
     }
 
     private queryTags(tsId: string) {
@@ -74,7 +83,27 @@ export class SearchSampleComponent implements OnInit {
             .subscribe(
                 (res: ITag[]) => {
                     this.tags = res;
-                    this.tagListDisabled = false;
+                    this.tagsDisabled = false;
+                },
+                (res: HttpErrorResponse) => this.onError(res.message)
+            );
+    }
+
+    private querySensors(tsId: string) {
+        this.samplingService
+            .listSensorsByTargetSystem(tsId)
+            .pipe(
+                filter((mayBeOk: HttpResponse<ISensor[]>) => mayBeOk.ok),
+                map((response: HttpResponse<ISensor[]>) => response.body)
+            )
+            .subscribe(
+                (res: ISensor[]) => {
+                    this.sensors = [];
+                    for (const sensor of res) {
+                        this.sensors.push(new SelectableSensor(sensor.internalId, sensor.sensorType));
+                    }
+                    this.sensorsDisabled = false;
+                    console.log('sensores', this.sensors);
                 },
                 (res: HttpErrorResponse) => this.onError(res.message)
             );
@@ -86,7 +115,7 @@ export class SearchSampleComponent implements OnInit {
 
     search() {
         this.searchParameters.targetSystemId = [this.selectedTargetSystem.id];
-        this.searchParameters.tags = this.selectedTags;
+        // this.searchParameters.tags = this.selectedTags;
         this.searchParameters.fromDateTime = this.selectedFromDate != null ? moment(this.selectedFromDate, DATE_TIME_FORMAT) : null;
         this.searchParameters.toDateTime = this.selectedToDate != null ? moment(this.selectedToDate, DATE_TIME_FORMAT) : null;
         console.log('search', this.searchParameters);
@@ -109,12 +138,8 @@ export class SearchSampleComponent implements OnInit {
         console.log('search error ', res);
     }
 
-    tagListCondition(): boolean {
-        return this.tagListDisabled;
-    }
-
     tagListPlaceHolder() {
-        if (this.tagListDisabled) {
+        if (this.tagsDisabled) {
             return '';
         } else if (this.tags.length === 0) {
             return 'No tags found for selected Target System';
