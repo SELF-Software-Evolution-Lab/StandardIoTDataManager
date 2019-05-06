@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import co.edu.uniandes.xrepo.domain.BatchTask;
 import co.edu.uniandes.xrepo.domain.enumeration.TaskState;
 import co.edu.uniandes.xrepo.domain.enumeration.TaskType;
+import co.edu.uniandes.xrepo.security.SecurityUtils;
 import co.edu.uniandes.xrepo.service.BatchTaskService;
 import co.edu.uniandes.xrepo.service.dto.SamplesFilesParametersDTO;
 import co.edu.uniandes.xrepo.web.rest.util.HeaderUtil;
@@ -69,6 +70,7 @@ public class SamplesFilesResource {
             tarea.setType(TaskType.FILE_LOAD);
             tarea.setDescription("Process File " + fileTemp.getName());
             tarea.setCreateDate(Instant.now());
+            tarea.setUser(SecurityUtils.getCurrentUserLogin().get());
             
             SamplesFilesParametersDTO parameters = new SamplesFilesParametersDTO();
 
