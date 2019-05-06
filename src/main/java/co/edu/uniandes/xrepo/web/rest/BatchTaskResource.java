@@ -102,6 +102,20 @@ public class BatchTaskResource {
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/batch-tasks");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
+    
+    /**
+     * GET  /batch-tasks/upload-files : get all the upload files tasks.
+     *
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of search reports in body
+     */
+    @GetMapping("/batch-tasks/upload-files")
+    public ResponseEntity<List<BatchTask>> getAllUploadFilesByUser(Pageable pageable) {
+        log.debug("REST request to get a page of Search Reports");
+        Page<BatchTask> page = batchTaskService.findAllUploadFilesByUser(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/batch-tasks/upload-files");
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
 
     /**
      * GET  /batch-tasks/search-reports : get all the search reports tasks.
@@ -155,4 +169,5 @@ public class BatchTaskResource {
         batchTaskService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id)).build();
     }
+    
 }

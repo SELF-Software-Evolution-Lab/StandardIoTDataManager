@@ -44,6 +44,13 @@ export class BatchTaskService {
             .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
     }
 
+    queryMyUploads(req?: any): Observable<EntityArrayResponseType> {
+        const options = createRequestOption(req);
+        return this.http
+            .get<IBatchTask[]>(`${this.resourceUrl}/upload-files`, { params: options, observe: 'response' })
+            .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+    }
+
     queryMyReports(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
         return this.http

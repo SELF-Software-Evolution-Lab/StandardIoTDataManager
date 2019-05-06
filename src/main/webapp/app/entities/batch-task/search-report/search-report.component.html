@@ -1,6 +1,12 @@
 <div>
     <h2 id="page-heading">
-        <span>Search Reports</span>
+        <span><fa-icon [icon]="'file-csv'"></fa-icon>Search Reports</span>|
+        <button class="btn btn-info " [routerLink]="['/batch-task/']">
+            <fa-icon icon="file-upload"></fa-icon>
+            <span >
+            Upload Samples
+            </span>
+        </button>
         <button class="btn btn-primary float-right" (click)="refresh()">
             <fa-icon [icon]="'sync'"></fa-icon> <span>Refresh</span>
         </button>

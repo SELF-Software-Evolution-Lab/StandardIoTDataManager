@@ -94,6 +94,10 @@ public class BatchTaskService {
         return batchTaskRepository.findByTypeAndUser(TaskType.REPORT, currentUser(), pageable);
     }
 
+    public Page<BatchTask> findAllUploadFilesByUser(Pageable pageable) {
+        return batchTaskRepository.findByTypeAndUser(TaskType.FILE_LOAD, currentUser(), pageable);
+    }
+
     public File fileFromReport(String id) {
         Optional<BatchTask> byId = batchTaskRepository.findById(id);
         BatchTask batchTask = byId.orElseThrow(() -> new NoSuchElementException("Report for id " + id + " wasn't found"));

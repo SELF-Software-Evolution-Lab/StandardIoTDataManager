@@ -5,11 +5,12 @@ import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 
-import { IBatchTask, TaskState } from 'app/shared/model/batch-task.model';
+import { IBatchTask, TaskState, TaskType } from 'app/shared/model/batch-task.model';
 import { AccountService } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
 import { BatchTaskService } from './batch-task.service';
+import { NgbTabChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'jhi-batch-task',
@@ -17,6 +18,7 @@ import { BatchTaskService } from './batch-task.service';
 })
 export class BatchTaskComponent implements OnInit, OnDestroy {
     currentAccount: any;
+    reportBatchTasks: IBatchTask[];
     batchTasks: IBatchTask[];
     error: any;
     success: any;
@@ -50,7 +52,7 @@ export class BatchTaskComponent implements OnInit, OnDestroy {
 
     loadAll() {
         this.batchTaskService
-            .query({
+            .queryMyUploads({
                 page: this.page - 1,
                 size: this.itemsPerPage,
                 sort: this.sort(),
@@ -131,5 +133,13 @@ export class BatchTaskComponent implements OnInit, OnDestroy {
     }
     refresh() {
         this.loadAll();
+    }
+
+    isReport(type: TaskType) {
+        return type === TaskType.REPORT;
+    }
+
+    isFileUpload(type: TaskType) {
+        return type === TaskType.FILELOAD;
     }
 }
