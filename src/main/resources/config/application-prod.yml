@@ -119,3 +119,4 @@ jhipster:
 xrepo:
     report-generation-location: /mnt/nfs/var/nfs/search-result
     samples-files-location: /mnt/nfs/var/nfs/input-samples
+    batch-tasks-checker-frequency: 120000

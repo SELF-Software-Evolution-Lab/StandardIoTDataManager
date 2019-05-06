@@ -36,7 +36,7 @@ public class BackgroundTaskExecutor {
             .findFirst().get();
     }
 
-    @Scheduled(fixedDelay = 30000)
+    @Scheduled(fixedDelayString = "${xrepo.batch-tasks-checker-frequency}")
     public void processPendingTasks() {
         log.info("Start looking for pending tasks");
         provider.listPendingTasks().stream()
