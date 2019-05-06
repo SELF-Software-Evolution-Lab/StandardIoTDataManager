@@ -54,66 +54,6 @@
                 </dd>
             </dl>
             
-            <div *ngIf="batchTask.type === 'FILE_LOAD'">
-                <h4>Aditional Info</h4>
-                <table class="table">
-                    <tr><th><strong>Total Lines</strong></th>
-                        <td>
-                            {{batchTask.parameters.totalLines}}
-                        </td>
-                    </tr>
-                    <tr><th><strong>Processed Lines</strong></th>
-                        <td>
-                            {{batchTask.parameters.processedLines}}
-                        </td>
-                    </tr>
-                    <tr><th><strong>Processed Lines OK</strong></th>
-                        <td>
-                            {{batchTask.parameters.processedLinesOk}}
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div *ngIf="batchTask.type === 'REPORT'">
-                <h4>Search parameters</h4>
-                <table class="table">
-                    <tr><th><strong>Expected Records</strong></th>
-                        <td>
-                            {{batchTask.parameters.expectedRecords}}
-                        </td>
-                    </tr>
-                    <tr><th><strong>From DateTime</strong></th>
-                        <td>
-                            {{batchTask.parameters.fromDateTime}}
-                        </td>
-                    </tr>
-                    <tr><th><strong>To DateTime</strong></th>
-                        <td>
-                            {{batchTask.parameters.toDateTime}}
-                        </td>
-                    </tr>
-                    <tr><th><strong>Tags</strong></th>
-                        <td>
-                            {{batchTask.parameters.tags}}
-                        </td>
-                    </tr>
-                    <tr><th><strong>Target Systems</strong></th>
-                        <td>
-                            {{batchTask.parameters.targetSystemId}}
-                        </td>
-                    </tr>
-                    <tr><th><strong>Experiments</strong></th>
-                        <td>
-                            {{batchTask.parameters.experimentsId}}
-                        </td>
-                    </tr>
-                    <tr><th><strong>Sensors</strong></th>
-                        <td>
-                            {{batchTask.parameters.sensorsId}}
-                        </td>
-                    </tr>   
-                </table>    
-            </div>
             <button type="submit"
                     (click)="previousState()"
                     class="btn btn-info">
