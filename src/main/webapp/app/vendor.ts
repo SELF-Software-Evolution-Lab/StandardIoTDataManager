@@ -44,7 +44,16 @@ import {
     faFileCsv,
     faFileDownload,
     faFileUpload,
-    faExclamationTriangle
+    faExclamationTriangle,
+    faSitemap,
+    faCogs,
+    faRuler,
+    faTags,
+    faLayerGroup,
+    faSortNumericDown,
+    faKey,
+    faFileMedicalAlt,
+    faDolly
 } from '@fortawesome/free-solid-svg-icons';
 
 // Adds the SVG icon to the library so you can use it in your page
@@ -87,5 +96,14 @@ library.add(faFileCsv);
 library.add(faFileDownload);
 library.add(faFileUpload);
 library.add(faExclamationTriangle);
+library.add(faSitemap);
+library.add(faCogs);
+library.add(faRuler);
+library.add(faTags);
+library.add(faLayerGroup);
+library.add(faSortNumericDown);
+library.add(faKey);
+library.add(faFileMedicalAlt);
+library.add(faDolly);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here
