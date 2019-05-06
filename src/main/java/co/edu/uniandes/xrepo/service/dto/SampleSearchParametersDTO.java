@@ -9,6 +9,8 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.query.Criteria;
 
+import co.edu.uniandes.xrepo.domain.metadata.OperativeRange;
+
 public class SampleSearchParametersDTO implements Serializable {
 
     private List<String> targetSystemId = new ArrayList<>();
@@ -18,6 +20,8 @@ public class SampleSearchParametersDTO implements Serializable {
     private List<String> samplingsId = new ArrayList<>();
 
     private List<String> sensorsId = new ArrayList<>();
+
+    private List<OperativeRange> operativeConditions = new ArrayList<>();
 
     private LocalDateTime fromDateTime;
     private LocalDateTime toDateTime;
@@ -136,5 +140,13 @@ public class SampleSearchParametersDTO implements Serializable {
 
     public void setExpectedRecords(long expectedRecords) {
         this.expectedRecords = expectedRecords;
+    }
+
+    public List<OperativeRange> getOperativeConditions() {
+        return operativeConditions;
+    }
+
+    public void setOperativeConditions(List<OperativeRange> operativeConditions) {
+        this.operativeConditions = operativeConditions;
     }
 }

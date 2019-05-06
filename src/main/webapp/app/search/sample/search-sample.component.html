@@ -3,123 +3,162 @@
         <hr/>
     </div>
 </div>
-<div class="row">
-    <div class="col">
-        <div class="form-group row">
-            <label id="select_targetSystem" class="col-lg-3 col-form-label">From Target System</label>
-            <div class="col-lg-7">
-                <ng-select labelForId="select_targetSystem"
-                           [items]="targetSystems | async"
-                           bindLabel="name"
-                           (change)="onChangeTargetSystem($event)"
-                           [(ngModel)]="selectedTargetSystem">
-                </ng-select>
+<form name="editForm" role="form" novalidate (ngSubmit)="search()" #editForm="ngForm">
+    <div class="row">
+        <div class="col">
+            <div class="form-group row">
+                <label id="select_targetSystem" class="col-lg-3 col-form-label">From Target System</label>
+                <div class="col-lg-7">
+                    <ng-select labelForId="select_targetSystem" name="select_targetSystem"
+                               [items]="targetSystems | async"
+                               bindLabel="name"
+                               (change)="onChangeTargetSystem($event)"
+                               [(ngModel)]="selectedTargetSystem"
+                               required>
+                    </ng-select>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col">
-        <div class="form-group row">
-            <label class="col-lg-3 col-form-label">Sensed between</label>
-            <div class="col-lg-7">
-                <div class="row">
-                    <div class="d-flex col-1">
-                        <label for="field_startTime">from</label>
-                    </div>
-                    <div class="d-flex col-lg-5">
-                        <input id="field_startTime"
-                               type="datetime-local"
-                               class="form-control"
-                               name="startTime"
-                               placeholder="YYYY-MM-DD HH:mm"
-                               [(ngModel)]="selectedFromDate"/>
-                    </div>
-                    <div class="d-flex col-1">
-                        <label for="field_endTime">to</label>
-                    </div>
-                    <div class="d-flex col-lg-5">
-                        <input id="field_endTime"
-                               type="datetime-local"
-                               class="form-control"
-                               name="startTime"
-                               placeholder="YYYY-MM-DD HH:mm"
-                               [(ngModel)]="selectedToDate"/>
+    <div class="row">
+        <div class="col">
+            <div class="form-group row">
+                <label class="col-lg-3 col-form-label">Sensed between</label>
+                <div class="col-lg-7">
+                    <div class="row">
+                        <div class="d-flex col-1">
+                            <label for="field_startTime">from</label>
+                        </div>
+                        <div class="d-flex col-lg-5">
+                            <input id="field_startTime" name="startTime"
+                                   type="datetime-local" class="form-control"
+                                   placeholder="YYYY-MM-DD HH:mm"
+                                   [(ngModel)]="selectedFromDate"/>
+                        </div>
+                        <div class="d-flex col-1">
+                            <label for="field_endTime">to</label>
+                        </div>
+                        <div class="d-flex col-lg-5">
+                            <input id="field_endTime" name="endTime"
+                                   type="datetime-local" class="form-control"
+                                   placeholder="YYYY-MM-DD HH:mm"
+                                   [(ngModel)]="selectedToDate"/>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col">
-        <div class="form-group row">
-            <label id="select_tags" class="col-lg-3 col-form-label">Marked with Tags</label>
-            <div class="col-lg-7">
-                <ng-select labelForId="select_tags" [multiple]="true"
-                           [items]="tags"
-                           bindLabel="name"
-                           bindValue="name"
-                           [(ngModel)]="selectedTags"
-                           [disabled]="tagsDisabled"
-                           placeholder="{{tagListPlaceHolder()}}">
-                </ng-select>
+
+    <div class="row">
+        <div class="col">
+            <div class="form-group row">
+                <label id="select_tags" class="col-lg-3 col-form-label">Marked with Tags</label>
+                <div class="col-lg-7">
+                    <ng-select labelForId="select_tags" name="select_tags"
+                               placeholder="{{tagListPlaceHolder()}}"
+                               [multiple]="true" [items]="tags"
+                               bindLabel="name" bindValue="name"
+                               [(ngModel)]="selectedTags"
+                               [disabled]="tagsDisabled">
+                    </ng-select>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col">
-        <div class="form-group row">
-            <label id="select_sensor" class="col-lg-3 col-form-label">From Sensors</label>
-            <div class="col-lg-7">
-                <ng-select labelForId="select_sensor" [multiple]="true"
-                           [items]="sensors"
-                           bindValue="internalId"
-                           [(ngModel)]="selectedSensors"
-                           [disabled]="sensorsDisabled"
-                           placeholder="{{sensorListPlaceHolder()}}">
-                </ng-select>
+    <div class="row">
+        <div class="col">
+            <div class="form-group row">
+                <label id="select_sensor" class="col-lg-3 col-form-label">From Sensors</label>
+                <div class="col-lg-7">
+                    <ng-select labelForId="select_sensor" name="select_sensor"
+                               placeholder="{{sensorListPlaceHolder()}}"
+                               [multiple]="true" [items]="sensors"
+                               bindValue="internalId"
+                               [(ngModel)]="selectedSensors"
+                               [disabled]="sensorsDisabled">
+                    </ng-select>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col">
-        <div class="form-group row">
-            <label id="select_op-condition" class="col-lg-3 col-form-label">With Operative Conditions</label>
-            <div class="col-lg-7">
-                <ng-select labelForId="select_op-condition"
-                           [items]="operativeConditions"
-                           (change)="onChangeOperativeCondition($event)"
-                           [(ngModel)]="selectedOpCondition"
-                           [disabled]="opCondDisabled">
-                </ng-select>
+    <div class="row">
+        <div class="col">
+            <div class="form-group row">
+                <label id="select_op-condition" class="col-lg-3 col-form-label">With Operative Conditions</label>
+                <div class="col-lg-7">
+                    <ng-select labelForId="select_op-condition" name="select_op-condition"
+                               placeholder="{{opConditionsListPlaceHolder()}}"
+                               [multiple]="true" [items]="operativeConditions"
+                               (add)="addOpCondSelected($event)"
+                               (remove)="removeOpCondSelected($event)"
+                               (clear)="resetOpCondSelected()"
+                               [(ngModel)]="unusedSelectedOpCond"
+                               [disabled]="opCondDisabled">
+                    </ng-select>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col">
-        <button id="jh-create-entity"
-                class="btn btn-primary float-right jh-create-entity create-experiment"
-                (click)="search()">
-            <fa-icon [icon]="'search'"></fa-icon>
-            <span>Search</span>
-        </button>
+    <div *ngFor="let cond of selectedOpConditions" class="row">
+        <div class="col">
+            <div class="form-group row">
+                <div class="col-lg-3"></div>
+
+                <label class="col-lg-1 col-form-label font-weight-bold font-italic">
+                    {{cond.varName}}
+                </label>
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="d-flex col-1">
+                            <label for="{{cond.varName}}_max">min</label>
+                        </div>
+                        <div class="d-flex col-lg-5">
+                            <input id="{{cond.varName}}_min" name="{{cond.varName}}_min"
+                                   type="number" step="any"
+                                   class="form-control"
+                                   required="true"
+                                   [(ngModel)]="cond.minVal"/>
+                        </div>
+                        <div class="d-flex col-1">
+                            <label for="{{cond.varName}}_max">max</label>
+                        </div>
+                        <div class="d-flex col-lg-5">
+                            <input id="{{cond.varName}}_max" name="{{cond.varName}}_max"
+                                   type="number" step="any"
+                                   class="form-control"
+                                   required="true"
+                                   [(ngModel)]="cond.maxVal"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+
+    <div class="row">
+        <div class="col">
+            <button id="jh-create-entity"
+                    type="submit"
+                    class="btn btn-primary float-right jh-create-entity create-experiment"
+                    [disabled]="editForm.form.invalid || isSearching">
+                <fa-icon [icon]="'search'"></fa-icon>
+                <span>Search</span>
+            </button>
+        </div>
+    </div>
+</form>
 <div *ngIf="searchReturned">
-<div class="row">
-    <div class="col-12">
-        <hr/>
+    <div class="row">
+        <div class="col-12">
+            <hr/>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        <h5 class="text-center">Search found {{searchResults}} result(s) <br/>
-            <a [routerLink]="['/batch-task', batchTaskId, 'view']">Click here to follow the report progress</a>
-        </h5>
+    <div class="row">
+        <div class="col-12">
+            <h5 class="text-center">Search found {{searchResults}} result(s) <br/>
+                <a [routerLink]="['/batch-task', batchTaskId, 'view']">Click here to follow the report progress</a>
+            </h5>
+        </div>
     </div>
-</div>
 </div>

@@ -12,6 +12,7 @@ import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { SamplingService } from 'app/entities/sampling';
 import { ISensor, SelectableSensor } from 'app/shared/model/sensor.model';
+import { IOperativeRange, OperativeRange } from 'app/shared/model/operative-range.model';
 
 @Component({
     selector: 'jhi-search-sample',
@@ -26,11 +27,10 @@ export class SearchSampleComponent implements OnInit {
     selectedTargetSystem: ITargetSystem;
     selectedTags: string[];
     selectedSensors: string[];
+    selectedOpConditions: IOperativeRange[] = [];
 
     selectedFromDate: string;
     selectedToDate: string;
-
-    selectedOpCondition: any;
 
     opCondDisabled = true;
     sensorsDisabled = true;
@@ -41,6 +41,9 @@ export class SearchSampleComponent implements OnInit {
     searchResults: Number = 0;
     batchTaskId = '';
 
+    isSearching: boolean;
+    unusedSelectedOpCond: any;
+
     constructor(
         protected jhiAlertService: JhiAlertService,
         protected targetSystemService: TargetSystemService,
@@ -50,6 +53,7 @@ export class SearchSampleComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.isSearching = false;
         this.searchParameters = new SampleSearchParameters();
         this.targetSystemService
             .query()
@@ -66,10 +70,26 @@ export class SearchSampleComponent implements OnInit {
 
     onChangeTargetSystem(selected: ITargetSystem) {
         console.log('selected system ', selected);
-        this.operativeConditions = Array.from(new Set(selected.operativeRanges.map(value => value.varName)));
 
-        this.queryTags(selected.id);
-        this.querySensors(selected.id);
+        if (selected) {
+            this.initOpConditions(selected);
+            this.queryTags(selected.id);
+            this.querySensors(selected.id);
+        } else {
+            this.opCondDisabled = true;
+            this.sensorsDisabled = true;
+            this.tagsDisabled = true;
+            this.selectedTags = [];
+            this.selectedSensors = [];
+            this.selectedOpConditions = [];
+        }
+    }
+
+    private initOpConditions(selected: ITargetSystem) {
+        this.selectedOpConditions = [];
+        this.operativeConditions = [];
+        this.opCondDisabled = false;
+        this.operativeConditions = Array.from(new Set(selected.operativeRanges.map(value => value.varName.toLowerCase())));
     }
 
     private queryTags(tsId: string) {
@@ -109,16 +129,15 @@ export class SearchSampleComponent implements OnInit {
             );
     }
 
-    onChangeOperativeCondition(selected: string) {
-        console.log('selected operative condition ', selected);
-    }
-
     search() {
         this.searchParameters.targetSystemId = [this.selectedTargetSystem.id];
         this.searchParameters.tags = this.selectedTags;
         this.searchParameters.sensorsId = this.selectedSensors;
+        this.searchParameters.operativeConditions = this.selectedOpConditions;
         this.searchParameters.fromDateTime = this.selectedFromDate != null ? moment(this.selectedFromDate, DATE_TIME_FORMAT) : null;
         this.searchParameters.toDateTime = this.selectedToDate != null ? moment(this.selectedToDate, DATE_TIME_FORMAT) : null;
+        //console.log('search with', this.searchParameters);
+        this.isSearching = true;
         this.searchSampleService
             .search(this.searchParameters)
             .subscribe(
@@ -129,12 +148,14 @@ export class SearchSampleComponent implements OnInit {
 
     private onSearchSuccess(res: HttpResponse<Array<string>>) {
         this.searchReturned = true;
+        this.isSearching = false;
         this.searchResults = res.body['count'];
         this.batchTaskId = res.body['batchTaskId'];
     }
 
     private onSearchError(res: HttpErrorResponse) {
         this.searchReturned = false;
+        this.isSearching = false;
         console.log('search error ', res);
     }
 
@@ -156,5 +177,34 @@ export class SearchSampleComponent implements OnInit {
         } else {
             return 'Select one or more sensors';
         }
+    }
+
+    opConditionsListPlaceHolder() {
+        if (this.opCondDisabled) {
+            return '';
+        } else if (this.operativeConditions.length === 0) {
+            return 'Target System doesn\'t have operative conditions';
+        } else {
+            return 'Select one or more operative conditions';
+        }
+    }
+
+    addOpCondSelected(opCondAdded) {
+        this.selectedOpConditions.push(new OperativeRange(opCondAdded));
+    }
+
+    removeOpCondSelected($event) {
+        let removeIndex = 0;
+        this.selectedOpConditions.forEach((value, index) => {
+            if (value.varName === $event.value) {
+                removeIndex = index;
+            }
+        });
+
+        this.selectedOpConditions.splice(removeIndex, 1);
+    }
+
+    resetOpCondSelected() {
+        this.selectedOpConditions = [];
     }
 }
