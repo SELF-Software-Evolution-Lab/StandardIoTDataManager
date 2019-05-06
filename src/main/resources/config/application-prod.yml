@@ -18,6 +18,8 @@ logging:
         ROOT: INFO
         co.edu.uniandes.xrepo: INFO
         io.github.jhipster: INFO
+    path: ./logs
+
 
 spring:
     devtools:
