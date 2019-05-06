@@ -36,7 +36,7 @@ public class BackgroundTaskExecutor {
             .findFirst().get();
     }
 
-    @Scheduled(fixedDelay = 120000)
+    @Scheduled(fixedDelay = 30000)
     public void processPendingTasks() {
         log.info("Start looking for pending tasks");
         provider.listPendingTasks().stream()

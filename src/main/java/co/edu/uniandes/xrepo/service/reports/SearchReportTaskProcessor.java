@@ -92,6 +92,7 @@ public class SearchReportTaskProcessor implements BackgroundTaskProcessor, Searc
         }
 
         stream.close();
+
     }
 
     private void writeReport(SampleSearchParametersDTO params,
@@ -104,9 +105,10 @@ public class SearchReportTaskProcessor implements BackgroundTaskProcessor, Searc
         final AtomicLong current = new AtomicLong(0);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             while (stream.hasNext()) {
-                writer.write(new SampleCsvAdapter(stream.next()).toCsvRecord());
+                writer.write(new SampleCsvAdapter(stream.next()).toCsvRecord()+"\n");
                 saveTaskProgress(expectedRecords, current.addAndGet(1), task);
             }
+            log.info("Report generated successfully {}", file.getName());
         } catch (IOException e) {
             file.delete();
             throw new UncheckedIOException(e);
@@ -114,10 +116,14 @@ public class SearchReportTaskProcessor implements BackgroundTaskProcessor, Searc
     }
 
     private void saveTaskProgress(final long expectedRecords, final long currentRecord, final BatchTask task) {
-        asyncDelegator.async(() -> {
-            Long l = Long.valueOf(currentRecord * 100 / expectedRecords);
-            batchTaskService.save(task.progress(l.intValue()));
-        });
+        try {
+            Long progress = Long.valueOf(currentRecord * 100 / expectedRecords);
+            if (progress % 4 == 0 || progress % 5 == 0) {
+                batchTaskService.save(task.progress(progress.intValue()));
+            }
+        } catch (Exception e) {
+            log.error("Error updating task progress", e);
+        }
     }
 
     private SampleSearchParametersDTO extractSearchParams(BatchTask task) {
