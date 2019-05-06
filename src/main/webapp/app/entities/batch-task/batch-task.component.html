@@ -1,6 +1,12 @@
 <div>
     <h2 id="page-heading">
-        <span>Batch Tasks</span>
+        <span><fa-icon icon="file-upload"></fa-icon>Upload Samples</span>|
+        <button class="btn btn-info " [routerLink]="['/batch-task/search-report']">
+            <fa-icon [icon]="'file-csv'"></fa-icon>
+            <span >
+            Search Reports
+            </span>
+        </button>
         <button class="btn btn-primary float-right" (click)="refresh()">
             <fa-icon [icon]="'sync'"></fa-icon> <span>Refresh</span>
         </button>
@@ -11,31 +17,27 @@
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="type"><span>Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="state"><span>Status</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="id"><span>Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="progress"><span>Progress</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="createDate"><span>Create Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="state"><span>Status</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="startDate"><span>Start Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="endDate"><span>End Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="user"><span>User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let batchTask of batchTasks ;trackBy: trackId">
                 <td><a [routerLink]="['/batch-task', batchTask.id, 'view' ]">{{batchTask.id}}</a></td>
-                <td>{{batchTask.description}}</td>
-                <td>{{batchTask.type}}</td>
-                <td>{{batchTask.state}}</td>
                 <td><ngb-progressbar type="success" [value]="batchTask.progress">
                     <span>{{ batchTask.progress }} %</span>
                 </ngb-progressbar></td>
                 <td>{{batchTask.createDate | date:'medium'}}</td>
+                <td>{{batchTask.state}}</td>
                 <td>{{batchTask.startDate | date:'medium'}}</td>
                 <td>{{batchTask.endDate | date:'medium'}}</td>
-                <td>{{batchTask.user}}</td>
+                <td>{{batchTask.description}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
