@@ -37,4 +37,12 @@ export class BatchTaskDetailComponent implements OnInit {
     isError(state: TaskState) {
         return state === TaskState.ERROR;
     }
+
+    isReport(type: TaskType) {
+        return type === TaskType.REPORT;
+    }
+
+    isFileUpload(type: TaskType) {
+        return type === TaskType.FILELOAD;
+    }
 }

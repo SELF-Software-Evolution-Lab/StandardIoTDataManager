@@ -1,5 +1,6 @@
 import { Moment } from 'moment';
 import { IUser } from 'app/core/user/user.model';
+import { IReportParameters } from './report-parameters.model';
 
 export const enum TaskType {
     UNDEFINED = 'UNDEFINED',
@@ -25,7 +26,7 @@ export interface IBatchTask {
     endDate?: Moment;
     progress?: number;
     user?: string;
-    parameters?: string;
+    parameters?: IReportParameters;
 }
 
 export class BatchTask implements IBatchTask {
@@ -39,6 +40,6 @@ export class BatchTask implements IBatchTask {
         public endDate?: Moment,
         public progress?: number,
         public user?: string,
-        public parameters?: string
+        public parameters?: IReportParameters
     ) {}
 }
