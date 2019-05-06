@@ -19,6 +19,8 @@ logging:
         io.github.jhipster: DEBUG
         co.edu.uniandes.xrepo: DEBUG
         org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+    path: ./build/logs/
+
 spring:
     profiles:
         active: dev
