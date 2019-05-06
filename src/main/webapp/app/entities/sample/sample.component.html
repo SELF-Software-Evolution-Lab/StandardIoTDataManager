@@ -11,8 +11,6 @@
             <th jhiSortBy="dateTime"><span>Date Time</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="sensorInternalId"><span>Sensor Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="samplingId"><span>Sampling</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="experimentId"><span>Experiment</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="targetSystemId"><span>Target System</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -21,8 +19,6 @@
                 <td>{{sample.dateTime | date:'medium'}}</td>
                 <td>{{sample.sensorInternalId}}</td>
                 <td>{{sample.samplingId}}</td>
-                <td>{{sample.experimentId}}</td>
-                <td>{{sample.targetSystemId}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
