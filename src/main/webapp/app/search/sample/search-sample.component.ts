@@ -136,7 +136,7 @@ export class SearchSampleComponent implements OnInit {
         this.searchParameters.operativeConditions = this.selectedOpConditions;
         this.searchParameters.fromDateTime = this.selectedFromDate != null ? moment(this.selectedFromDate, DATE_TIME_FORMAT) : null;
         this.searchParameters.toDateTime = this.selectedToDate != null ? moment(this.selectedToDate, DATE_TIME_FORMAT) : null;
-        //console.log('search with', this.searchParameters);
+        // console.log('search with', this.searchParameters);
         this.isSearching = true;
         this.searchSampleService
             .search(this.searchParameters)
