@@ -13,7 +13,8 @@ export const enum TaskState {
     SUBMITTED = 'SUBMITTED',
     PROCESSING = 'PROCESSING',
     COMPLETED = 'COMPLETED',
-    ERROR = 'ERROR'
+    ERROR = 'ERROR',
+    ALL = 'ALL'
 }
 
 export interface IBatchTask {

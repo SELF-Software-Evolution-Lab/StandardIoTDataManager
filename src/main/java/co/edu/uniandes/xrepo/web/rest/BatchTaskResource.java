@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.uniandes.xrepo.domain.BatchTask;
+import co.edu.uniandes.xrepo.domain.enumeration.TaskState;
 import co.edu.uniandes.xrepo.service.BatchTaskService;
 import co.edu.uniandes.xrepo.web.rest.errors.BadRequestAlertException;
 import co.edu.uniandes.xrepo.web.rest.util.HeaderUtil;
@@ -111,9 +112,23 @@ public class BatchTaskResource {
      */
     @GetMapping("/batch-tasks/upload-files")
     public ResponseEntity<List<BatchTask>> getAllUploadFilesByUser(Pageable pageable) {
-        log.debug("REST request to get a page of Search Reports");
+        log.debug("REST request to get a page of upload files");
         Page<BatchTask> page = batchTaskService.findAllUploadFilesByUser(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/batch-tasks/upload-files");
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * GET  /batch-tasks/upload-files : get all the upload files tasks.
+     *
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of search reports in body
+     */
+    @GetMapping("/batch-tasks/upload-files/{state}")
+    public ResponseEntity<List<BatchTask>> getAllUploadFilesByUser(Pageable pageable, @PathVariable TaskState state) {
+        log.debug("REST request to get a page of upload files task by state");
+        Page<BatchTask> page = batchTaskService.findAllUploadFilesByUserAndState(pageable, state);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/batch-tasks/upload-files/{%s}", state));
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
@@ -128,6 +143,20 @@ public class BatchTaskResource {
         log.debug("REST request to get a page of Search Reports");
         Page<BatchTask> page = batchTaskService.findAllSearchReportsByUser(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/batch-tasks/search-reports");
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    
+    /**
+     * GET  /batch-tasks/search-reports : get all the search reports tasks.
+     *
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of search reports in body
+     */
+    @GetMapping("/batch-tasks/search-reports/{state}")
+    public ResponseEntity<List<BatchTask>> getAllSearchReportsByUser(Pageable pageable, @PathVariable TaskState state) {
+        log.debug("REST request to get a page of Search Reports by state");
+        Page<BatchTask> page = batchTaskService.findAllSearchReportsByUserAndState(pageable, state);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page,  String.format("/api/batch-tasks/search-reports/{%s}", state));
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 

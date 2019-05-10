@@ -31,7 +31,7 @@ export class BatchTaskComponent implements OnInit, OnDestroy {
     predicate: any;
     previousPage: any;
     reverse: any;
-
+    taskState: TaskState = TaskState.ALL;
     constructor(
         protected batchTaskService: BatchTaskService,
         protected parseLinks: JhiParseLinks,
@@ -52,12 +52,14 @@ export class BatchTaskComponent implements OnInit, OnDestroy {
 
     loadAll() {
         this.batchTaskService
-            .queryMyUploads({
-                page: this.page - 1,
-                size: this.itemsPerPage,
-                sort: this.sort(),
-                state: TaskState.COMPLETED
-            })
+            .queryMyUploads(
+                {
+                    page: this.page - 1,
+                    size: this.itemsPerPage,
+                    sort: this.sort()
+                },
+                this.taskState
+            )
             .subscribe(
                 (res: HttpResponse<IBatchTask[]>) => this.paginateBatchTasks(res.body, res.headers),
                 (res: HttpErrorResponse) => this.onError(res.message)
@@ -141,5 +143,9 @@ export class BatchTaskComponent implements OnInit, OnDestroy {
 
     isFileUpload(type: TaskType) {
         return type === TaskType.FILELOAD;
+    }
+
+    changeState() {
+        this.loadAll();
     }
 }

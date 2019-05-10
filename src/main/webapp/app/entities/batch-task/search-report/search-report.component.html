@@ -1,16 +1,37 @@
 <div>
-    <h2 id="page-heading">
-        <span><fa-icon [icon]="'file-csv'"></fa-icon>Search Reports</span>|
-        <button class="btn btn-info " [routerLink]="['/batch-task/']">
-            <fa-icon icon="file-upload"></fa-icon>
-            <span >
-            Upload Samples
-            </span>
-        </button>
-        <button class="btn btn-primary float-right" (click)="refresh()">
-            <fa-icon [icon]="'sync'"></fa-icon> <span>Refresh</span>
-        </button>
-    </h2>
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-xl-4">
+            <h2 id="page-heading">
+                <span><fa-icon [icon]="'file-csv'"></fa-icon>Search Reports</span>|
+                <button class="btn btn-info " [routerLink]="['/batch-task/']">
+                    <fa-icon icon="file-upload"></fa-icon>
+                    <span >
+                    Upload Samples
+                    </span>
+                </button>
+            </h2>
+        </div>
+        <div class="col-lg-4 col-md-4 col-xl-4">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="field_state">State</label>
+                </div>
+                <select class="custom-select" name="state"  id="field_state" [(ngModel)]="taskState" (change)="changeState()">
+                    <option value="ALL" selected>ALL</option>
+                    <option value="PENDING">PENDING</option>
+                    <option value="PROCESSING">PROCESSING</option>
+                    <option value="COMPLETED">COMPLETED</option>
+                    <option value="ERROR">ERROR</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-1 col-md-1 col-xl-1 offset-3">
+            <button class="btn btn-primary float-right" (click)="refresh()">
+                <fa-icon [icon]="'sync'"></fa-icon> <span>Refresh</span>
+            </button>
+        </div>
+    </div>
+    
     <jhi-alert></jhi-alert>
     <br/>
     <div class="table-responsive" *ngIf="batchTasks">

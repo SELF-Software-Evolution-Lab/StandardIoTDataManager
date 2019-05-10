@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
-import { IBatchTask } from 'app/shared/model/batch-task.model';
+import { IBatchTask, TaskState } from 'app/shared/model/batch-task.model';
 
 type EntityResponseType = HttpResponse<IBatchTask>;
 type EntityArrayResponseType = HttpResponse<IBatchTask[]>;
@@ -44,18 +44,30 @@ export class BatchTaskService {
             .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
     }
 
-    queryMyUploads(req?: any): Observable<EntityArrayResponseType> {
+    queryMyUploads(req?: any, taskState?: TaskState): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http
-            .get<IBatchTask[]>(`${this.resourceUrl}/upload-files`, { params: options, observe: 'response' })
-            .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+        if (taskState === TaskState.ALL) {
+            return this.http
+                .get<IBatchTask[]>(`${this.resourceUrl}/upload-files`, { params: options, observe: 'response' })
+                .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+        } else {
+            return this.http
+                .get<IBatchTask[]>(`${this.resourceUrl}/upload-files/${taskState}`, { params: options, observe: 'response' })
+                .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+        }
     }
 
-    queryMyReports(req?: any): Observable<EntityArrayResponseType> {
+    queryMyReports(req?: any, taskState?: TaskState): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http
-            .get<IBatchTask[]>(`${this.resourceUrl}/search-reports`, { params: options, observe: 'response' })
-            .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+        if (taskState === TaskState.ALL) {
+            return this.http
+                .get<IBatchTask[]>(`${this.resourceUrl}/search-reports`, { params: options, observe: 'response' })
+                .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+        } else {
+            return this.http
+                .get<IBatchTask[]>(`${this.resourceUrl}/search-reports/${taskState}`, { params: options, observe: 'response' })
+                .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+        }
     }
 
     locateReport(id: string): string {

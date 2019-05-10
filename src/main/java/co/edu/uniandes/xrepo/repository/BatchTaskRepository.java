@@ -21,4 +21,6 @@ public interface BatchTaskRepository extends MongoRepository<BatchTask, String> 
     List<BatchTask> findByState(TaskState state);
 
     Page<BatchTask> findByTypeAndUser(TaskType type, String user, Pageable pageable);
+
+    Page<BatchTask> findByTypeAndUserAndState(TaskType type, String user, TaskState state, Pageable pageable);
 }

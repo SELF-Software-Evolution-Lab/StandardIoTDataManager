@@ -94,8 +94,16 @@ public class BatchTaskService {
         return batchTaskRepository.findByTypeAndUser(TaskType.REPORT, currentUser(), pageable);
     }
 
+    public Page<BatchTask> findAllSearchReportsByUserAndState(Pageable pageable, TaskState state) {
+        return batchTaskRepository.findByTypeAndUserAndState(TaskType.REPORT, currentUser(), state, pageable);
+    }
+
     public Page<BatchTask> findAllUploadFilesByUser(Pageable pageable) {
         return batchTaskRepository.findByTypeAndUser(TaskType.FILE_LOAD, currentUser(), pageable);
+    }
+
+    public Page<BatchTask> findAllUploadFilesByUserAndState(Pageable pageable, TaskState state) {
+        return batchTaskRepository.findByTypeAndUserAndState(TaskType.FILE_LOAD, currentUser(), state, pageable);
     }
 
     public File fileFromReport(String id) {
