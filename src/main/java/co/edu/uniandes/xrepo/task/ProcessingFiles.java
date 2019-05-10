@@ -60,14 +60,22 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
 
         Path file = Paths.get(params.getFilePath());
         Stream<String> lines = null;
+        Sample lastSample = null;
         try {
             lines = Files.lines(file, StandardCharsets.UTF_8);
 
             for (String line : (Iterable<String>) lines::iterator) {
-                SampleDTO sample = parseLineToSample(line);
+                Sample sample = parseLineToSample(line);
                 if (sample != null) {
+
                     try {
-                        sampleService.save(sample);
+                        if ((lastSample == null) || (!lastSample.getSamplingId().equals(sample.getSamplingId()))) {
+                            sampleService.completeSample(sample);
+                        } else {
+                            sample.setExperimentId(lastSample.getExperimentId());
+                            sample.setTargetSystemId(lastSample.getTargetSystemId());
+                        }
+                        lastSample = sampleService.save(sample);
                         processedLinesOk++;    
                     } catch (Exception e) {
                         log.error("Error saving sample {}", e.getMessage());
@@ -117,14 +125,14 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
         }
     }
     
-    private SampleDTO parseLineToSample(String line) {
+    private Sample parseLineToSample(String line) {
 
-        SampleDTO sample = null;
+        Sample sample = null;
         String[] columns = line.split(",");
 
         try {
             if (columns.length > 4) {
-                sample = new SampleDTO();
+                sample = new Sample();
                 // Sampling Id
                 sample.setSamplingId(columns[0]);
                 
