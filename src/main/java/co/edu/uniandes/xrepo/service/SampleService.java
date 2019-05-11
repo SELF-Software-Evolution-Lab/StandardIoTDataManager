@@ -44,18 +44,29 @@ public class SampleService {
      * @return the persisted entity
      */
     public SampleDTO save(SampleDTO sampleDTO) {
-        log.debug("Request to save Sample : {}", sampleDTO);
+        log.debug("Request to save SampleDTO : {}", sampleDTO);
         Sample sample = sampleMapper.toEntity(sampleDTO);
         completeSample(sample);
         sample = sampleRepository.save(sample);
         return sampleMapper.toDto(sample);
     }
 
-    private void completeSample(Sample sample) {
+    public void completeSample(Sample sample) {
         Optional<Sampling> byId = samplingRepository.findById(sample.getSamplingId());
         Sampling sampling = byId.orElseThrow(() -> new IllegalArgumentException("Sampling Id " + sample.getSamplingId() + " not found"));
         sample.setExperimentId(sampling.getExperiment().getId());
         sample.setTargetSystemId(sampling.getExperiment().getSystem().getId());
+    }
+
+    /**
+     * Save a sample.
+     *
+     * @param sample the entity to save
+     * @return the persisted entity
+     */
+    public Sample save(Sample sample) {
+        log.debug("Request to save Sample : {}", sample);
+        return sampleRepository.save(sample);
     }
 
     /**

@@ -28,6 +28,7 @@ export class SearchReportComponent implements OnInit, OnDestroy {
     predicate: any;
     previousPage: any;
     reverse: any;
+    taskState: TaskState = TaskState.ALL;
 
     constructor(
         protected batchTaskService: BatchTaskService,
@@ -49,11 +50,14 @@ export class SearchReportComponent implements OnInit, OnDestroy {
 
     loadAll() {
         this.batchTaskService
-            .queryMyReports({
-                page: this.page - 1,
-                size: this.itemsPerPage,
-                sort: this.sort()
-            })
+            .queryMyReports(
+                {
+                    page: this.page - 1,
+                    size: this.itemsPerPage,
+                    sort: this.sort()
+                },
+                this.taskState
+            )
             .subscribe(
                 (res: HttpResponse<IBatchTask[]>) => this.paginateBatchTasks(res.body, res.headers),
                 (res: HttpErrorResponse) => this.onError(res.message)
@@ -141,6 +145,9 @@ export class SearchReportComponent implements OnInit, OnDestroy {
     }
 
     refresh() {
+        this.loadAll();
+    }
+    changeState() {
         this.loadAll();
     }
 }

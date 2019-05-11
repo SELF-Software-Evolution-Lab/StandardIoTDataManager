@@ -10,7 +10,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,10 +27,8 @@ import co.edu.uniandes.xrepo.domain.BatchTask;
 import co.edu.uniandes.xrepo.domain.Sample;
 import co.edu.uniandes.xrepo.domain.enumeration.TaskState;
 import co.edu.uniandes.xrepo.domain.enumeration.TaskType;
-import co.edu.uniandes.xrepo.repository.SampleRepository;
 import co.edu.uniandes.xrepo.service.BatchTaskService;
 import co.edu.uniandes.xrepo.service.SampleService;
-import co.edu.uniandes.xrepo.service.dto.SampleDTO;
 import co.edu.uniandes.xrepo.service.dto.SamplesFilesParametersDTO;
 import co.edu.uniandes.xrepo.service.task.BackgroundTaskProcessor;
 import co.edu.uniandes.xrepo.service.util.AsyncDelegator;
@@ -60,14 +57,22 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
 
         Path file = Paths.get(params.getFilePath());
         Stream<String> lines = null;
+        Sample lastSample = null;
         try {
             lines = Files.lines(file, StandardCharsets.UTF_8);
 
             for (String line : (Iterable<String>) lines::iterator) {
-                SampleDTO sample = parseLineToSample(line);
+                Sample sample = parseLineToSample(line);
                 if (sample != null) {
+
                     try {
-                        sampleService.save(sample);
+                        if ((lastSample == null) || (!lastSample.getSamplingId().equals(sample.getSamplingId()))) {
+                            sampleService.completeSample(sample);
+                        } else {
+                            sample.setExperimentId(lastSample.getExperimentId());
+                            sample.setTargetSystemId(lastSample.getTargetSystemId());
+                        }
+                        lastSample = sampleService.save(sample);
                         processedLinesOk++;    
                     } catch (Exception e) {
                         log.error("Error saving sample {}", e.getMessage());
@@ -117,14 +122,14 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
         }
     }
     
-    private SampleDTO parseLineToSample(String line) {
+    private Sample parseLineToSample(String line) {
 
-        SampleDTO sample = null;
+        Sample sample = null;
         String[] columns = line.split(",");
 
         try {
             if (columns.length > 4) {
-                sample = new SampleDTO();
+                sample = new Sample();
                 // Sampling Id
                 sample.setSamplingId(columns[0]);
                 
