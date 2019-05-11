@@ -10,8 +10,8 @@
                 <dd>
                     <span>{{batchTask.id}}</span>
                 </dd>
-                <dt><span>Progress</span></dt>
-                <dd>
+                <dt *ngIf="!isError(batchTask.state)"><span>Progress</span></dt>
+                <dd *ngIf="!isError(batchTask.state)">
                     <div class="row">
                         <div class="col-lg-6 col-sm-12">
                             <ngb-progressbar type="success" [value]="batchTask.progress">

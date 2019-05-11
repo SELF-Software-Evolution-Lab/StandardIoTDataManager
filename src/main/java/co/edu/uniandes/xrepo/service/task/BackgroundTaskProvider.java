@@ -26,6 +26,7 @@ public class BackgroundTaskProvider {
     }
 
     public void markTaskAsError(BatchTask errorTask) {
+        errorTask.setProgress(0);
         errorTask.setState(TaskState.ERROR);
         taskBatchService.save(errorTask);
     }

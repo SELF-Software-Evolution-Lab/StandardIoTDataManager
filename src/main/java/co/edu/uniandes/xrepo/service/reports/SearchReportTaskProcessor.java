@@ -77,7 +77,7 @@ public class SearchReportTaskProcessor implements BackgroundTaskProcessor, Searc
         if (!stream.hasNext()) {
             log.error("No data found to generate search report {}", params);
             batchTaskService.save(
-                task.progress(100).state(ERROR).endDate(Instant.now())
+                task.progress(0).state(ERROR).endDate(Instant.now())
                     .description("No data found to generate search report")
             );
             return;
