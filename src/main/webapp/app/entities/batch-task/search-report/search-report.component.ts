@@ -72,7 +72,7 @@ export class SearchReportComponent implements OnInit, OnDestroy {
     }
 
     transition() {
-        this.router.navigate(['/batch-task'], {
+        this.router.navigate(['/batch-task/search-report'], {
             queryParams: {
                 page: this.page,
                 size: this.itemsPerPage,
@@ -85,7 +85,7 @@ export class SearchReportComponent implements OnInit, OnDestroy {
     clear() {
         this.page = 0;
         this.router.navigate([
-            '/batch-task',
+            '/batch-task/search-report',
             {
                 page: this.page,
                 sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
