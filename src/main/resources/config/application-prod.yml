@@ -44,6 +44,11 @@ spring:
             ssl.trust: smtp.gmail.com
     thymeleaf:
         cache: true
+    servlet:
+        multipart:
+            max-file-size: 700MB
+            max-request-size: 800MB
+            file-size-threshold: 1MB
 
 # ===================================================================
 # To enable TLS in production, generate a certificate using:
