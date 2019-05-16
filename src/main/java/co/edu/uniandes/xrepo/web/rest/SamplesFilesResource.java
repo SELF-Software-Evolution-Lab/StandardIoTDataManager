@@ -58,7 +58,7 @@ public class SamplesFilesResource {
                 file.getSize(), fileTemp.getName());
 
         try {
-
+            long fileSize = file.getSize();
             Path filePath = Paths.get(samplesFilesLocation, fileTemp.getName());
             
             Files.createDirectories(filePath.getParent());
@@ -75,7 +75,7 @@ public class SamplesFilesResource {
             SamplesFilesParametersDTO parameters = new SamplesFilesParametersDTO();
 
             parameters.setFilePath(filePath.toString());
-            parameters.setFileSize(file.getSize());
+            parameters.setFileSize(fileSize);
 
             tarea.objectToParameters(parameters);
             tarea = batchTaskService.save(tarea);
