@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import co.edu.uniandes.xrepo.domain.Sampling;
+import co.edu.uniandes.xrepo.repository.custom.SamplingRepositoryCustom;
 
 
 /**
@@ -14,10 +15,7 @@ import co.edu.uniandes.xrepo.domain.Sampling;
  */
 
 @Repository
-public interface SamplingRepository extends MongoRepository<Sampling, String> {
-
-    @Query(value = "{ 'tags' : {$all : ?0 }}")
-    List<Sampling> findWithTags(List<String> tagsSearch);
+public interface SamplingRepository extends MongoRepository<Sampling, String>, SamplingRepositoryCustom {
 
     List<Sampling> findByTargetSystemId(String tsId);
 }
