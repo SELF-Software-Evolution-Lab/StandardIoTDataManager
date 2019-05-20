@@ -64,8 +64,16 @@ public class SearchEngineService {
 
     public SearchResponse preSearchSamples(SampleSearchParametersDTO params) {
 
-        addCandidateExperiments(params);
-        addCandidateSamplings(params);
+        boolean foundExperiments = foundCandidateExperiments(params);
+        boolean foundSamplings = foundCandidateSamplings(params);
+
+        if (params.requireSearchWithTags() && !foundExperiments && !foundSamplings) {
+            return new SearchResponse(0);
+        }
+
+        if (params.requireSearchWithConditions() && !foundSamplings) {
+            return new SearchResponse(0);
+        }
 
         Query query = new Query(params.asCriteria());
         log.info("Requesting count for query: {}", query.getQueryObject().toJson());
@@ -82,7 +90,7 @@ public class SearchEngineService {
         return response;
     }
 
-    private void addCandidateSamplings(SampleSearchParametersDTO params) {
+    private boolean foundCandidateSamplings(SampleSearchParametersDTO params) {
         List<String> tags = params.getTags() == null ? Collections.emptyList() : params.getTags();
 
         List<OperativeRange> operativeConditions =
@@ -99,7 +107,11 @@ public class SearchEngineService {
                 .collect(Collectors.toList());
 
             params.getSamplingsId().addAll(samplingsId);
+            if (samplingsId.isEmpty()) {
+                return false;
+            }
         }
+        return true;
     }
 
     private boolean conditionsInRange(Sampling sampling, List<OperativeRange> operativeConditions) {
@@ -124,7 +136,7 @@ public class SearchEngineService {
         return true;
     }
 
-    private void addCandidateExperiments(SampleSearchParametersDTO params) {
+    private boolean foundCandidateExperiments(SampleSearchParametersDTO params) {
         List<String> tags = params.getTags();
         if (!tags.isEmpty()) {
             List<String> experimentsId = experimentRepository.findWithTags(tags).stream()
@@ -132,7 +144,11 @@ public class SearchEngineService {
                 .collect(Collectors.toList());
 
             params.getExperimentsId().addAll(experimentsId);
+            if (experimentsId.isEmpty()) {
+                return false;
+            }
         }
+        return true;
     }
 
     private String generateOnlineReport(SampleSearchParametersDTO params) {
@@ -165,6 +181,14 @@ public class SearchEngineService {
     @Setter
     @Getter
     public class SearchResponse implements Serializable {
+
+        public SearchResponse() {
+        }
+
+        public SearchResponse(long count) {
+            this.count = count;
+        }
+
         private String batchTaskId;
         private long count;
     }

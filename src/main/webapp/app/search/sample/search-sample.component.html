@@ -157,7 +157,7 @@
     <div class="row">
         <div class="col-12">
             <h5 class="text-center">Search found {{searchResults}} result(s) <br/>
-                <a [routerLink]="['/batch-task', batchTaskId, 'view']">Click here to follow the report progress</a>
+                <a [routerLink]="['/batch-task', batchTaskId, 'view']" *ngIf="searchResults>0">Click here to follow the report progress</a>
             </h5>
         </div>
     </div>
