@@ -114,5 +114,5 @@ jhipster:
 # application:
 xrepo:
     report-generation-location: ./build/search-result
-    samples-files-location: C:\AJAR\SamplesFiles2
+    samples-files-location: ./build/upload-samples
     batch-tasks-checker-frequency: 30000

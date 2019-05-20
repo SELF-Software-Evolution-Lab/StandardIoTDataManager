@@ -35,7 +35,7 @@ public class SamplingRepositoryTest {
     public void findByTags() {
         assertThat(samplingRepository.findAll()).hasSize(1);
         List<Sampling> withTags =
-            samplingRepository.findWithTags(Arrays.asList("tag2"));
+            samplingRepository.findByTagsAndConditions(Arrays.asList("tag2"), Arrays.asList());
         assertThat(withTags).hasSize(1);
     }
 
@@ -43,7 +43,7 @@ public class SamplingRepositoryTest {
     public void findByTagsMultiple() {
         assertThat(samplingRepository.findAll()).hasSize(1);
         List<Sampling> withTags =
-            samplingRepository.findWithTags(Arrays.asList("tag2", "tag1"));
+            samplingRepository.findByTagsAndConditions(Arrays.asList("tag2", "tag1"), Arrays.asList());
         assertThat(withTags).hasSize(1);
     }
 
@@ -51,7 +51,7 @@ public class SamplingRepositoryTest {
     public void findByTagsNotMatch() {
         assertThat(samplingRepository.findAll()).hasSize(1);
         List<Sampling> withTags =
-            samplingRepository.findWithTags(Arrays.asList("tag3"));
+            samplingRepository.findByTagsAndConditions(Arrays.asList("tag3"), Arrays.asList());
         assertThat(withTags).hasSize(0);
     }
 
@@ -59,7 +59,7 @@ public class SamplingRepositoryTest {
     public void findByTagsNotMatchMultiple() {
         assertThat(samplingRepository.findAll()).hasSize(1);
         List<Sampling> withTags =
-            samplingRepository.findWithTags(Arrays.asList("tag1", "tag3"));
+            samplingRepository.findByTagsAndConditions(Arrays.asList("tag1", "tag3"), Arrays.asList());
         assertThat(withTags).hasSize(0);
     }
 }
