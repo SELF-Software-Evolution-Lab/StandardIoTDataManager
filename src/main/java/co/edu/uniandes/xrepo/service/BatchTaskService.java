@@ -91,19 +91,31 @@ public class BatchTaskService {
     }
 
     public Page<BatchTask> findAllSearchReportsByUser(Pageable pageable) {
-        return batchTaskRepository.findByTypeAndUser(TaskType.REPORT, currentUser(), pageable);
+        if (currentUser().equals("admin"))
+            return batchTaskRepository.findByType(TaskType.REPORT, pageable);
+        else
+            return batchTaskRepository.findByTypeAndUser(TaskType.REPORT, currentUser(), pageable);
     }
 
     public Page<BatchTask> findAllSearchReportsByUserAndState(Pageable pageable, TaskState state) {
-        return batchTaskRepository.findByTypeAndUserAndState(TaskType.REPORT, currentUser(), state, pageable);
+        if (currentUser().equals("admin"))
+            return batchTaskRepository.findByTypeAndState(TaskType.REPORT, state, pageable);
+        else
+            return batchTaskRepository.findByTypeAndUserAndState(TaskType.REPORT, currentUser(), state, pageable);
     }
 
     public Page<BatchTask> findAllUploadFilesByUser(Pageable pageable) {
-        return batchTaskRepository.findByTypeAndUser(TaskType.FILE_LOAD, currentUser(), pageable);
+        if (currentUser().equals("admin"))
+            return batchTaskRepository.findByType(TaskType.FILE_LOAD, pageable);
+        else
+            return batchTaskRepository.findByTypeAndUser(TaskType.FILE_LOAD, currentUser(), pageable);
     }
 
     public Page<BatchTask> findAllUploadFilesByUserAndState(Pageable pageable, TaskState state) {
-        return batchTaskRepository.findByTypeAndUserAndState(TaskType.FILE_LOAD, currentUser(), state, pageable);
+        if (currentUser().equals("admin"))
+            return batchTaskRepository.findByTypeAndState(TaskType.FILE_LOAD, state, pageable);
+        else
+            return batchTaskRepository.findByTypeAndUserAndState(TaskType.FILE_LOAD, currentUser(), state, pageable);
     }
 
     public File fileFromReport(String id) {
