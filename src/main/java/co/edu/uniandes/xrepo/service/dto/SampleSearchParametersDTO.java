@@ -149,4 +149,12 @@ public class SampleSearchParametersDTO implements Serializable {
     public void setOperativeConditions(List<OperativeRange> operativeConditions) {
         this.operativeConditions = operativeConditions;
     }
+
+    public boolean requireSearchWithTags() {
+        return !tags.isEmpty();
+    }
+
+    public boolean requireSearchWithConditions() {
+        return !operativeConditions.isEmpty();
+    }
 }

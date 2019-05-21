@@ -80,3 +80,9 @@ jhipster:
 # ===================================================================
 
 # application:
+xrepo:
+    background-task-pool-size: 5
+    report-generation-max-records-online: 200
+    report-generation-location: ./build/search-result
+    samples-files-location: ./build/upload-samples
+    batch-tasks-checker-frequency: 30000
