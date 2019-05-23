@@ -38,7 +38,7 @@ public class BackgroundTaskExecutor {
 
     @Scheduled(fixedDelayString = "${xrepo.batch-tasks-checker-frequency}")
     public void processPendingTasks() {
-        log.info("Start looking for pending tasks");
+        log.debug("Start looking for pending tasks");
         provider.listPendingTasks().stream()
             .map(this::sendToPool)
             .forEach(provider::markTaskAsSubmitted);

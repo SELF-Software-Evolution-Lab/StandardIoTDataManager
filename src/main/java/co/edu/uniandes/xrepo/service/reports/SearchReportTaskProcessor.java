@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
@@ -32,7 +31,6 @@ import co.edu.uniandes.xrepo.domain.enumeration.TaskType;
 import co.edu.uniandes.xrepo.service.BatchTaskService;
 import co.edu.uniandes.xrepo.service.dto.SampleSearchParametersDTO;
 import co.edu.uniandes.xrepo.service.task.BackgroundTaskProcessor;
-import co.edu.uniandes.xrepo.service.util.AsyncDelegator;
 
 @Service
 public class SearchReportTaskProcessor implements BackgroundTaskProcessor, SearchReportFileLocator {
@@ -43,16 +41,13 @@ public class SearchReportTaskProcessor implements BackgroundTaskProcessor, Searc
     private static final ObjectMapper jsonMapper = new ObjectMapper();
 
     private final MongoTemplate mongoTemplate;
-    private final AsyncDelegator asyncDelegator;
     private final BatchTaskService batchTaskService;
     private final String reportLocation;
 
     public SearchReportTaskProcessor(MongoTemplate mongoTemplate,
-                                     AsyncDelegator asyncDelegator,
                                      BatchTaskService batchTaskService,
                                      @Value("${xrepo.report-generation-location}") String reportLocation) {
         this.mongoTemplate = mongoTemplate;
-        this.asyncDelegator = asyncDelegator;
         this.batchTaskService = batchTaskService;
         this.reportLocation = reportLocation;
     }
@@ -75,7 +70,7 @@ public class SearchReportTaskProcessor implements BackgroundTaskProcessor, Searc
         CloseableIterator<Sample> stream = mongoTemplate.stream(query, Sample.class);
 
         if (!stream.hasNext()) {
-            log.error("No data found to generate search report {}", params);
+            log.warn("No data found to generate search report {}", params);
             batchTaskService.save(
                 task.progress(0).state(ERROR).endDate(Instant.now())
                     .description("No data found to generate search report")
@@ -98,14 +93,16 @@ public class SearchReportTaskProcessor implements BackgroundTaskProcessor, Searc
     private void writeReport(SampleSearchParametersDTO params,
                              CloseableIterator<Sample> stream, BatchTask task) throws IOException {
         Path path = Paths.get(reportLocation, buildReportName(task));
-        Files.createDirectories(path.getParent());
+        log.info("Report to create {}", path);
         File file = path.toFile();
         file.createNewFile();
+        log.info("Report created {}", path);
         final long expectedRecords = params.getExpectedRecords();
         final AtomicLong current = new AtomicLong(0);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            log.info("Start reading records");
             while (stream.hasNext()) {
-                writer.write(new SampleCsvAdapter(stream.next()).toCsvRecord()+"\n");
+                writer.write(new SampleCsvAdapter(stream.next()).toCsvRecord() + "\n");
                 saveTaskProgress(expectedRecords, current.addAndGet(1), task);
             }
             log.info("Report generated successfully {}", file.getName());
