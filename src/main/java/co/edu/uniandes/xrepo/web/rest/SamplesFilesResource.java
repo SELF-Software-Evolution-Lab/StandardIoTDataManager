@@ -50,8 +50,7 @@ public class SamplesFilesResource {
     }
 
     @PostMapping("/samples-files-2")
-    public ResponseEntity<Void> createSamplesFiles2(@RequestPart MultipartFile file)
-            throws URISyntaxException {
+    public ResponseEntity<Void> createSamplesFiles2(@RequestPart MultipartFile file) {
 
         File fileTemp = new File(file.getOriginalFilename());
         log.debug("REST request to save archivo : {};{};{};{}", file.getName(), file.getOriginalFilename(),
@@ -61,7 +60,6 @@ public class SamplesFilesResource {
             long fileSize = file.getSize();
             Path filePath = Paths.get(samplesFilesLocation, fileTemp.getName());
             
-            Files.createDirectories(filePath.getParent());
             file.transferTo(filePath.toFile());
 
             BatchTask tarea = new BatchTask();

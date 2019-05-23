@@ -51,22 +51,11 @@ public class SampleService {
         return sampleMapper.toDto(sample);
     }
 
-    public void completeSample(Sample sample) {
+    private void completeSample(Sample sample) {
         Optional<Sampling> byId = samplingRepository.findById(sample.getSamplingId());
         Sampling sampling = byId.orElseThrow(() -> new IllegalArgumentException("Sampling Id " + sample.getSamplingId() + " not found"));
         sample.setExperimentId(sampling.getExperiment().getId());
         sample.setTargetSystemId(sampling.getExperiment().getSystem().getId());
-    }
-
-    /**
-     * Save a sample.
-     *
-     * @param sample the entity to save
-     * @return the persisted entity
-     */
-    public Sample save(Sample sample) {
-        log.debug("Request to save Sample : {}", sample);
-        return sampleRepository.save(sample);
     }
 
     /**

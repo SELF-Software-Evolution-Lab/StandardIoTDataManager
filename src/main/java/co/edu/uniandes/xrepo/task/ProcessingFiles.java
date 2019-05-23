@@ -13,22 +13,24 @@ import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Stream;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import co.edu.uniandes.xrepo.domain.BatchTask;
-import co.edu.uniandes.xrepo.domain.Sample;
 import co.edu.uniandes.xrepo.domain.enumeration.TaskState;
 import co.edu.uniandes.xrepo.domain.enumeration.TaskType;
 import co.edu.uniandes.xrepo.service.BatchTaskService;
 import co.edu.uniandes.xrepo.service.SampleService;
+import co.edu.uniandes.xrepo.service.dto.SampleDTO;
 import co.edu.uniandes.xrepo.service.dto.SamplesFilesParametersDTO;
 import co.edu.uniandes.xrepo.service.task.BackgroundTaskProcessor;
 import co.edu.uniandes.xrepo.service.util.AsyncDelegator;
@@ -45,7 +47,7 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
     private int totalLines = 0;
     private int processedLines = 0;
     private int processedLinesOk;
- 
+
 
     public ProcessingFiles(BatchTaskService batchTaskService, AsyncDelegator asyncDelegator, SampleService sampleService) {
         this.batchTaskService = batchTaskService;
@@ -53,44 +55,63 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
         this.sampleService = sampleService;
     }
 
-    private void proccesFile(SamplesFilesParametersDTO params, BatchTask task) {
-
-        Path file = Paths.get(params.getFilePath());
-        Stream<String> lines = null;
-        Sample lastSample = null;
+    @Override
+    public void processTask(BatchTask task) {
         try {
-            lines = Files.lines(file, StandardCharsets.UTF_8);
-
-            for (String line : (Iterable<String>) lines::iterator) {
-                Sample sample = parseLineToSample(line);
-                if (sample != null) {
-
-                    try {
-                        if ((lastSample == null) || (!lastSample.getSamplingId().equals(sample.getSamplingId()))) {
-                            sampleService.completeSample(sample);
-                        } else {
-                            sample.setExperimentId(lastSample.getExperimentId());
-                            sample.setTargetSystemId(lastSample.getTargetSystemId());
-                        }
-                        lastSample = sampleService.save(sample);
-                        processedLinesOk++;    
-                    } catch (Exception e) {
-                        log.error("Error saving sample {}", e.getMessage());
-                    }
-                }
-                if (( ++processedLines % 1000 ) == 0) {
-                    saveTaskProgress(totalLines, processedLines, task);
-                }
+            SamplesFilesParametersDTO parameters = extractSamplesFileParams(task);
+            totalLines = countLines(parameters.getFilePath());
+            if (totalLines < 0) {
+                parameters.setTotalLines(totalLines);
+                task.endDate(Instant.now()).state(TaskState.ERROR).objectToParameters(parameters);
+                batchTaskService.save(task);
+                return;
             }
+            parameters.setTotalLines(totalLines);
+            task.startDate(Instant.now()).state(TaskState.PROCESSING).objectToParameters(parameters);
+            batchTaskService.save(task);
+            processFile(parameters, task);
 
-        } catch (IOException ioe) {
-            log.error(ioe.getMessage());
-        } finally {
-            if (lines != null)
-                lines.close();
+            parameters.setProcessedLines(processedLines);
+            parameters.setProcessedLinesOk(processedLinesOk);
+
+            task.endDate(Instant.now()).state(TaskState.COMPLETED).progress(100).objectToParameters(parameters);
+            batchTaskService.save(task);
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            task.endDate(Instant.now()).state(TaskState.ERROR);
+            batchTaskService.save(task);
         }
 
     }
+
+    private void processFile(SamplesFilesParametersDTO params, BatchTask task) {
+        Path file = Paths.get(params.getFilePath());
+        try (Stream<String> lines = Files.lines(file, StandardCharsets.UTF_8)) {
+            lines.forEach(s -> processFileLine(s, task));
+        } catch (IOException ioe) {
+            log.error("Unexpected error handling samples file", ioe);
+        }
+    }
+
+    private void processFileLine(String line, BatchTask task) {
+        SampleDTO sample = parseLineToSample(line);
+        if (sample == null) {
+            return;
+        }
+
+        try {
+            sampleService.save(sample);
+            processedLinesOk++;
+        } catch (Exception e) {
+            log.error("Error saving sample {}", e.getMessage());
+
+        }
+        if ((++processedLines % 1000) == 0) {
+            saveTaskProgress(totalLines, processedLines, task);
+        }
+    }
+
 
     public int countLines(String path) {
         LineNumberReader reader;
@@ -98,21 +119,19 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
             reader = new LineNumberReader(new FileReader(path));
         } catch (FileNotFoundException e) {
             log.error("Error count lines {}", e.getMessage());
-            return(-1);
+            return (-1);
         }
 
         try {
-            while ((reader.readLine()) != null);
-            int cnt = reader.getLineNumber(); 
+            while ((reader.readLine()) != null) ;
+            int cnt = reader.getLineNumber();
             reader.close();
             return cnt;
         } catch (IOException e) {
             log.error("Error count lines {}", e.getMessage());
-            return(-2);
-        }
-        finally
-        {
-            if(reader != null) {
+            return (-2);
+        } finally {
+            if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
@@ -121,41 +140,46 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
             }
         }
     }
-    
-    private Sample parseLineToSample(String line) {
 
-        Sample sample = null;
-        String[] columns = line.split(",");
+    private SampleDTO parseLineToSample(String line) {
 
         try {
-            if (columns.length > 4) {
-                sample = new Sample();
-                // Sampling Id
-                sample.setSamplingId(columns[0]);
-                
-                // DateTime
-                sample.setDateTime(LocalDateTime.parse(columns[1], dateTimeformatter));
+            SampleDTO sample = new SampleDTO();
+            String[] columns = line.split(",");
 
-                // Time stamp
-                sample.setTs(Instant.ofEpochSecond(Long.parseLong(columns[2]) / 10000000,
-                        (Long.parseLong(columns[2]) % 10000000) * 100));
-                // Sensor Id
-                sample.setSensorInternalId(columns[3]);
-                // measurements
-                Map<String, BigDecimal> measurements = new HashMap<String, BigDecimal>();
-                int totalmeasurements = (columns.length - 4) / 2;
-                int posColumn = 4;
-                for (int i = 0; i < totalmeasurements; i++, posColumn += 2) {
-                    measurements.put(columns[posColumn], BigDecimal.valueOf(Double.valueOf(columns[posColumn + 1])));
-                }
 
-                sample.setMeasurements(measurements);
+            Iterator<String> iterator = Arrays.stream(columns).iterator();
+            // Sampling Id
+            String samplingId = iterator.next();
+            sample.setSamplingId(samplingId);
+
+            // DateTime
+            String datetime = iterator.next();
+            sample.setDateTime(LocalDateTime.parse(datetime, dateTimeformatter));
+
+            // Time stamp
+            String timestamp = iterator.next();
+            sample.setTs(Instant.ofEpochSecond(Long.parseLong(timestamp) / 10000000,
+                (Long.parseLong(timestamp) % 10000000) * 100));
+
+            // Sensor Id
+            String sensorId = iterator.next();
+            sample.setSensorInternalId(sensorId);
+
+            // measurements
+            Map<String, BigDecimal> measurements = new HashMap<>();
+            sample.setMeasurements(measurements);
+            while (iterator.hasNext()) {
+                String variable = iterator.next();
+                String value = iterator.next();
+                measurements.put(variable, new BigDecimal(value));
             }
-        } catch (Exception ex) {
-            log.debug("Error Parse Line to Sample {}", ex.getMessage());
-        }
 
-        return (sample);
+            return sample;
+        } catch (Exception ex) {
+            log.error("Error Parse Line to Sample", ex);
+            return null;
+        }
     }
 
     @Override
@@ -163,36 +187,6 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
         return TaskType.FILE_LOAD;
     }
 
-    @Override
-    public void processTask(BatchTask task) {
-        try {
-            SamplesFilesParametersDTO parameters = extractSamplesFileParams(task);
-            totalLines = countLines(parameters.getFilePath());
-            if(totalLines < 0)
-            {
-                parameters.setTotalLines(totalLines);
-                task.endDate(Instant.now()).state(TaskState.ERROR).objectToParameters(parameters);
-                batchTaskService.save(task);  
-                return;
-            }
-            parameters.setTotalLines(totalLines);
-            task.startDate(Instant.now()).state(TaskState.PROCESSING).objectToParameters(parameters);
-            batchTaskService.save(task);
-            proccesFile(parameters, task);
-            
-            parameters.setProcessedLines(processedLines);
-            parameters.setProcessedLinesOk(processedLinesOk);
-
-            task.endDate(Instant.now()).state(TaskState.COMPLETED).progress(100).objectToParameters(parameters);
-            batchTaskService.save(task);    
-
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            task.endDate(Instant.now()).state(TaskState.ERROR);
-            batchTaskService.save(task);  
-        }
-        
-    }
 
     private SamplesFilesParametersDTO extractSamplesFileParams(BatchTask task) {
         try {
