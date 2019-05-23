@@ -42,7 +42,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="field_device">Device</label>
-                        <select class="form-control" id="field_device" name="device" [(ngModel)]="selectedDevice">
+                        <select class="form-control" id="field_device" name="device" [(ngModel)]="selectedDevice" required>
                             <option *ngIf="!editForm.value.device" [ngValue]="null" selected></option>
                             <option [ngValue]="deviceOption" *ngFor="let deviceOption of devices; trackBy: trackDeviceById">{{deviceOption.name}}</option>
                         </select>

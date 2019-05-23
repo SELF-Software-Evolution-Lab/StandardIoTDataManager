@@ -34,7 +34,7 @@ import co.edu.uniandes.xrepo.service.task.BackgroundTaskProcessor;
 
 @Service
 public class SearchReportTaskProcessor implements BackgroundTaskProcessor, SearchReportFileLocator {
-    public static final DateTimeFormatter TIME_FORMATTER_FILE = DateTimeFormatter.ofPattern("YYMMDD.HHmmssn")
+    public static final DateTimeFormatter TIME_FORMATTER_FILE = DateTimeFormatter.ofPattern("yyMMdd.HHmmssn")
         .withZone(ZoneId.systemDefault());
 
     private final Logger log = LoggerFactory.getLogger(SearchReportTaskProcessor.class);
@@ -71,7 +71,7 @@ public class SearchReportTaskProcessor implements BackgroundTaskProcessor, Searc
             log.info("Processing report for query: {}", query.getQueryObject().toJson());
             stream = mongoTemplate.stream(query, Sample.class);
             log.info("Cursor retrieved");
-            
+
             if (!stream.hasNext()) {
                 log.warn("No data found to generate search report {}", params);
                 batchTaskService.save(
