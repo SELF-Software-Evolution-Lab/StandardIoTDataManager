@@ -61,32 +61,38 @@ public class SearchReportTaskProcessor implements BackgroundTaskProcessor, Searc
     public void processTask(BatchTask task) {
         log.info("Starting ReportService for task {}", task);
 
-        batchTaskService.save(task.startDate(Instant.now()).state(PROCESSING));
-
-        SampleSearchParametersDTO params = extractSearchParams(task);
-
-        Query query = new Query(params.asCriteria());
-        log.info("Processing report for query: {}", query.getQueryObject().toJson());
-        CloseableIterator<Sample> stream = mongoTemplate.stream(query, Sample.class);
-
-        if (!stream.hasNext()) {
-            log.warn("No data found to generate search report {}", params);
-            batchTaskService.save(
-                task.progress(0).state(ERROR).endDate(Instant.now())
-                    .description("No data found to generate search report")
-            );
-            return;
-        }
-
+        CloseableIterator<Sample> stream = null;
         try {
+            batchTaskService.save(task.startDate(Instant.now()).state(PROCESSING));
+
+            SampleSearchParametersDTO params = extractSearchParams(task);
+
+            Query query = new Query(params.asCriteria());
+            log.info("Processing report for query: {}", query.getQueryObject().toJson());
+            stream = mongoTemplate.stream(query, Sample.class);
+            log.info("Cursor retrieved");
+            
+            if (!stream.hasNext()) {
+                log.warn("No data found to generate search report {}", params);
+                batchTaskService.save(
+                    task.progress(0).state(ERROR).endDate(Instant.now())
+                        .description("No data found to generate search report")
+                );
+                return;
+            }
+
+
             writeReport(params, stream, task);
             batchTaskService.save(task.progress(100).state(COMPLETED).endDate(Instant.now()));
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Unexpected error handling report file", e);
             batchTaskService.save(task.progress(0).description(e.getMessage()).state(ERROR).endDate(Instant.now()));
+        } finally {
+            if (stream != null) {
+                stream.close();
+            }
         }
 
-        stream.close();
 
     }
 
