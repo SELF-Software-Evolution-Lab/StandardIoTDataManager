@@ -1,6 +1,6 @@
 package co.edu.uniandes.xrepo.service.dto;
 import java.math.BigDecimal;
-import java.time.Instant;
+
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -21,7 +21,7 @@ public class SampleDTO implements Serializable {
     private LocalDateTime dateTime;
 
     @NotNull
-    private Instant ts;
+    private SampleInstant ts;
 
     @NotNull
     private String sensorInternalId;
@@ -47,11 +47,11 @@ public class SampleDTO implements Serializable {
         this.dateTime = dateTime;
     }
 
-    public Instant getTs() {
+    public SampleInstant getTs() {
         return ts;
     }
 
-    public void setTs(Instant ts) {
+    public void setTs(SampleInstant ts) {
         this.ts = ts;
     }
 
@@ -98,6 +98,42 @@ public class SampleDTO implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hashCode(getId());
+    }
+
+    public static final class SampleInstant{
+        /**
+         * The number of epochSeconds from the epoch of 1970-01-01T00:00:00Z.
+         */
+        private long epochSeconds;
+        /**
+         * The number of nanoseconds, later along the time-line, from the epochSeconds field.
+         * This is always positive, and never exceeds 999,999,999.
+         */
+        private long nanos;
+
+        public SampleInstant() {
+        }
+
+        public SampleInstant(long epochSeconds, long nanos) {
+            this.epochSeconds = epochSeconds;
+            this.nanos = nanos;
+        }
+
+        public long getEpochSeconds() {
+            return epochSeconds;
+        }
+
+        public void setEpochSeconds(long epochSeconds) {
+            this.epochSeconds = epochSeconds;
+        }
+
+        public long getNanos() {
+            return nanos;
+        }
+
+        public void setNanos(long nanos) {
+            this.nanos = nanos;
+        }
     }
 
 }

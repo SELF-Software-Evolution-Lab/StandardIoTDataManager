@@ -159,7 +159,7 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
 
             // Time stamp
             String timestamp = iterator.next();
-            sample.setTs(Instant.ofEpochSecond(Long.parseLong(timestamp) / 10000000,
+            sample.setTs(new SampleDTO.SampleInstant(Long.parseLong(timestamp) / 10000000,
                 (Long.parseLong(timestamp) % 10000000) * 100));
 
             // Sensor Id

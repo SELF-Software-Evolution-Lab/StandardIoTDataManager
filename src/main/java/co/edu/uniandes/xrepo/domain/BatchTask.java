@@ -26,7 +26,6 @@ import lombok.ToString;
  */
 @Builder
 @AllArgsConstructor
-@ToString
 @Document(collection = "batch_task")
 @TypeAlias("xrepo:batch_task")
 public class BatchTask implements Serializable {
