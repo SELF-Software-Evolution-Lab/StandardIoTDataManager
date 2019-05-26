@@ -43,7 +43,7 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
     private final BatchTaskService batchTaskService;
     private final AsyncDelegator asyncDelegator;
     private final ObjectMapper jsonMapper = new ObjectMapper();
-    private final DateTimeFormatter dateTimeformatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.nnnnnnnnn");
+    private final DateTimeFormatter dateTimeformatter = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.SSS");
     private int totalLines = 0;
     private int processedLines = 0;
     private int processedLinesOk;
@@ -158,9 +158,10 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
             sample.setDateTime(LocalDateTime.parse(datetime, dateTimeformatter));
 
             // Time stamp
-            String timestamp = iterator.next();
-            sample.setTs(new SampleDTO.SampleInstant(Long.parseLong(timestamp) / 10000000,
-                (Long.parseLong(timestamp) % 10000000) * 100));
+            BigDecimal timeStamp = new BigDecimal(iterator.next());
+            
+            sample.setTs(new SampleDTO.SampleInstant(timeStamp.longValue(),
+                timeStamp.remainder(BigDecimal.ONE).multiply(new BigDecimal(1000000000)).longValue()));
 
             // Sensor Id
             String sensorId = iterator.next();
