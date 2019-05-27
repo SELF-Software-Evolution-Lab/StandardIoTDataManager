@@ -29,7 +29,7 @@ spring:
             enabled: false
     data:
         mongodb:
-            uri: mongodb://127.0.0.1:27017
+            uri: mongodb://172.24.100.107:27017
             database: xrepo
     mail:
         host: smtp.gmail.com
