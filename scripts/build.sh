@@ -1,2 +1,4 @@
 #! /bin/sh
-../gradlew clean -Pprod bootWar
+
+cd /home/profesor/development/StandardIoTDataManager
+./gradlew clean -Pprod bootWar
