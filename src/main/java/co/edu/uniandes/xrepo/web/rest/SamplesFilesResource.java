@@ -79,10 +79,16 @@ public class SamplesFilesResource {
             tarea = batchTaskService.save(tarea);
             return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, tarea.getId())).build();
         } catch (IllegalStateException e) {
+            log.error(e.getMessage());
             e.printStackTrace();
         } catch (IOException e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            log.error(e.getMessage());
             e.printStackTrace();
         }
+
 
         return ResponseEntity.status(500).build();
     }
