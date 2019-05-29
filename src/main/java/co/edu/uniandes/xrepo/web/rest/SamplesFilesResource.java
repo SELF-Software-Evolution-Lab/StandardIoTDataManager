@@ -59,9 +59,12 @@ public class SamplesFilesResource {
         try {
             long fileSize = file.getSize();
             Path filePath = Paths.get(samplesFilesLocation, fileTemp.getName());
-            
-            file.transferTo(filePath.toFile());
-
+            File archivo = filePath.toFile();
+            archivo.setReadable(true, false); 
+            archivo.setWritable(true, false); 
+            file.transferTo(archivo);
+            archivo.setReadable(true, false); 
+            archivo.setWritable(true, false); 
             BatchTask tarea = new BatchTask();
             tarea.progress(0);
             tarea.setState(TaskState.PENDING);
