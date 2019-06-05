@@ -44,9 +44,7 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
     private final AsyncDelegator asyncDelegator;
     private final ObjectMapper jsonMapper = new ObjectMapper();
     private final DateTimeFormatter dateTimeformatter = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.SSS");
-    private int totalLines = 0;
-    private int processedLines = 0;
-    private int processedLinesOk;
+   
 
 
     public ProcessingFiles(BatchTaskService batchTaskService, AsyncDelegator asyncDelegator, SampleService sampleService) {
@@ -57,6 +55,7 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
 
     @Override
     public void processTask(BatchTask task) {
+        int totalLines = 0;
         try {
             SamplesFilesParametersDTO parameters = extractSamplesFileParams(task);
             totalLines = countLines(parameters.getFilePath());
@@ -67,12 +66,11 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
                 return;
             }
             parameters.setTotalLines(totalLines);
+            parameters.setProcessedLines(0);
+            parameters.setProcessedLinesOk(0);
             task.startDate(Instant.now()).state(TaskState.PROCESSING).objectToParameters(parameters);
             batchTaskService.save(task);
             processFile(parameters, task);
-
-            parameters.setProcessedLines(processedLines);
-            parameters.setProcessedLinesOk(processedLinesOk);
 
             task.endDate(Instant.now()).state(TaskState.COMPLETED).progress(100).objectToParameters(parameters);
             batchTaskService.save(task);
@@ -88,13 +86,13 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
     private void processFile(SamplesFilesParametersDTO params, BatchTask task) {
         Path file = Paths.get(params.getFilePath());
         try (Stream<String> lines = Files.lines(file, StandardCharsets.UTF_8)) {
-            lines.forEach(s -> processFileLine(s, task));
+            lines.forEach(s -> processFileLine(s, task, params));
         } catch (IOException ioe) {
             log.error("Unexpected error handling samples file", ioe);
         }
     }
 
-    private void processFileLine(String line, BatchTask task) {
+    private void processFileLine(String line, BatchTask task, SamplesFilesParametersDTO params) {
         SampleDTO sample = parseLineToSample(line);
         if (sample == null) {
             return;
@@ -102,13 +100,14 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
 
         try {
             sampleService.save(sample);
-            processedLinesOk++;
+            params.setProcessedLinesOk(params.getProcessedLinesOk() + 1);
         } catch (Exception e) {
             log.error("Error saving sample {}", e.getMessage());
 
         }
-        if ((++processedLines % 1000) == 0) {
-            saveTaskProgress(totalLines, processedLines, task);
+        params.setProcessedLines(params.getProcessedLines() + 1);
+        if ((params.getProcessedLines() % 1000) == 0) {
+            saveTaskProgress(params.getTotalLines(), params.getProcessedLines(), task);
         }
     }
 
