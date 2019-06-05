@@ -36,7 +36,15 @@ export class SensorModalService {
 
     openToEdit(devices: IDevice[], sensor: ISensor): EventEmitter<ISensor> {
         const modalRef = this._open();
-        modalRef.componentInstance.sensor = new Sensor(sensor.internalId, sensor.sensorType, sensor.potentialFreq, sensor.samplingFreq);
+        modalRef.componentInstance.sensor = new Sensor(
+            sensor.internalId,
+            sensor.sensorType,
+            sensor.potentialFreq,
+            sensor.samplingFreq,
+            sensor.deviceId,
+            sensor.deviceName,
+            sensor.samplingUnit
+        );
         modalRef.componentInstance.devices = devices;
         modalRef.componentInstance.mode = 'Edit';
         return modalRef.componentInstance.returnCondition;

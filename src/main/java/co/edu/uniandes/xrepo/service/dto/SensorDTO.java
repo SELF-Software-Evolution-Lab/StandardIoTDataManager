@@ -29,10 +29,14 @@ public class SensorDTO implements Serializable {
     @NotNull
     private String sensorType;
 
+    @NotNull
+    private String samplingUnit;
+
     private BigDecimal potentialFreq;
 
     private BigDecimal samplingFreq;
 
+    @NotNull
     private String deviceId;
 
     private String deviceName;
@@ -83,6 +87,14 @@ public class SensorDTO implements Serializable {
 
     public void setDeviceName(String deviceName) {
         this.deviceName = deviceName;
+    }
+
+    public String getSamplingUnit() {
+        return samplingUnit;
+    }
+
+    public void setSamplingUnit(String samplingUnit) {
+        this.samplingUnit = samplingUnit;
     }
 
     @Override

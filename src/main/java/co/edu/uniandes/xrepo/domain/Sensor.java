@@ -33,6 +33,10 @@ public class Sensor implements Serializable {
     @Field("sensor_type")
     private String sensorType;
 
+    @NotNull
+    @Field("sampling_unit")
+    private String samplingUnit;
+
     @Field("potential_freq")
     private BigDecimal potentialFreq;
 
@@ -92,6 +96,15 @@ public class Sensor implements Serializable {
         this.samplingFreq = samplingFreq;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+
+    public String getSamplingUnit() {
+        return samplingUnit;
+    }
+
+    public void setSamplingUnit(String samplingUnit) {
+        this.samplingUnit = samplingUnit;
+    }
 
     @Override
     public boolean equals(Object o) {

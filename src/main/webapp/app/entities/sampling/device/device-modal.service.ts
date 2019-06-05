@@ -36,7 +36,7 @@ export class DeviceModalService {
 
     openToEdit(device: IDevice): EventEmitter<IDevice> {
         const modalRef = this._open();
-        modalRef.componentInstance.sensor = new Device(device.internalId, device.name, device.description);
+        modalRef.componentInstance.device = new Device(device.internalId, device.name, device.description);
         modalRef.componentInstance.mode = 'Edit';
         return modalRef.componentInstance.returnCondition;
     }

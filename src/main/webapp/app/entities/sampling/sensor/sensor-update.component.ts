@@ -20,6 +20,8 @@ export class SensorUpdateComponent implements OnInit {
     ngOnInit() {
         if (!this.sensor) {
             this.sensor = new Sensor();
+        } else {
+            this.selectedDevice = this.devices.filter(value => value.internalId === this.sensor.deviceId).pop();
         }
     }
 

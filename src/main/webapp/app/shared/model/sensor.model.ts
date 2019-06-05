@@ -1,6 +1,7 @@
 export interface ISensor {
     internalId?: string;
     sensorType?: string;
+    samplingUnit?: string;
     potentialFreq?: number;
     samplingFreq?: number;
     deviceId?: string;
@@ -14,7 +15,8 @@ export class Sensor implements ISensor {
         public potentialFreq?: number,
         public samplingFreq?: number,
         public deviceId?: string,
-        public deviceName?: string
+        public deviceName?: string,
+        public samplingUnit?: string
     ) {}
 }
 
