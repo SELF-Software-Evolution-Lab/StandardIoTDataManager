@@ -2,14 +2,9 @@ package co.edu.uniandes.xrepo.web.rest;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,9 +54,12 @@ public class SamplesFilesResource {
         try {
             long fileSize = file.getSize();
             Path filePath = Paths.get(samplesFilesLocation, fileTemp.getName());
-            
-            file.transferTo(filePath.toFile());
-
+            File archivo = filePath.toFile();
+            archivo.setReadable(true, false); 
+            archivo.setWritable(true, false); 
+            file.transferTo(archivo);
+            archivo.setReadable(true, false); 
+            archivo.setWritable(true, false); 
             BatchTask tarea = new BatchTask();
             tarea.progress(0);
             tarea.setState(TaskState.PENDING);
