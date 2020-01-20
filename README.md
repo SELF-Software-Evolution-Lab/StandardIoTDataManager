@@ -196,3 +196,12 @@ To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`)
 [openapi-generator]: https://openapi-generator.tech
 [swagger-editor]: http://editor.swagger.io
 [doing api-first development]: https://www.jhipster.tech/documentation-archive/v5.8.2/doing-api-first-development/
+
+## Deployment
+
+The software is deployed in the following machines from Admonsis infraestructure
+
+172.24.100.107 -> Web server 
+172.24.100.108 ->
+172.24.100.109 ->
+
