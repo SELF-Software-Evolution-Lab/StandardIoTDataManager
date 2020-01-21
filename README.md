@@ -202,6 +202,16 @@ To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`)
 The software is deployed in the following machines from Admonsis infraestructure
 
 172.24.100.107 -> Web server 
-172.24.100.108 ->
-172.24.100.109 ->
+
+172.24.100.108 -> File server
+
+172.24.100.109 -> Database
+
+To run the Web server, first access the machine via SSH. Then go to the repository folder:
+
+    cd development/StandardIoTDataManager
+    
+Here run the command
+
+    ./gradlew
 
