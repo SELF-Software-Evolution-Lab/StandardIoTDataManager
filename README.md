@@ -213,5 +213,5 @@ To run the Web server, first access the machine via SSH. Then go to the reposito
     
 Here run the command
 
-    ./gradlew
+    nohup ./gradlew &
 
