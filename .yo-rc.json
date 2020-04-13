@@ -8,7 +8,7 @@
         "baseName": "xrepo",
         "packageName": "co.edu.uniandes.xrepo",
         "packageFolder": "co/edu/uniandes/xrepo",
-        "serverPort": "8080",
+        "serverPort": "80",
         "authenticationType": "jwt",
         "cacheProvider": "no",
         "enableHibernateCache": false,

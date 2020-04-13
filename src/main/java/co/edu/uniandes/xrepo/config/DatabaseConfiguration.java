@@ -4,9 +4,14 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.mongobee.Mongobee;
-import com.mongodb.MongoClient;
+import com.github.cloudyrock.mongock.*;
 
+import com.mongodb.MongoClient;
+import org.springframework.context.ApplicationContext;
+
+import org.springframework.core.env.Environment;
+
+import com.mongodb.MongoClientURI;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +68,15 @@ public class DatabaseConfiguration {
     }
 
     @Bean
+    public Mongock mongock(ApplicationContext applicationContext, MongoClient mongoClient, MongoProperties mongoProperties, MongoTemplate mongoTemplate) {
+        return new SpringBootMongockBuilder(mongoClient, mongoProperties.getMongoClientDatabase(), "co.edu.uniandes.xrepo.config.dbmigrations")
+            .setApplicationContext(applicationContext)
+            .setLockQuickConfig()
+            .setEnabled(true)
+            .build();
+    }
+
+    /*@Bean
     public Mongobee mongobee(MongoClient mongoClient, MongoTemplate mongoTemplate, MongoProperties mongoProperties) {
         log.debug("Configuring Mongobee");
         Mongobee mongobee = new Mongobee(mongoClient);
@@ -72,8 +86,8 @@ public class DatabaseConfiguration {
         mongobee.setChangeLogsScanPackage("co.edu.uniandes.xrepo.config.dbmigrations");
         mongobee.setEnabled(true);
         return mongobee;
-    }
-    
+    }*/
+
     @WritingConverter
     enum InstantWriterConverter implements Converter<Instant, Document> {
 

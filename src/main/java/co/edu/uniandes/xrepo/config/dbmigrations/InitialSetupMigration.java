@@ -4,9 +4,12 @@ import co.edu.uniandes.xrepo.domain.Authority;
 import co.edu.uniandes.xrepo.domain.User;
 import co.edu.uniandes.xrepo.security.AuthoritiesConstants;
 
-import com.github.mongobee.changeset.ChangeLog;
-import com.github.mongobee.changeset.ChangeSet;
+import com.github.cloudyrock.mongock.ChangeLog;
+import com.github.cloudyrock.mongock.ChangeSet;
+
 import org.springframework.data.mongodb.core.MongoTemplate;
+
+
 
 import java.time.Instant;
 

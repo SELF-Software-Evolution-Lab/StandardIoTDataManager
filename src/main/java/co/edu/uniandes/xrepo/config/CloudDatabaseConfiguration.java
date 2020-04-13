@@ -1,9 +1,13 @@
 package co.edu.uniandes.xrepo.config;
 
-import com.github.mongobee.Mongobee;
+import com.github.cloudyrock.mongock.*;
+
+import com.mongodb.MongoClientURI;
 
 import io.github.jhipster.config.JHipsterConstants;
 import io.github.jhipster.domain.util.JSR310DateConverters.*;
+
+import com.mongodb.MongoClient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +16,7 @@ import org.springframework.cloud.CloudException;
 import org.springframework.cloud.config.java.AbstractCloudConfig;
 import org.springframework.cloud.service.ServiceInfo;
 import org.springframework.cloud.service.common.MongoServiceInfo;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.mongodb.MongoDbFactory;
@@ -20,6 +25,9 @@ import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventListener;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+
+import org.springframework.boot.autoconfigure.mongo.MongoProperties;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +64,15 @@ public class CloudDatabaseConfiguration extends AbstractCloudConfig {
     }
 
     @Bean
+    public Mongock mongock(ApplicationContext applicationContext, MongoClient mongoClient, MongoProperties mongoProperties, MongoTemplate mongoTemplate) {
+        return new SpringBootMongockBuilder(mongoClient, mongoProperties.getMongoClientDatabase(), "co.edu.uniandes.xrepo.config.dbmigrations")
+            .setApplicationContext(applicationContext)
+            .setLockQuickConfig()
+            .setEnabled(true)
+            .build();
+    }
+
+    /*@Bean
     public Mongobee mongobee(MongoDbFactory mongoDbFactory, MongoTemplate mongoTemplate, Cloud cloud) {
         log.debug("Configuring Cloud Mongobee");
         List<ServiceInfo> matchingServiceInfos = cloud.getServiceInfos(MongoDbFactory.class);
@@ -72,5 +89,5 @@ public class CloudDatabaseConfiguration extends AbstractCloudConfig {
         mongobee.setChangeLogsScanPackage("co.edu.uniandes.xrepo.config.dbmigrations");
         mongobee.setEnabled(true);
         return mongobee;
-    }
+    }*/
 }
