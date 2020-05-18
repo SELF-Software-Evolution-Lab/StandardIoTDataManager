@@ -74,6 +74,8 @@ public class SampleResource {
     @PostMapping("/samples/data")
     public ResponseEntity<SearchResponse> preSearchSample(@RequestBody SampleSearchParametersDTO searchParametersDTO) {
         SearchResponse l = searchEngineService.preSearchSamples(searchParametersDTO);
+        //to avoid messing with the response types, im just implementing HDFS search on top.
+        
         return ResponseEntity.ok().body(l);
     }
 
