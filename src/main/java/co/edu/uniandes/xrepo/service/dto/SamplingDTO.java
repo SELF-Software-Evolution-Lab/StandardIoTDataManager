@@ -35,6 +35,8 @@ public class SamplingDTO implements Serializable {
 
     private String experimentName;
 
+    private List<String> fileUris;
+
     private List<String> tags;
 
     private List<Device> devices;
@@ -106,6 +108,10 @@ public class SamplingDTO implements Serializable {
     public void setTags(List<String> tags) {
         this.tags = tags;
     }
+
+    public List<String> getFileUris() { return fileUris; }
+
+    public void setFileUris(List<String> fileUris) { this.fileUris = fileUris; }
 
     public List<Device> getDevices() {
         return devices;

@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import co.edu.uniandes.xrepo.service.dto.HDFileParametersDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -87,6 +88,16 @@ public class SamplingResource {
             .body(result);
     }
 
+    @PutMapping("/samplings/file")
+    public ResponseEntity<SamplingDTO> updateSamplingFiles(@Valid @RequestBody HDFileParametersDTO hdfileParametersDTO) throws URISyntaxException {
+        log.debug("REST request to update Sampling Files: {}", hdfileParametersDTO);
+
+        SamplingDTO result = samplingService.addFileUriToSampling(hdfileParametersDTO.getSamplingId(), hdfileParametersDTO.getFileUri()).get();
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, hdfileParametersDTO.getSamplingId().toString()))
+            .body(result);
+    }
+
     /**
      * GET  /samplings : get all the samplings.
      *
@@ -132,5 +143,12 @@ public class SamplingResource {
         log.debug("REST request to get all sensors from target system");
         List<SensorDTO> tags = samplingService.findSensorsByTargetSystem(tsId);
         return ResponseEntity.ok().body(tags);
+    }
+
+    @GetMapping("/samplings/files/{tsId}")
+    public ResponseEntity<List<String>> getFilesByTargetSystem(@PathVariable String tsId) {
+        log.debug("REST request to get all files from target system");
+        List<String> files = samplingService.getAllFilesFromTargetSystem(tsId);
+        return ResponseEntity.ok().body(files);
     }
 }

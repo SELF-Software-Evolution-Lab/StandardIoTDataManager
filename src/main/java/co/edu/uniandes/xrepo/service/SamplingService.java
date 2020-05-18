@@ -1,12 +1,9 @@
 package co.edu.uniandes.xrepo.service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.io.SegmentedStringWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -139,6 +136,24 @@ public class SamplingService {
                 .internalId(sensor.getInternalId())
                 .sensorType(sensor.getSensorType()).build()
             )
+            .collect(Collectors.toList());
+    }
+
+    public Optional<SamplingDTO> addFileUriToSampling(String samplingID, String fileUri){
+        Optional<Sampling> SamplingToUpdate = samplingRepository.findById(samplingID);
+        List<String> currentFileUrls = new ArrayList<>();
+        if (SamplingToUpdate.isPresent()){
+//            currentFileUrls = SampleToUpdate.get().getFileUris();
+//            currentFileUrls.add(fileUri);
+            SamplingToUpdate.get().getFileUris().add(fileUri);
+            return Optional.of(samplingMapper.toDto(samplingRepository.save(SamplingToUpdate.get())));
+        }
+        return SamplingToUpdate.map(samplingMapper::toDto);
+    }
+
+    public List<String> getAllFilesFromTargetSystem(String targetSystemID){
+        return samplingRepository.findByTargetSystemId(targetSystemID).stream()
+            .flatMap(sampling -> sampling.getFileUris().stream())
             .collect(Collectors.toList());
     }
 }
