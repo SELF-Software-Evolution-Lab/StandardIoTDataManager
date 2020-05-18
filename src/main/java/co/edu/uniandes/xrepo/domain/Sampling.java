@@ -39,7 +39,7 @@ import lombok.ToString;
 public class Sampling implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     private String id;
 
@@ -79,6 +79,9 @@ public class Sampling implements Serializable {
 
     @Field("tags")
     private List<String> tags = new ArrayList<>();
+
+    @Field("file_uri")
+    private List<String> fileUris = new ArrayList<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
@@ -205,6 +208,15 @@ public class Sampling implements Serializable {
     public void setTags(List<String> tags) {
         this.tags = tags;
     }
+
+    public List<String> getFileUris() { return fileUris; }
+
+    public Sampling fileUris(List<String> fileUris) {
+        this.fileUris = fileUris;
+        return this;
+    }
+
+    public void setFileUris(List<String> fileUris) { this.fileUris = fileUris; }
 
     public Map<String, Set<String>> getDeviceSensor() {
         return deviceSensor;
