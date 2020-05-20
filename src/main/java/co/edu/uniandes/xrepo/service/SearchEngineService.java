@@ -1,18 +1,23 @@
 package co.edu.uniandes.xrepo.service;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.URL;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.core.io.ClassPathResource;
 
 import co.edu.uniandes.xrepo.domain.BatchTask;
 import co.edu.uniandes.xrepo.domain.Sample;
@@ -60,6 +65,17 @@ public class SearchEngineService {
         this.reportTaskProcessor = reportTaskProcessor;
         this.asyncDelegator = asyncDelegator;
         this.maxRecords = maxRecords;
+    }
+
+    public SearchResponse hdfsFind(List<String> fileHdfsLocations, LocalDateTime start, LocalDateTime end) throws IOException {
+        String shellScript = new ClassPathResource("mapreduce-files/ShellSample.sh").getURI().getPath();
+        log.info("Start Date Requested", start.toString());
+        log.info("End Date Requested", end.toString());
+        Process console = Runtime.getRuntime().exec(new String[]{shellScript
+                                                    ,"-i",fileHdfsLocations.get(0)
+                                                    ,"-s",start.toString()
+                                                    ,"-e",end.toString()});
+        return new SearchResponse(0);
     }
 
     public SearchResponse preSearchSamples(SampleSearchParametersDTO params) {
