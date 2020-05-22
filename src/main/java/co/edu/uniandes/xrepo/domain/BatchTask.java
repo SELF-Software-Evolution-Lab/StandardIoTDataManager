@@ -131,7 +131,7 @@ public class BatchTask implements Serializable {
     public void setCreateDate(Instant createDate) {
         this.createDate = createDate;
     }
-    
+
     public Instant getStartDate() {
         return startDate;
     }
@@ -242,4 +242,5 @@ public class BatchTask implements Serializable {
             ", progress=" + getProgress() +
             "}";
     }
+
 }

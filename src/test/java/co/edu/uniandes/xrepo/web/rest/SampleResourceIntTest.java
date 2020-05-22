@@ -5,6 +5,7 @@ import co.edu.uniandes.xrepo.XrepoApp;
 import co.edu.uniandes.xrepo.domain.Sample;
 import co.edu.uniandes.xrepo.repository.SampleRepository;
 import co.edu.uniandes.xrepo.service.SampleService;
+import co.edu.uniandes.xrepo.service.SamplingService;
 import co.edu.uniandes.xrepo.service.SearchEngineService;
 import co.edu.uniandes.xrepo.service.dto.SampleDTO;
 import co.edu.uniandes.xrepo.service.mapper.SampleMapper;
@@ -75,6 +76,9 @@ public class SampleResourceIntTest {
     private SampleService sampleService;
 
     @Autowired
+    private SamplingService samplingService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -93,7 +97,7 @@ public class SampleResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final SampleResource sampleResource = new SampleResource(sampleService, Mockito.mock(SearchEngineService.class));
+        final SampleResource sampleResource = new SampleResource(sampleService, Mockito.mock(SearchEngineService.class), samplingService);
         this.restSampleMockMvc = MockMvcBuilders.standaloneSetup(sampleResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -256,7 +260,7 @@ public class SampleResourceIntTest {
             .andExpect(jsonPath("$.[*].experimentId").value(hasItem(DEFAULT_EXPERIMENT_ID.toString())))
             .andExpect(jsonPath("$.[*].targetSystemId").value(hasItem(DEFAULT_TARGET_SYSTEM_ID.toString())));
     }
-    
+
     @Test
     public void getSample() throws Exception {
         // Initialize the database
