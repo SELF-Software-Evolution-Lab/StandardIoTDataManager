@@ -81,9 +81,8 @@ public class SampleResource {
     public ResponseEntity<SearchResponse> preSearchSample(@RequestBody SampleSearchParametersDTO searchParametersDTO) throws IOException {
 //        SearchResponse l = searchEngineService.preSearchSamples(searchParametersDTO);
         //to avoid messing with the response types, im just implementing HDFS search on top.
-        SearchResponse l = searchEngineService.hdfsFind(samplingService
-            .getAllFilesFromTargetSystem(searchParametersDTO.getTargetSystemId().get(0))
-            ,searchParametersDTO.getFromDateTime(), searchParametersDTO.getToDateTime());
+        //of existing functionality
+        SearchResponse l = searchEngineService.hdfsFindTask(searchParametersDTO);
         return ResponseEntity.ok().body(l);
     }
 

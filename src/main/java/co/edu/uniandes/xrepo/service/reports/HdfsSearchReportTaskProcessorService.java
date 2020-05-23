@@ -8,6 +8,8 @@ import co.edu.uniandes.xrepo.service.SamplingService;
 import co.edu.uniandes.xrepo.service.dto.SampleSearchParametersDTO;
 import co.edu.uniandes.xrepo.service.task.BackgroundTaskProcessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,8 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static co.edu.uniandes.xrepo.domain.enumeration.TaskState.ERROR;
-import static co.edu.uniandes.xrepo.domain.enumeration.TaskState.PROCESSING;
+import static co.edu.uniandes.xrepo.domain.enumeration.TaskState.*;
 
 @Service
 public class HdfsSearchReportTaskProcessorService implements BackgroundTaskProcessor, SearchReportFileLocator {
@@ -48,6 +49,7 @@ public class HdfsSearchReportTaskProcessorService implements BackgroundTaskProce
 
     public HdfsSearchReportTaskProcessorService(BatchTaskService batchTaskService, SamplingService samplingService
                                                 ,@Value("${xrepo.report-generation-location}") String reportLocation) {
+        log.info("Creating HDFS search processor service");
         this.batchTaskService = batchTaskService;
         this.samplingService = samplingService;
         this.reportLocation = reportLocation;
@@ -80,7 +82,7 @@ public class HdfsSearchReportTaskProcessorService implements BackgroundTaskProce
                 return;
             }
 
-            String shellScript = new ClassPathResource("mapreduce-files/ShellSample.sh").getURI().getPath();
+            String shellScript = new ClassPathResource("mapreduce-files/RunRemoteMR.sh").getURI().getPath();
 
             log.info("Processing HDFS report starting: {}, ending {}", startTime.toString(), endTime.toString());
 
@@ -91,15 +93,27 @@ public class HdfsSearchReportTaskProcessorService implements BackgroundTaskProce
                     ,"-i",hdfsFile
                     ,"-s",startTime.toString()
                     ,"-e",endTime.toString()
-                    ,"-f",getFileName(hdfsFile)
+                    ,"-o",getFileName(hdfsFile)
                     ,"-d",TIME_FORMATTER_DATE.format(processStart)
                     ,"-t",TIME_FORMATTER_TIME.format(processStart)});
                 consoleTracker.add(console);
             }
-            //TODO: wait for all the console command to finish to write the report
+            //wait for all the console command to finish to write the report
+            //better than wait for console, so all HDFS search can be made in parallel
+            Boolean running = true;
+            while (running){
+              if (!consoleTracker.stream().anyMatch(s -> s.isAlive())){
+                  running = false;
+              }
+            }
+            writeReport(fileHdfsLocations, TIME_FORMATTER_DATE.format(processStart)
+                        ,TIME_FORMATTER_TIME.format(processStart), task);
+            batchTaskService.save(task.progress(100).state(COMPLETED).endDate(Instant.now()));
         } catch (Exception e) {
+            batchTaskService.save(
+                task.progress(0).state(ERROR).endDate(Instant.now())
+                    .description("Internal server error: " + e.getMessage()));
             e.printStackTrace();
-        } finally {
         }
     }
 
@@ -124,6 +138,7 @@ public class HdfsSearchReportTaskProcessorService implements BackgroundTaskProce
 
     private SampleSearchParametersDTO extractSearchParams(BatchTask task) {
         try {
+            jsonMapper.registerModule(new JavaTimeModule());
             return jsonMapper
                 .readValue(task.getParameters().toJson(), SampleSearchParametersDTO.class);
         } catch (IOException e) {

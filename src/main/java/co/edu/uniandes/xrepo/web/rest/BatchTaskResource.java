@@ -103,7 +103,7 @@ public class BatchTaskResource {
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/batch-tasks");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
-    
+
     /**
      * GET  /batch-tasks/upload-files : get all the upload files tasks.
      *
@@ -141,11 +141,12 @@ public class BatchTaskResource {
     @GetMapping("/batch-tasks/search-reports")
     public ResponseEntity<List<BatchTask>> getAllSearchReportsByUser(Pageable pageable) {
         log.debug("REST request to get a page of Search Reports");
-        Page<BatchTask> page = batchTaskService.findAllSearchReportsByUser(pageable);
+        //Page<BatchTask> page = batchTaskService.findAllSearchReportsByUser(pageable);
+        Page<BatchTask> page = batchTaskService.findAllHdfsReportsByUser(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/batch-tasks/search-reports");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
-    
+
     /**
      * GET  /batch-tasks/search-reports : get all the search reports tasks.
      *
@@ -155,7 +156,8 @@ public class BatchTaskResource {
     @GetMapping("/batch-tasks/search-reports/{state}")
     public ResponseEntity<List<BatchTask>> getAllSearchReportsByUser(Pageable pageable, @PathVariable TaskState state) {
         log.debug("REST request to get a page of Search Reports by state");
-        Page<BatchTask> page = batchTaskService.findAllSearchReportsByUserAndState(pageable, state);
+        //Page<BatchTask> page = batchTaskService.findAllSearchReportsByUserAndState(pageable, state);
+        Page<BatchTask> page = batchTaskService.findAllHdfsReportsByUserAndState(pageable, state);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page,  String.format("/api/batch-tasks/search-reports/{%s}", state));
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -198,5 +200,5 @@ public class BatchTaskResource {
         batchTaskService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id)).build();
     }
-    
+
 }

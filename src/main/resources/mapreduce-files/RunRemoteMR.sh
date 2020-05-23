@@ -1,7 +1,5 @@
 #!/bin/sh
 
-#this is intended to be placed and ran on the HDFS server.
-
 usage()
 {
     echo "usage: shellsample [[-i hdfsFileLocation ] [-s startDate] [-e endDate] [-o outputFolder] [-d dateFolder] [-t timeFolder]]"
@@ -48,9 +46,7 @@ while [ "$1" != "" ]; do
     shift
 done
 
-echo "/home/hadoop/ejemplos/remoto/DateFilter/dateReducer.py -s $startDate -e $endDate"
+ssh hadoop@xrhdfsserver1.westus2.cloudapp.azure.com -i ~/.ssh/privateKeyHadoop.ppk \
+/home/hadoop/xrepo/DateFilter/RunMR.sh --input "$inputFilename" --start "$startDate" --end "$endDate" \
+--output "$outputFolder" --date "$dateFolder" --time "$timeFolder"
 
-~/hadoop/bin/mapred streaming \
--mapper /home/hadoop/xrepo/DateFilter/mapper.py -file /home/hadoop/xrepo/DateFilter/mapper.py \
--reducer "/home/hadoop/xrepo/DateFilter/reducer.py -s $startDate -e $endDate" -file /home/hadoop/xrepo/DateFilter/reducer.py \
--input "$inputFilename" -output /user/andes/search-result/"$outputFolder"/"$dateFolder"/"$timeFolder"

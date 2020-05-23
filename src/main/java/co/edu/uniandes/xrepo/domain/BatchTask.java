@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -195,6 +196,7 @@ public class BatchTask implements Serializable {
 
     public void objectToParameters(Object parameters) {
         try {
+            mapper.registerModule(new JavaTimeModule());
             String json = mapper.writeValueAsString(parameters);
             setParameters(org.bson.Document.parse(json));
         } catch (JsonProcessingException e) {
