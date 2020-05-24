@@ -1,7 +1,9 @@
 package co.edu.uniandes.xrepo.service;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.core.io.ClassPathResource;
 
 import co.edu.uniandes.xrepo.domain.BatchTask;
 import co.edu.uniandes.xrepo.domain.Sample;
@@ -37,6 +40,8 @@ public class SearchEngineService {
 
     private final SamplingRepository samplingRepository;
 
+    private final SamplingService samplingService;
+
     private final ExperimentRepository experimentRepository;
 
     private final MongoTemplate mongoTemplate;
@@ -48,18 +53,40 @@ public class SearchEngineService {
     private final AsyncDelegator asyncDelegator;
     private final int maxRecords;
 
-    public SearchEngineService(SamplingRepository samplingRepository, ExperimentRepository experimentRepository,
+    public SearchEngineService(SamplingRepository samplingRepository, SamplingService samplingService, ExperimentRepository experimentRepository,
                                MongoTemplate mongoTemplate, BatchTaskService batchTaskService,
                                SearchReportTaskProcessor reportTaskProcessor,
                                AsyncDelegator asyncDelegator,
                                @Value("${xrepo.report-generation-max-records-online}") int maxRecords) {
         this.samplingRepository = samplingRepository;
+        this.samplingService = samplingService;
         this.experimentRepository = experimentRepository;
         this.mongoTemplate = mongoTemplate;
         this.batchTaskService = batchTaskService;
         this.reportTaskProcessor = reportTaskProcessor;
         this.asyncDelegator = asyncDelegator;
         this.maxRecords = maxRecords;
+    }
+
+    public SearchResponse hdfsFind(SampleSearchParametersDTO searchParametersDTO) throws IOException {
+        List<String> fileHdfsLocations = samplingService.getAllFilesFromTargetSystem(searchParametersDTO.getTargetSystemId().get(0));
+        LocalDateTime start = searchParametersDTO.getFromDateTime();
+        LocalDateTime end = searchParametersDTO.getToDateTime();
+
+        String shellScript = new ClassPathResource("mapreduce-files/ShellSample.sh").getURI().getPath();
+        log.info("Start Date Requested", start.toString());
+        log.info("End Date Requested", end.toString());
+        Process console = Runtime.getRuntime().exec(new String[]{shellScript
+                                                    ,"-i",fileHdfsLocations.get(0)
+                                                    ,"-s",start.toString()
+                                                    ,"-e",end.toString()});
+        return new SearchResponse(samplingService.getAllFilesFromTargetSystem(searchParametersDTO.getTargetSystemId().get(0)).size());
+    }
+
+    public SearchResponse hdfsFindTask(SampleSearchParametersDTO searchParametersDTO) throws IOException {
+        SearchResponse response = new SearchResponse();
+        response.setBatchTaskId(deferGeneration(searchParametersDTO,TaskType.HDFS_REPORT));
+        return response;
     }
 
     public SearchResponse preSearchSamples(SampleSearchParametersDTO params) {
@@ -82,9 +109,9 @@ public class SearchEngineService {
         response.setCount(count);
         params.setExpectedRecords(count);
         if (count > maxRecords) {
-            response.setBatchTaskId(deferReport(params));
+            response.setBatchTaskId(deferGeneration(params, TaskType.REPORT));
         } else {
-            response.setBatchTaskId(generateOnlineReport(params));
+            response.setBatchTaskId(generateOnline(params, TaskType.REPORT));
         }
         log.info("Count returned {}", count);
         return response;
@@ -151,12 +178,12 @@ public class SearchEngineService {
         return true;
     }
 
-    private String generateOnlineReport(SampleSearchParametersDTO params) {
+    private String generateOnline(SampleSearchParametersDTO params, TaskType tskType) {
         BatchTask onlineTask = BatchTask.builder()
             .createDate(Instant.now())
             .progress(0)
             .user(SecurityUtils.getCurrentUserLogin().get())
-            .type(TaskType.REPORT)
+            .type(tskType)
             .state(TaskState.SUBMITTED)
             .build();
         onlineTask.objectToParameters(params);
@@ -165,12 +192,12 @@ public class SearchEngineService {
         return saved.getId();
     }
 
-    private String deferReport(SampleSearchParametersDTO params) {
+    private String deferGeneration(SampleSearchParametersDTO params, TaskType tskType) {
         BatchTask deferredTask = BatchTask.builder()
             .createDate(Instant.now())
             .progress(0)
             .user(SecurityUtils.getCurrentUserLogin().get())
-            .type(TaskType.REPORT)
+            .type(tskType)
             .state(TaskState.PENDING)
             .build();
         deferredTask.objectToParameters(params);

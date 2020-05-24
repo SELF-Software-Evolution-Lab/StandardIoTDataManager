@@ -15,7 +15,6 @@ import co.edu.uniandes.xrepo.domain.BatchTask;
 import co.edu.uniandes.xrepo.domain.enumeration.TaskType;
 
 @Service
-@Profile("worker")
 public class BackgroundTaskExecutor {
 
     private final Logger log = LoggerFactory.getLogger(BackgroundTaskExecutor.class);

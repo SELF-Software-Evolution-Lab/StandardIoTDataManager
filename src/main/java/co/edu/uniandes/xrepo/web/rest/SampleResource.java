@@ -1,5 +1,6 @@
 package co.edu.uniandes.xrepo.web.rest;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.uniandes.xrepo.service.SampleService;
+import co.edu.uniandes.xrepo.service.SamplingService;
 import co.edu.uniandes.xrepo.service.SearchEngineService;
 import co.edu.uniandes.xrepo.service.SearchEngineService.SearchResponse;
 import co.edu.uniandes.xrepo.service.dto.SampleDTO;
@@ -45,11 +47,15 @@ public class SampleResource {
 
     private final SampleService sampleService;
 
+    private final SamplingService samplingService;
+
     private final SearchEngineService searchEngineService;
 
-    public SampleResource(SampleService sampleService, SearchEngineService searchEngineService) {
+    public SampleResource(SampleService sampleService, SearchEngineService searchEngineService
+                            , SamplingService samplingService) {
         this.sampleService = sampleService;
         this.searchEngineService = searchEngineService;
+        this.samplingService = samplingService;
     }
 
     /**
@@ -72,10 +78,11 @@ public class SampleResource {
     }
 
     @PostMapping("/samples/data")
-    public ResponseEntity<SearchResponse> preSearchSample(@RequestBody SampleSearchParametersDTO searchParametersDTO) {
-        SearchResponse l = searchEngineService.preSearchSamples(searchParametersDTO);
+    public ResponseEntity<SearchResponse> preSearchSample(@RequestBody SampleSearchParametersDTO searchParametersDTO) throws IOException {
+//        SearchResponse l = searchEngineService.preSearchSamples(searchParametersDTO);
         //to avoid messing with the response types, im just implementing HDFS search on top.
-        
+        //of existing functionality
+        SearchResponse l = searchEngineService.hdfsFindTask(searchParametersDTO);
         return ResponseEntity.ok().body(l);
     }
 

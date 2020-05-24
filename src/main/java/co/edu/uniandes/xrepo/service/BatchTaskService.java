@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import co.edu.uniandes.xrepo.service.reports.HdfsSearchReportTaskProcessorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -31,7 +32,7 @@ public class BatchTaskService {
     private final BatchTaskRepository batchTaskRepository;
     private final SearchReportFileLocator reportFileLocator;
 
-    public BatchTaskService(BatchTaskRepository batchTaskRepository, @Lazy SearchReportFileLocator reportFileLocator) {
+    public BatchTaskService(BatchTaskRepository batchTaskRepository, @Lazy HdfsSearchReportTaskProcessorService reportFileLocator) {
         this.batchTaskRepository = batchTaskRepository;
         this.reportFileLocator = reportFileLocator;
     }
@@ -102,6 +103,20 @@ public class BatchTaskService {
             return batchTaskRepository.findByTypeAndState(TaskType.REPORT, state, pageable);
         else
             return batchTaskRepository.findByTypeAndUserAndState(TaskType.REPORT, currentUser(), state, pageable);
+    }
+
+    public Page<BatchTask> findAllHdfsReportsByUser(Pageable pageable) {
+        if (currentUser().equals("admin"))
+            return batchTaskRepository.findByType(TaskType.HDFS_REPORT, pageable);
+        else
+            return batchTaskRepository.findByTypeAndUser(TaskType.HDFS_REPORT, currentUser(), pageable);
+    }
+
+    public Page<BatchTask> findAllHdfsReportsByUserAndState(Pageable pageable, TaskState state) {
+        if (currentUser().equals("admin"))
+            return batchTaskRepository.findByTypeAndState(TaskType.HDFS_REPORT, state, pageable);
+        else
+            return batchTaskRepository.findByTypeAndUserAndState(TaskType.HDFS_REPORT, currentUser(), state, pageable);
     }
 
     public Page<BatchTask> findAllUploadFilesByUser(Pageable pageable) {
