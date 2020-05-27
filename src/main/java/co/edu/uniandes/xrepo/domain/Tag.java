@@ -4,19 +4,17 @@ package co.edu.uniandes.xrepo.domain;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import co.edu.uniandes.xrepo.domain.enumeration.TagType;
 
 /**
  * A Tag.
  */
-@NoArgsConstructor
-@AllArgsConstructor
 @Document(collection = "tag")
 public class Tag implements Serializable {
 
@@ -29,6 +27,10 @@ public class Tag implements Serializable {
     @Size(max = 100)
     @Field("name")
     private String name;
+
+    @NotNull
+    @Field("type")
+    private TagType type;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
@@ -50,6 +52,19 @@ public class Tag implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public TagType getType() {
+        return type;
+    }
+
+    public Tag type(TagType type) {
+        this.type = type;
+        return this;
+    }
+
+    public void setType(TagType type) {
+        this.type = type;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -78,6 +93,7 @@ public class Tag implements Serializable {
         return "Tag{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", type='" + getType() + "'" +
             "}";
     }
 }

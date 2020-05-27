@@ -1,0 +1,49 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="laboratory">
+            <h2><span>Laboratory</span> {{laboratory.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Name</span></dt>
+                <dd>
+                    <span>{{laboratory.name}}</span>
+                </dd>
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{laboratory.description}}</span>
+                </dd>
+                <dt><span>Date Created</span></dt>
+                <dd>
+                    <span>{{laboratory.dateCreated}}</span>
+                </dd>
+                <dt><span>Share Url</span></dt>
+                <dd>
+                    <span>{{laboratory.shareUrl}}</span>
+                </dd>
+                <dt><span>Share Valid Thru</span></dt>
+                <dd>
+                    <span>{{laboratory.shareValidThru}}</span>
+                </dd>
+                <dt><span>Sampling</span></dt>
+                <dd>
+                    <div *ngIf="laboratory.samplingId">
+                        <a [routerLink]="['/sampling', laboratory.samplingId, 'view']">{{laboratory.samplingName}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/laboratory', laboratory.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

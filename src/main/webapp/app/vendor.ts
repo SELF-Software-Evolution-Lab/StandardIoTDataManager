@@ -53,7 +53,10 @@ import {
     faSortNumericDown,
     faKey,
     faFileMedicalAlt,
-    faDolly
+    faDolly,
+    faFlask,
+    faFileContract,
+    faObjectUngroup
 } from '@fortawesome/free-solid-svg-icons';
 
 // Adds the SVG icon to the library so you can use it in your page
@@ -105,5 +108,8 @@ library.add(faSortNumericDown);
 library.add(faKey);
 library.add(faFileMedicalAlt);
 library.add(faDolly);
+library.add(faFlask);
+library.add(faFileContract);
+library.add(faObjectUngroup);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here
