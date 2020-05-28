@@ -41,36 +41,12 @@ import { RouterModule } from '@angular/router';
                 loadChildren: './laboratory/laboratory.module#XrepoLaboratoryModule'
             },
             {
-                path: 'laboratory',
-                loadChildren: './laboratory/laboratory.module#XrepoLaboratoryModule'
-            },
-            {
                 path: 'algorithm',
                 loadChildren: './algorithm/algorithm.module#XrepoAlgorithmModule'
             },
             {
                 path: 'sub-set',
                 loadChildren: './sub-set/sub-set.module#XrepoSubSetModule'
-            },
-            {
-                path: 'laboratory',
-                loadChildren: './laboratory/laboratory.module#XrepoLaboratoryModule'
-            },
-            {
-                path: 'laboratory',
-                loadChildren: './laboratory/laboratory.module#XrepoLaboratoryModule'
-            },
-            {
-                path: 'algorithm',
-                loadChildren: './algorithm/algorithm.module#XrepoAlgorithmModule'
-            },
-            {
-                path: 'sub-set',
-                loadChildren: './sub-set/sub-set.module#XrepoSubSetModule'
-            },
-            {
-                path: 'tag',
-                loadChildren: './tag/tag.module#XrepoTagModule'
             }
             /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
         ])

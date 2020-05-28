@@ -8,9 +8,13 @@ import {
     LaboratoryUpdateComponent,
     LaboratoryDeletePopupComponent,
     LaboratoryDeleteDialogComponent,
+    LaboratoryShareComponent,
     laboratoryRoute,
     laboratoryPopupRoute
 } from './';
+
+import { SamplingComponent } from 'app/entities/sampling/sampling.component';
+import { SamplingService } from 'app/entities/sampling/sampling.service';
 
 const ENTITY_STATES = [...laboratoryRoute, ...laboratoryPopupRoute];
 
@@ -21,9 +25,20 @@ const ENTITY_STATES = [...laboratoryRoute, ...laboratoryPopupRoute];
         LaboratoryDetailComponent,
         LaboratoryUpdateComponent,
         LaboratoryDeleteDialogComponent,
-        LaboratoryDeletePopupComponent
+        LaboratoryDeletePopupComponent,
+        LaboratoryShareComponent,
+        //
+        SamplingComponent
     ],
-    entryComponents: [LaboratoryComponent, LaboratoryUpdateComponent, LaboratoryDeleteDialogComponent, LaboratoryDeletePopupComponent],
+    entryComponents: [
+        LaboratoryComponent,
+        LaboratoryUpdateComponent,
+        LaboratoryDeleteDialogComponent,
+        LaboratoryDeletePopupComponent,
+        //
+        SamplingComponent
+    ],
+    providers: [SamplingService],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class XrepoLaboratoryModule {}

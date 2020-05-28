@@ -45,6 +45,9 @@ public class Laboratory implements Serializable {
     @Field("share_valid_thru")
     private Instant shareValidThru;
 
+    @Field("tags")
+    private String tags;
+
     @DBRef
     @Field("algorithm")
     private Set<Algorithm> algorithms = new HashSet<>();
@@ -128,6 +131,19 @@ public class Laboratory implements Serializable {
 
     public void setShareValidThru(Instant shareValidThru) {
         this.shareValidThru = shareValidThru;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public Laboratory tags(String tags) {
+        this.tags = tags;
+        return this;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 
     public Set<Algorithm> getAlgorithms() {
@@ -223,6 +239,7 @@ public class Laboratory implements Serializable {
             ", dateCreated='" + getDateCreated() + "'" +
             ", shareUrl='" + getShareUrl() + "'" +
             ", shareValidThru='" + getShareValidThru() + "'" +
+            ", tags='" + getTags() + "'" +
             "}";
     }
 }

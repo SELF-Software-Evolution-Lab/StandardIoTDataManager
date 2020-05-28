@@ -20,6 +20,7 @@
             <th jhiSortBy="dateCreated"><span>Date Created</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="shareUrl"><span>Share Url</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="shareValidThru"><span>Share Valid Thru</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="tags"><span>Tags</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="samplingName"><span>Sampling</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
@@ -32,6 +33,7 @@
                 <td>{{laboratory.dateCreated | date:'medium'}}</td>
                 <td>{{laboratory.shareUrl}}</td>
                 <td>{{laboratory.shareValidThru | date:'medium'}}</td>
+                <td>{{laboratory.tags}}</td>
                 <td>
                     <div *ngIf="laboratory.samplingId">
                         <a [routerLink]="['../sampling', laboratory.samplingId , 'view' ]" >{{laboratory.samplingName}}</a>

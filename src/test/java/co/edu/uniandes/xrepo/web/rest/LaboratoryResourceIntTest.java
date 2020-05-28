@@ -59,6 +59,9 @@ public class LaboratoryResourceIntTest {
     private static final Instant DEFAULT_SHARE_VALID_THRU = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_SHARE_VALID_THRU = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
+    private static final String DEFAULT_TAGS = "AAAAAAAAAA";
+    private static final String UPDATED_TAGS = "BBBBBBBBBB";
+
     @Autowired
     private LaboratoryRepository laboratoryRepository;
 
@@ -108,7 +111,8 @@ public class LaboratoryResourceIntTest {
             .description(DEFAULT_DESCRIPTION)
             .dateCreated(DEFAULT_DATE_CREATED)
             .shareUrl(DEFAULT_SHARE_URL)
-            .shareValidThru(DEFAULT_SHARE_VALID_THRU);
+            .shareValidThru(DEFAULT_SHARE_VALID_THRU)
+            .tags(DEFAULT_TAGS);
         // Add required entity
         Sampling sampling = SamplingResourceIntTest.createEntity();
         sampling.setId("fixed-id-for-tests");
@@ -142,6 +146,7 @@ public class LaboratoryResourceIntTest {
         assertThat(testLaboratory.getDateCreated()).isEqualTo(DEFAULT_DATE_CREATED);
         assertThat(testLaboratory.getShareUrl()).isEqualTo(DEFAULT_SHARE_URL);
         assertThat(testLaboratory.getShareValidThru()).isEqualTo(DEFAULT_SHARE_VALID_THRU);
+        assertThat(testLaboratory.getTags()).isEqualTo(DEFAULT_TAGS);
     }
 
     @Test
@@ -195,7 +200,8 @@ public class LaboratoryResourceIntTest {
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].dateCreated").value(hasItem(DEFAULT_DATE_CREATED.toString())))
             .andExpect(jsonPath("$.[*].shareUrl").value(hasItem(DEFAULT_SHARE_URL.toString())))
-            .andExpect(jsonPath("$.[*].shareValidThru").value(hasItem(DEFAULT_SHARE_VALID_THRU.toString())));
+            .andExpect(jsonPath("$.[*].shareValidThru").value(hasItem(DEFAULT_SHARE_VALID_THRU.toString())))
+            .andExpect(jsonPath("$.[*].tags").value(hasItem(DEFAULT_TAGS.toString())));
     }
     
     @Test
@@ -212,7 +218,8 @@ public class LaboratoryResourceIntTest {
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.dateCreated").value(DEFAULT_DATE_CREATED.toString()))
             .andExpect(jsonPath("$.shareUrl").value(DEFAULT_SHARE_URL.toString()))
-            .andExpect(jsonPath("$.shareValidThru").value(DEFAULT_SHARE_VALID_THRU.toString()));
+            .andExpect(jsonPath("$.shareValidThru").value(DEFAULT_SHARE_VALID_THRU.toString()))
+            .andExpect(jsonPath("$.tags").value(DEFAULT_TAGS.toString()));
     }
 
     @Test
@@ -236,7 +243,8 @@ public class LaboratoryResourceIntTest {
             .description(UPDATED_DESCRIPTION)
             .dateCreated(UPDATED_DATE_CREATED)
             .shareUrl(UPDATED_SHARE_URL)
-            .shareValidThru(UPDATED_SHARE_VALID_THRU);
+            .shareValidThru(UPDATED_SHARE_VALID_THRU)
+            .tags(UPDATED_TAGS);
         LaboratoryDTO laboratoryDTO = laboratoryMapper.toDto(updatedLaboratory);
 
         restLaboratoryMockMvc.perform(put("/api/laboratories")
@@ -253,6 +261,7 @@ public class LaboratoryResourceIntTest {
         assertThat(testLaboratory.getDateCreated()).isEqualTo(UPDATED_DATE_CREATED);
         assertThat(testLaboratory.getShareUrl()).isEqualTo(UPDATED_SHARE_URL);
         assertThat(testLaboratory.getShareValidThru()).isEqualTo(UPDATED_SHARE_VALID_THRU);
+        assertThat(testLaboratory.getTags()).isEqualTo(UPDATED_TAGS);
     }
 
     @Test

@@ -11,6 +11,7 @@ import { LaboratoryComponent } from './laboratory.component';
 import { LaboratoryDetailComponent } from './laboratory-detail.component';
 import { LaboratoryUpdateComponent } from './laboratory-update.component';
 import { LaboratoryDeletePopupComponent } from './laboratory-delete-dialog.component';
+import { LaboratoryShareComponent } from './laboratory-share.component';
 import { ILaboratory } from 'app/shared/model/laboratory.model';
 
 @Injectable({ providedIn: 'root' })
@@ -26,6 +27,22 @@ export class LaboratoryResolve implements Resolve<ILaboratory> {
             );
         }
         return of(new Laboratory());
+    }
+}
+
+@Injectable({ providedIn: 'root' })
+export class fileShareResolve implements Resolve<String[]> {
+    constructor(private laboratoryService: LaboratoryService) {}
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<String[]> {
+        const id = route.params['id'] ? route.params['id'] : null;
+        if (id) {
+            return this.laboratoryService.findSharedFiles(id).pipe(
+                filter((response: HttpResponse<String[]>) => response.ok),
+                map((files: HttpResponse<String[]>) => files.body)
+            );
+        }
+        return of([]);
     }
 }
 
@@ -71,6 +88,19 @@ export const laboratoryRoute: Routes = [
         path: ':id/edit',
         component: LaboratoryUpdateComponent,
         resolve: {
+            laboratory: LaboratoryResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'Laboratories'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: ':id/share',
+        component: LaboratoryShareComponent,
+        resolve: {
+            files: fileShareResolve,
             laboratory: LaboratoryResolve
         },
         data: {

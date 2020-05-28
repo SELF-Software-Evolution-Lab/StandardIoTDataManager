@@ -9,6 +9,7 @@ import { ILaboratory } from 'app/shared/model/laboratory.model';
 })
 export class LaboratoryDetailComponent implements OnInit {
     laboratory: ILaboratory;
+    showShareLink = false;
 
     constructor(protected activatedRoute: ActivatedRoute) {}
 
@@ -20,5 +21,16 @@ export class LaboratoryDetailComponent implements OnInit {
 
     previousState() {
         window.history.back();
+    }
+
+    toogleShareLinkDisplay() {
+        this.showShareLink = !this.showShareLink;
+    }
+
+    getToogleShareButtonName() {
+        if (this.showShareLink) {
+            return 'hide share link';
+        }
+        return 'show share link';
     }
 }

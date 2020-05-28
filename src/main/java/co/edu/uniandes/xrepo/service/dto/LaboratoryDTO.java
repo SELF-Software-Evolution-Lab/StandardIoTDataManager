@@ -25,6 +25,8 @@ public class LaboratoryDTO implements Serializable {
 
     private Instant shareValidThru;
 
+    private String tags;
+
 
     private String samplingId;
 
@@ -78,6 +80,14 @@ public class LaboratoryDTO implements Serializable {
         this.shareValidThru = shareValidThru;
     }
 
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
     public String getSamplingId() {
         return samplingId;
     }
@@ -124,6 +134,7 @@ public class LaboratoryDTO implements Serializable {
             ", dateCreated='" + getDateCreated() + "'" +
             ", shareUrl='" + getShareUrl() + "'" +
             ", shareValidThru='" + getShareValidThru() + "'" +
+            ", tags='" + getTags() + "'" +
             ", sampling=" + getSamplingId() +
             ", sampling='" + getSamplingName() + "'" +
             "}";

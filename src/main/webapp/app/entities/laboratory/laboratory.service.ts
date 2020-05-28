@@ -11,6 +11,7 @@ import { ILaboratory } from 'app/shared/model/laboratory.model';
 
 type EntityResponseType = HttpResponse<ILaboratory>;
 type EntityArrayResponseType = HttpResponse<ILaboratory[]>;
+type StringArrayResponseType = HttpResponse<String[]>;
 
 @Injectable({ providedIn: 'root' })
 export class LaboratoryService {
@@ -74,5 +75,9 @@ export class LaboratoryService {
             });
         }
         return res;
+    }
+
+    findSharedFiles(id: string): Observable<StringArrayResponseType> {
+        return this.http.get<String[]>(`${this.resourceUrl}/files/${id}`, { observe: 'response' });
     }
 }

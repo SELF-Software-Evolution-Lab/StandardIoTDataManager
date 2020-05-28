@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -46,12 +47,12 @@ public class LaboratoryResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/laboratories")
-    public ResponseEntity<LaboratoryDTO> createLaboratory(@Valid @RequestBody LaboratoryDTO laboratoryDTO) throws URISyntaxException {
+    public ResponseEntity<LaboratoryDTO> createLaboratory(@Valid @RequestBody LaboratoryDTO laboratoryDTO, HttpServletRequest request) throws URISyntaxException {
         log.debug("REST request to save Laboratory : {}", laboratoryDTO);
         if (laboratoryDTO.getId() != null) {
             throw new BadRequestAlertException("A new laboratory cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        LaboratoryDTO result = laboratoryService.save(laboratoryDTO);
+        LaboratoryDTO result = laboratoryService.save(laboratoryDTO, request.getLocalName());
         return ResponseEntity.created(new URI("/api/laboratories/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -67,12 +68,12 @@ public class LaboratoryResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/laboratories")
-    public ResponseEntity<LaboratoryDTO> updateLaboratory(@Valid @RequestBody LaboratoryDTO laboratoryDTO) throws URISyntaxException {
+    public ResponseEntity<LaboratoryDTO> updateLaboratory(@Valid @RequestBody LaboratoryDTO laboratoryDTO, HttpServletRequest request) throws URISyntaxException {
         log.debug("REST request to update Laboratory : {}", laboratoryDTO);
         if (laboratoryDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        LaboratoryDTO result = laboratoryService.save(laboratoryDTO);
+        LaboratoryDTO result = laboratoryService.save(laboratoryDTO, request.getRequestURI());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, laboratoryDTO.getId().toString()))
             .body(result);
@@ -103,6 +104,13 @@ public class LaboratoryResource {
         log.debug("REST request to get Laboratory : {}", id);
         Optional<LaboratoryDTO> laboratoryDTO = laboratoryService.findOne(id);
         return ResponseUtil.wrapOrNotFound(laboratoryDTO);
+    }
+
+    @GetMapping("/laboratories/files/{id}")
+    public ResponseEntity<List<String>> getLaboratorySharedFiles(@PathVariable String id) {
+        log.debug("REST request to get Laboratory shared files : {}", id);
+        List<String> sharedFilesURL = laboratoryService.findAllSharedFiles(id);
+        return ResponseEntity.ok().body(sharedFilesURL);
     }
 
     /**

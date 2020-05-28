@@ -1,0 +1,13 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <h2><span class="font-weight-bold">Laboratory:</span> {{laboratory.name}}</h2>
+        <span class="alert">Available files to download: </span>
+        <div *ngIf="fileShares">
+            <ul class="list-unstyled">
+                <li *ngFor="let file of fileShares">
+                    <span class="badge badge-info">{{ file }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

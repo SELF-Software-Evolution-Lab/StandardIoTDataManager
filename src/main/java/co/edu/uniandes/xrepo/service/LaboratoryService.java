@@ -1,7 +1,9 @@
 package co.edu.uniandes.xrepo.service;
 
 import co.edu.uniandes.xrepo.domain.Laboratory;
+import co.edu.uniandes.xrepo.domain.Sampling;
 import co.edu.uniandes.xrepo.repository.LaboratoryRepository;
+import co.edu.uniandes.xrepo.repository.SamplingRepository;
 import co.edu.uniandes.xrepo.service.dto.LaboratoryDTO;
 import co.edu.uniandes.xrepo.service.mapper.LaboratoryMapper;
 import org.slf4j.Logger;
@@ -11,7 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing Laboratory.
@@ -36,10 +40,15 @@ public class LaboratoryService {
      * @param laboratoryDTO the entity to save
      * @return the persisted entity
      */
-    public LaboratoryDTO save(LaboratoryDTO laboratoryDTO) {
+    public LaboratoryDTO save(LaboratoryDTO laboratoryDTO, String serverURI) {
         log.debug("Request to save Laboratory : {}", laboratoryDTO);
         Laboratory laboratory = laboratoryMapper.toEntity(laboratoryDTO);
         laboratory = laboratoryRepository.save(laboratory);
+
+        if (laboratoryDTO.getShareValidThru() != null && laboratoryDTO.getShareUrl() == null){
+            laboratory.setShareUrl("/laboratory/" + laboratory.getId() + "/share");
+            laboratory = laboratoryRepository.save(laboratory);
+        }
         return laboratoryMapper.toDto(laboratory);
     }
 
@@ -66,6 +75,18 @@ public class LaboratoryService {
         log.debug("Request to get Laboratory : {}", id);
         return laboratoryRepository.findById(id)
             .map(laboratoryMapper::toDto);
+    }
+
+    /**
+     * Get laboratory shared files by id.
+     *
+     * @param id the id of the entity
+     * @return the String Array of files
+     */
+    public List<String> findAllSharedFiles(String id) {
+        log.debug("Request to get all Laboratory shared files: {}", id);
+        return laboratoryRepository.findById(id).get()
+            .getSampling().getFileUris().stream().collect(Collectors.toList()) ;
     }
 
     /**

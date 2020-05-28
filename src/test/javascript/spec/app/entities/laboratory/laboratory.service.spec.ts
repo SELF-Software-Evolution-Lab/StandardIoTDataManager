@@ -25,7 +25,7 @@ describe('Service Tests', () => {
             httpMock = injector.get(HttpTestingController);
             currentDate = moment();
 
-            elemDefault = new Laboratory('ID', 'AAAAAAA', 'AAAAAAA', currentDate, 'AAAAAAA', currentDate);
+            elemDefault = new Laboratory('ID', 'AAAAAAA', 'AAAAAAA', currentDate, 'AAAAAAA', currentDate, 'AAAAAAA');
         });
 
         describe('Service methods', async () => {
@@ -77,7 +77,8 @@ describe('Service Tests', () => {
                         description: 'BBBBBB',
                         dateCreated: currentDate.format(DATE_TIME_FORMAT),
                         shareUrl: 'BBBBBB',
-                        shareValidThru: currentDate.format(DATE_TIME_FORMAT)
+                        shareValidThru: currentDate.format(DATE_TIME_FORMAT),
+                        tags: 'BBBBBB'
                     },
                     elemDefault
                 );
@@ -104,7 +105,8 @@ describe('Service Tests', () => {
                         description: 'BBBBBB',
                         dateCreated: currentDate.format(DATE_TIME_FORMAT),
                         shareUrl: 'BBBBBB',
-                        shareValidThru: currentDate.format(DATE_TIME_FORMAT)
+                        shareValidThru: currentDate.format(DATE_TIME_FORMAT),
+                        tags: 'BBBBBB'
                     },
                     elemDefault
                 );

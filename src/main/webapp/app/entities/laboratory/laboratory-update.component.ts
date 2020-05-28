@@ -10,6 +10,8 @@ import { ILaboratory } from 'app/shared/model/laboratory.model';
 import { LaboratoryService } from './laboratory.service';
 import { ISampling } from 'app/shared/model/sampling.model';
 import { SamplingService } from 'app/entities/sampling';
+import { TagService } from 'app/entities/tag';
+import { ITag } from 'app/shared/model/tag.model';
 
 @Component({
     selector: 'jhi-laboratory-update',
@@ -22,16 +24,19 @@ export class LaboratoryUpdateComponent implements OnInit {
     samplings: ISampling[];
     dateCreated: string;
     shareValidThru: string;
+    tags: String[] = [];
 
     constructor(
         protected jhiAlertService: JhiAlertService,
         protected laboratoryService: LaboratoryService,
         protected samplingService: SamplingService,
+        protected tagService: TagService,
         protected activatedRoute: ActivatedRoute
     ) {}
 
     ngOnInit() {
         this.isSaving = false;
+        this.loadAllTags();
         this.activatedRoute.data.subscribe(({ laboratory }) => {
             this.laboratory = laboratory;
             this.dateCreated = this.laboratory.dateCreated != null ? this.laboratory.dateCreated.format(DATE_TIME_FORMAT) : null;
@@ -80,5 +85,20 @@ export class LaboratoryUpdateComponent implements OnInit {
 
     trackSamplingById(index: number, item: ISampling) {
         return item.id;
+    }
+
+    loadAllTags() {
+        this.tagService
+            .query({})
+            .subscribe((res: HttpResponse<ITag[]>) => this.todosTags(res.body), (res: HttpErrorResponse) => this.onError(res.message));
+    }
+
+    protected todosTags(data: ITag[]) {
+        console.log(data);
+        const lista: String[] = [];
+        data.forEach(element => {
+            lista.push(element.name);
+        });
+        this.tags = lista;
     }
 }
