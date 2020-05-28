@@ -30,6 +30,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import co.edu.uniandes.xrepo.domain.enumeration.TagType;
 /**
  * Test class for the TagResource REST controller.
  *
@@ -41,6 +42,9 @@ public class TagResourceIntTest {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
+
+    private static final TagType DEFAULT_TYPE = TagType.ANALYSIS_PURPOSE;
+    private static final TagType UPDATED_TYPE = TagType.FAILURE_MODE;
 
     @Autowired
     private TagRepository tagRepository;
@@ -84,7 +88,8 @@ public class TagResourceIntTest {
      */
     public static Tag createEntity() {
         Tag tag = new Tag()
-            .name(DEFAULT_NAME);
+            .name(DEFAULT_NAME)
+            .type(DEFAULT_TYPE);
         return tag;
     }
 
@@ -109,6 +114,7 @@ public class TagResourceIntTest {
         assertThat(tagList).hasSize(databaseSizeBeforeCreate + 1);
         Tag testTag = tagList.get(tagList.size() - 1);
         assertThat(testTag.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testTag.getType()).isEqualTo(DEFAULT_TYPE);
     }
 
     @Test
@@ -147,6 +153,23 @@ public class TagResourceIntTest {
     }
 
     @Test
+    public void checkTypeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = tagRepository.findAll().size();
+        // set the field null
+        tag.setType(null);
+
+        // Create the Tag, which fails.
+
+        restTagMockMvc.perform(post("/api/tags")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(tag)))
+            .andExpect(status().isBadRequest());
+
+        List<Tag> tagList = tagRepository.findAll();
+        assertThat(tagList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
     public void getAllTags() throws Exception {
         // Initialize the database
         tagRepository.save(tag);
@@ -156,7 +179,8 @@ public class TagResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(tag.getId())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())));
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
+            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())));
     }
     
     @Test
@@ -169,7 +193,8 @@ public class TagResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(tag.getId()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()));
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
+            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()));
     }
 
     @Test
@@ -189,7 +214,8 @@ public class TagResourceIntTest {
         // Update the tag
         Tag updatedTag = tagRepository.findById(tag.getId()).get();
         updatedTag
-            .name(UPDATED_NAME);
+            .name(UPDATED_NAME)
+            .type(UPDATED_TYPE);
 
         restTagMockMvc.perform(put("/api/tags")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -201,6 +227,7 @@ public class TagResourceIntTest {
         assertThat(tagList).hasSize(databaseSizeBeforeUpdate);
         Tag testTag = tagList.get(tagList.size() - 1);
         assertThat(testTag.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testTag.getType()).isEqualTo(UPDATED_TYPE);
     }
 
     @Test

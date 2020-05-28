@@ -1,0 +1,49 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="subSet">
+            <h2><span>Sub Set</span> {{subSet.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Name</span></dt>
+                <dd>
+                    <span>{{subSet.name}}</span>
+                </dd>
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{subSet.description}}</span>
+                </dd>
+                <dt><span>File Hdfs Location</span></dt>
+                <dd>
+                    <span>{{subSet.fileHdfsLocation}}</span>
+                </dd>
+                <dt><span>Date Created</span></dt>
+                <dd>
+                    <span>{{subSet.dateCreated}}</span>
+                </dd>
+                <dt><span>Download Url</span></dt>
+                <dd>
+                    <span>{{subSet.downloadUrl}}</span>
+                </dd>
+                <dt><span>Laboratory</span></dt>
+                <dd>
+                    <div *ngIf="subSet.laboratoryId">
+                        <a [routerLink]="['/laboratory', subSet.laboratoryId, 'view']">{{subSet.laboratoryName}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/sub-set', subSet.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

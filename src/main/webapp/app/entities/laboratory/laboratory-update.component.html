@@ -1,0 +1,109 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-laboratory-heading">Create or edit a Laboratory</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!laboratory.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="laboratory.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_name">Name</label>
+                    <input type="text" class="form-control" name="name" id="field_name"
+                        [(ngModel)]="laboratory.name" required maxlength="30"/>
+                    <div [hidden]="!(editForm.controls.name?.dirty && editForm.controls.name?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.name?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.name?.errors?.maxlength">
+                        This field cannot be longer than 30 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_description">Description</label>
+                    <input type="text" class="form-control" name="description" id="field_description"
+                        [(ngModel)]="laboratory.description" maxlength="1024"/>
+                    <div [hidden]="!(editForm.controls.description?.dirty && editForm.controls.description?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.description?.errors?.maxlength">
+                        This field cannot be longer than 1024 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_dateCreated">Date Created</label>
+                    <div class="d-flex">
+                        <input id="field_dateCreated" type="datetime-local" class="form-control" name="dateCreated" [(ngModel)]="dateCreated" placeholder="YYYY-MM-DD HH:mm"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_shareUrl">Share Url</label>
+                    <input type="text" class="form-control" name="shareUrl" id="field_shareUrl"
+                        [(ngModel)]="laboratory.shareUrl" maxlength="2048" readonly/>
+                    <span class="form-text text-info">To create a share URL, set a valid Thru date and the system will create a share URL</span>
+                    <div [hidden]="!(editForm.controls.shareUrl?.dirty && editForm.controls.shareUrl?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.shareUrl?.errors?.maxlength">
+                        This field cannot be longer than 2048 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_shareValidThru">Share Valid Thru</label>
+                    <div class="d-flex">
+                        <input id="field_shareValidThru" type="datetime-local" class="form-control" name="shareValidThru" [(ngModel)]="shareValidThru" placeholder="YYYY-MM-DD HH:mm"
+                        />
+                    </div>
+                </div>
+<!--                <div class="form-group">-->
+<!--                    <label class="form-control-label" for="field_tags">Tags</label>-->
+<!--                    <input type="text" class="form-control" name="tags" id="field_tags"-->
+<!--                        [(ngModel)]="laboratory.tags" />-->
+<!--                </div>-->
+
+                <div class="form-group">
+                    <label class="form-control-label" for="tags">Tags</label>
+                    <ng-select
+                        id ="tags"
+                        [items]="tags"
+                        [multiple]="true"
+                        [closeOnSelect]="false"
+                        [searchable]="false"
+                        bindLabel="name"
+                        placeholder="Select Tags"
+                        [(ngModel)]="laboratory.tags"
+                        name="tags">
+                    </ng-select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_sampling">Sampling</label>
+                    <select class="form-control" id="field_sampling" name="sampling" [(ngModel)]="laboratory.samplingId"  required>
+                        <option *ngIf="!editForm.value.sampling" [ngValue]="null" selected></option>
+                        <option [ngValue]="samplingOption.id" *ngFor="let samplingOption of samplings; trackBy: trackSamplingById">{{samplingOption.name}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.sampling?.dirty && editForm.controls.sampling?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.sampling?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
