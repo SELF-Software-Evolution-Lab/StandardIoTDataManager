@@ -57,7 +57,7 @@ export class LaboratoryUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
-        this.laboratory.dateCreated = this.dateCreated != null ? moment(this.dateCreated, DATE_TIME_FORMAT) : null;
+        this.laboratory.dateCreated = this.dateCreated != null ? moment(this.dateCreated, DATE_TIME_FORMAT) : moment();
         this.laboratory.shareValidThru = this.shareValidThru != null ? moment(this.shareValidThru, DATE_TIME_FORMAT) : null;
         if (this.laboratory.id !== undefined) {
             this.subscribeToSaveResponse(this.laboratoryService.update(this.laboratory));

@@ -80,4 +80,10 @@ export class LaboratoryService {
     findSharedFiles(id: string): Observable<StringArrayResponseType> {
         return this.http.get<String[]>(`${this.resourceUrl}/files/${id}`, { observe: 'response' });
     }
+
+    findAnonymous(id: string): Observable<EntityResponseType> {
+        return this.http
+            .get<ILaboratory>(`${this.resourceUrl}/anonymous/${id}`, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+    }
 }

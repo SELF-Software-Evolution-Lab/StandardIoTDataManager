@@ -46,6 +46,22 @@ export class fileShareResolve implements Resolve<String[]> {
     }
 }
 
+@Injectable({ providedIn: 'root' })
+export class AnonymousLaboratoryResolve implements Resolve<ILaboratory> {
+    constructor(private service: LaboratoryService) {}
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ILaboratory> {
+        const id = route.params['id'] ? route.params['id'] : null;
+        if (id) {
+            return this.service.findAnonymous(id).pipe(
+                filter((response: HttpResponse<Laboratory>) => response.ok),
+                map((laboratory: HttpResponse<Laboratory>) => laboratory.body)
+            );
+        }
+        return of(new Laboratory());
+    }
+}
+
 export const laboratoryRoute: Routes = [
     {
         path: '',
@@ -101,10 +117,10 @@ export const laboratoryRoute: Routes = [
         component: LaboratoryShareComponent,
         resolve: {
             files: fileShareResolve,
-            laboratory: LaboratoryResolve
+            laboratory: AnonymousLaboratoryResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: [],
             pageTitle: 'Laboratories'
         },
         canActivate: [UserRouteAccessService]

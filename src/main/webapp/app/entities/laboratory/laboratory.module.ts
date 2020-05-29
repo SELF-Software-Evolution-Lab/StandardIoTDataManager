@@ -13,9 +13,6 @@ import {
     laboratoryPopupRoute
 } from './';
 
-import { SamplingComponent } from 'app/entities/sampling/sampling.component';
-import { SamplingService } from 'app/entities/sampling/sampling.service';
-
 const ENTITY_STATES = [...laboratoryRoute, ...laboratoryPopupRoute];
 
 @NgModule({
@@ -26,19 +23,10 @@ const ENTITY_STATES = [...laboratoryRoute, ...laboratoryPopupRoute];
         LaboratoryUpdateComponent,
         LaboratoryDeleteDialogComponent,
         LaboratoryDeletePopupComponent,
-        LaboratoryShareComponent,
-        //
-        SamplingComponent
+        LaboratoryShareComponent
     ],
-    entryComponents: [
-        LaboratoryComponent,
-        LaboratoryUpdateComponent,
-        LaboratoryDeleteDialogComponent,
-        LaboratoryDeletePopupComponent,
-        //
-        SamplingComponent
-    ],
-    providers: [SamplingService],
+    entryComponents: [LaboratoryComponent, LaboratoryUpdateComponent, LaboratoryDeleteDialogComponent, LaboratoryDeletePopupComponent],
+    providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class XrepoLaboratoryModule {}

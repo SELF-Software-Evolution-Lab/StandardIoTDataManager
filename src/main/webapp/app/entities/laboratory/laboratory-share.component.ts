@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import * as moment from 'moment';
 
 import { ILaboratory } from 'app/shared/model/laboratory.model';
 
@@ -11,6 +12,7 @@ import { ILaboratory } from 'app/shared/model/laboratory.model';
 export class LaboratoryShareComponent implements OnInit {
     fileShares: String[];
     laboratory: ILaboratory;
+    today;
 
     constructor(protected activatedRoute: ActivatedRoute) {}
 
@@ -19,5 +21,17 @@ export class LaboratoryShareComponent implements OnInit {
             this.fileShares = files;
             this.laboratory = laboratory;
         });
+        this.today = moment();
+    }
+
+    linkHasExpired() {
+        if (this.laboratory.shareValidThru) {
+            return this.laboratory.shareValidThru.isBefore(this.today);
+        }
+        return true;
+    }
+
+    getFileCount() {
+        return this.fileShares.length;
     }
 }

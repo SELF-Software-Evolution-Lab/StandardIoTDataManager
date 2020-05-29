@@ -40,7 +40,7 @@
                     <textarea class="form-control" name="mapperText" id="field_mapperText"
                         [(ngModel)]="algorithm.mapperText" ></textarea>
                 </div>
-                <div class="form-group">
+                <div class="form-group" [hidden]="!algorithm.mapperFileUrl">
                     <label class="form-control-label" for="field_mapperFileUrl">Mapper File Url</label>
                     <input type="text" class="form-control" name="mapperFileUrl" id="field_mapperFileUrl"
                         [(ngModel)]="algorithm.mapperFileUrl" maxlength="2048"/>
@@ -56,7 +56,7 @@
                     <textarea class="form-control" name="reducerText" id="field_reducerText"
                         [(ngModel)]="algorithm.reducerText" ></textarea>
                 </div>
-                <div class="form-group">
+                <div class="form-group" [hidden]="!algorithm.reducerFileUrl">
                     <label class="form-control-label" for="field_reducerFileUrl">Reducer File Url</label>
                     <input type="text" class="form-control" name="reducerFileUrl" id="field_reducerFileUrl"
                         [(ngModel)]="algorithm.reducerFileUrl" maxlength="2048"/>
@@ -67,17 +67,17 @@
                         </small>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" [hidden]="!algorithm.dateCreated">
                     <label class="form-control-label" for="field_dateCreated">Date Created</label>
                     <div class="d-flex">
-                        <input id="field_dateCreated" type="datetime-local" class="form-control" name="dateCreated" [(ngModel)]="dateCreated" placeholder="YYYY-MM-DD HH:mm"
+                        <input id="field_dateCreated" type="datetime-local" class="form-control" name="dateCreated" [(ngModel)]="dateCreated" placeholder="YYYY-MM-DD HH:mm" readonly
                         />
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" [hidden]="!algorithm.lastSuccessfulRun">
                     <label class="form-control-label" for="field_lastSuccessfulRun">Last Successful Run</label>
                     <div class="d-flex">
-                        <input id="field_lastSuccessfulRun" type="datetime-local" class="form-control" name="lastSuccessfulRun" [(ngModel)]="lastSuccessfulRun" placeholder="YYYY-MM-DD HH:mm"
+                        <input id="field_lastSuccessfulRun" type="datetime-local" class="form-control" name="lastSuccessfulRun" [(ngModel)]="lastSuccessfulRun" placeholder="YYYY-MM-DD HH:mm" readonly
                         />
                     </div>
                 </div>

@@ -66,7 +66,7 @@ export class AlgorithmUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
-        this.algorithm.dateCreated = this.dateCreated != null ? moment(this.dateCreated, DATE_TIME_FORMAT) : null;
+        this.algorithm.dateCreated = this.dateCreated != null ? moment(this.dateCreated, DATE_TIME_FORMAT) : moment();
         this.algorithm.lastSuccessfulRun = this.lastSuccessfulRun != null ? moment(this.lastSuccessfulRun, DATE_TIME_FORMAT) : null;
         if (this.algorithm.id !== undefined) {
             this.subscribeToSaveResponse(this.algorithmService.update(this.algorithm));

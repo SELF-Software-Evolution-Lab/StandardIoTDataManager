@@ -113,6 +113,14 @@ public class LaboratoryResource {
         return ResponseEntity.ok().body(sharedFilesURL);
     }
 
+    /*same as Get Lab but authorized on anonymous connections*/
+    @GetMapping("/laboratories/anonymous/{id}")
+    public ResponseEntity<LaboratoryDTO> getAnonymousLaboratory(@PathVariable String id) {
+        log.debug("REST request to get Laboratory : {}", id);
+        Optional<LaboratoryDTO> laboratoryDTO = laboratoryService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(laboratoryDTO);
+    }
+
     /**
      * DELETE  /laboratories/:id : delete the "id" laboratory.
      *
