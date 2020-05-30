@@ -129,4 +129,6 @@ xrepo:
     #batch-tasks-checker-frequency: 120000
     report-generation-location: /home/andes/xrepo/data/search-result
     samples-files-location: /home/andes/xrepo/data/input-samples
+    temp-algorithm-files-location: /home/andes/xrepo/data/temp-algorithm
+    algorithm-hdfs-location: /home/hadoop/xrepo/algorithms/
     batch-tasks-checker-frequency: 120000

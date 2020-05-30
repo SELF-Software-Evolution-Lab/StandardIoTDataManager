@@ -115,4 +115,6 @@ jhipster:
 xrepo:
     report-generation-location: ./build/search-result
     samples-files-location: ./build/upload-samples
+    temp-algorithm-files-location: ./build/temp-algorithm
+    algorithm-hdfs-location: /home/hadoop/xrepo/algorithms/
     batch-tasks-checker-frequency: 30000
