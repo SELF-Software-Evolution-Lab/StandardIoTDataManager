@@ -1,0 +1,77 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "algorithm",
+            "otherEntityName": "algorithm",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "laboratory",
+            "otherEntityRelationshipNameUndefined": false
+        },
+        {
+            "relationshipName": "subSet",
+            "otherEntityName": "subSet",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "laboratory",
+            "otherEntityRelationshipNameUndefined": false
+        },
+        {
+            "relationshipName": "sampling",
+            "otherEntityName": "sampling",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "name",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityRelationshipName": "laboratory",
+            "otherEntityRelationshipNameUndefined": false
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "30"
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "1024"
+        },
+        {
+            "fieldName": "dateCreated",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "shareUrl",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "2048"
+        },
+        {
+            "fieldName": "shareValidThru",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "tags",
+            "fieldType": "String"
+        }
+    ],
+    "dto": "mapstruct",
+    "searchEngine": false,
+    "service": "serviceClass",
+    "entityTableName": "laboratory",
+    "databaseType": "mongodb",
+    "jpaMetamodelFiltering": false,
+    "pagination": "pagination"
+}

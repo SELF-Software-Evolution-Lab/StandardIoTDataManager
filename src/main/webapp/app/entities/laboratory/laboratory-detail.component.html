@@ -1,0 +1,63 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="laboratory">
+            <h2><span class="font-weight-bold">Laboratory:</span> {{laboratory.name}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Id</span></dt>
+                <dd>
+                    <span>{{laboratory.id}}</span>
+                </dd>
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{laboratory.description}}</span>
+                </dd>
+                <dt><span>Date Created</span></dt>
+                <dd>
+                    <span>{{laboratory.dateCreated}}</span>
+                </dd>
+                <dt><span>Tags</span></dt>
+                <dd>
+                    <ul class="list-unstyled">
+                        <li *ngFor="let tag of laboratory.tags">
+                            <span class="badge badge-info">{{ tag }}</span>
+                        </li>
+                    </ul>
+                </dd>
+                <dt><span>Sampling</span></dt>
+                <dd>
+                    <div *ngIf="laboratory.samplingId">
+                        <a [routerLink]="['/sampling', laboratory.samplingId, 'view']">{{laboratory.samplingName}}</a>
+                    </div>
+                </dd>
+                <h3>Share this Laboratory</h3>
+                <button class="btn btn-primary" type="button" (click) = toogleShareLinkDisplay() >
+                    {{getToogleShareButtonName()}}
+                </button>
+                <div *ngIf="showShareLink">
+                    <dt><span>Share Url</span></dt>
+                    <dd>
+                        <span>{{laboratory.shareUrl}}</span>
+                    </dd>
+                    <dt><span>Share Valid Thru</span></dt>
+                    <dd>
+                        <span>{{laboratory.shareValidThru}}</span>
+                    </dd>
+                </div>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/laboratory', laboratory.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

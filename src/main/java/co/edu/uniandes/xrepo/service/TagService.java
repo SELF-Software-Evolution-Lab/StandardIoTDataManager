@@ -1,24 +1,24 @@
 package co.edu.uniandes.xrepo.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
 import co.edu.uniandes.xrepo.domain.Experiment;
 import co.edu.uniandes.xrepo.domain.Sampling;
 import co.edu.uniandes.xrepo.domain.Tag;
 import co.edu.uniandes.xrepo.repository.ExperimentRepository;
 import co.edu.uniandes.xrepo.repository.SamplingRepository;
 import co.edu.uniandes.xrepo.repository.TagRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Service Implementation for managing Tag.
@@ -34,8 +34,7 @@ public class TagService {
 
     private final SamplingRepository samplingRepository;
 
-    public TagService(TagRepository tagRepository, ExperimentRepository experimentRepository,
-                      SamplingRepository samplingRepository) {
+    public TagService(TagRepository tagRepository, ExperimentRepository experimentRepository, SamplingRepository samplingRepository) {
         this.tagRepository = tagRepository;
         this.experimentRepository = experimentRepository;
         this.samplingRepository = samplingRepository;
@@ -102,5 +101,4 @@ public class TagService {
 
         return new ArrayList<>(collect);
     }
-
 }
