@@ -20,6 +20,7 @@
             <th jhiSortBy="fileHdfsLocation"><span>File Hdfs Location</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="dateCreated"><span>Date Created</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="downloadUrl"><span>Download Url</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="setType"><span>Set Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="laboratoryName"><span>Laboratory</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
@@ -32,6 +33,7 @@
                 <td>{{subSet.fileHdfsLocation}}</td>
                 <td>{{subSet.dateCreated | date:'medium'}}</td>
                 <td>{{subSet.downloadUrl}}</td>
+                <td>{{subSet.setType}}</td>
                 <td>
                     <div *ngIf="subSet.laboratoryId">
                         <a [routerLink]="['../laboratory', subSet.laboratoryId , 'view' ]" >{{subSet.laboratoryName}}</a>

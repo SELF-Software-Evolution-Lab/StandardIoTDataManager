@@ -9,7 +9,9 @@ import {
     AlgorithmDeletePopupComponent,
     AlgorithmDeleteDialogComponent,
     algorithmRoute,
-    algorithmPopupRoute
+    algorithmPopupRoute,
+    AlgorithmRunMRDialogComponent,
+    AlgorithmRunMRPopupComponent
 } from './';
 
 const ENTITY_STATES = [...algorithmRoute, ...algorithmPopupRoute];
@@ -21,9 +23,18 @@ const ENTITY_STATES = [...algorithmRoute, ...algorithmPopupRoute];
         AlgorithmDetailComponent,
         AlgorithmUpdateComponent,
         AlgorithmDeleteDialogComponent,
-        AlgorithmDeletePopupComponent
+        AlgorithmDeletePopupComponent,
+        AlgorithmRunMRDialogComponent,
+        AlgorithmRunMRPopupComponent
     ],
-    entryComponents: [AlgorithmComponent, AlgorithmUpdateComponent, AlgorithmDeleteDialogComponent, AlgorithmDeletePopupComponent],
+    entryComponents: [
+        AlgorithmComponent,
+        AlgorithmUpdateComponent,
+        AlgorithmDeleteDialogComponent,
+        AlgorithmDeletePopupComponent,
+        AlgorithmRunMRDialogComponent,
+        AlgorithmRunMRPopupComponent
+    ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class XrepoAlgorithmModule {}

@@ -68,6 +68,19 @@
                         </small>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_setType">Set Type</label>
+                    <select class="form-control" name="setType" [(ngModel)]="subSet.setType" id="field_setType"  required>
+                        <option value="TRAINING">TRAINING</option>
+                        <option value="VALIDATION">VALIDATION</option>
+                    </select>
+                    <div [hidden]="!(editForm.controls.setType?.dirty && editForm.controls.setType?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.setType?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_laboratory">Laboratory</label>

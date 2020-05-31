@@ -3,8 +3,8 @@ package co.edu.uniandes.xrepo.service.reports;
 import co.edu.uniandes.xrepo.domain.BatchTask;
 import co.edu.uniandes.xrepo.domain.enumeration.TaskType;
 import co.edu.uniandes.xrepo.service.BatchTaskService;
-import co.edu.uniandes.xrepo.service.SamplingService;
-import co.edu.uniandes.xrepo.service.dto.SampleSearchParametersDTO;
+import co.edu.uniandes.xrepo.service.LaboratoryService;
+import co.edu.uniandes.xrepo.service.dto.AlgorithmDTO;
 import co.edu.uniandes.xrepo.service.task.BackgroundTaskProcessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -18,7 +18,6 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ import java.util.List;
 import static co.edu.uniandes.xrepo.domain.enumeration.TaskState.*;
 
 @Service
-public class HdfsSearchReportTaskProcessorService implements BackgroundTaskProcessor, SearchReportFileLocator {
+public class HdfsRunMRAlgorithmTaskProcessorService implements BackgroundTaskProcessor, SearchReportFileLocator {
 
     private final Logger log = LoggerFactory.getLogger(HdfsSearchReportTaskProcessorService.class);
     private static final ObjectMapper jsonMapper = new ObjectMapper();
@@ -40,37 +39,35 @@ public class HdfsSearchReportTaskProcessorService implements BackgroundTaskProce
 
     private final BatchTaskService batchTaskService;
 
-    private final SamplingService samplingService;
+    private final LaboratoryService laboratoryService;
     private final String reportLocation;
 
-    public HdfsSearchReportTaskProcessorService(BatchTaskService batchTaskService, SamplingService samplingService
-                                                ,@Value("${xrepo.report-generation-location}") String reportLocation) {
+    public HdfsRunMRAlgorithmTaskProcessorService(BatchTaskService batchTaskService, LaboratoryService samplingService
+        , @Value("${xrepo.report-generation-location}") String reportLocation) {
         log.info("Creating HDFS search processor service");
         this.batchTaskService = batchTaskService;
-        this.samplingService = samplingService;
+        this.laboratoryService = samplingService;
         this.reportLocation = reportLocation;
     }
 
     @Override
     public TaskType getType() {
-        return TaskType.HDFS_REPORT;
+        return TaskType.HDFS_MR_ALGORITHM;
     }
 
     @Override
     public void processTask(BatchTask task) {
-        log.info("Starting HDFS Search for task {}", task);
+        log.info("Starting HDFS MR Algorithm for task {}", task);
 
         try {
             Instant processStart = Instant.now();
             batchTaskService.save(task.startDate(processStart).state(PROCESSING));
-            SampleSearchParametersDTO params = extractSearchParams(task);
+            AlgorithmDTO params = extractSearchParams(task);
 
-            List<String> fileHdfsLocations = samplingService.getAllFilesFromTargetSystem(params.getTargetSystemId().get(0));
-            LocalDateTime startTime = params.getFromDateTime();
-            LocalDateTime endTime = params.getToDateTime();
+            List<String> fileHdfsLocations = laboratoryService.findAllSharedFiles(params.getLaboratoryId());
 
             if (fileHdfsLocations.isEmpty()){
-                log.warn("No data found to generate search report {}", params);
+                log.warn("No data found to Run Map Reduce {}", params);
                 batchTaskService.save(
                     task.progress(0).state(ERROR).endDate(processStart)
                         .description("No data found to generate search report")
@@ -78,17 +75,17 @@ public class HdfsSearchReportTaskProcessorService implements BackgroundTaskProce
                 return;
             }
 
-            String shellScript = new ClassPathResource("mapreduce-files/RunRemoteMRSearch.sh").getURI().getPath();
+            String shellScript = new ClassPathResource("mapreduce-files/RunRemoteMRAlgorithm.sh").getURI().getPath();
 
-            log.info("Processing HDFS report starting: {}, ending {}", startTime.toString(), endTime.toString());
+            log.info("Processing HDFS algorithm with id {}", params.getId());
 
             List<Process> consoleTracker = new ArrayList<>();
 
             for(String hdfsFile : fileHdfsLocations){
                 Process console = Runtime.getRuntime().exec(new String[]{shellScript
                     ,"-i",hdfsFile
-                    ,"-s",startTime.toString()
-                    ,"-e",endTime.toString()
+                    ,"-m",params.getMapperFileUrl()
+                    ,"-r",params.getReducerFileUrl()
                     ,"-o",getFileName(hdfsFile)
                     ,"-d",TIME_FORMATTER_DATE.format(processStart)
                     ,"-t",TIME_FORMATTER_TIME.format(processStart)});
@@ -98,12 +95,12 @@ public class HdfsSearchReportTaskProcessorService implements BackgroundTaskProce
             //better than wait for console, so all HDFS search can be made in parallel
             Boolean running = true;
             while (running){
-              if (!consoleTracker.stream().anyMatch(s -> s.isAlive())){
-                  running = false;
-              }
+                if (!consoleTracker.stream().anyMatch(s -> s.isAlive())){
+                    running = false;
+                }
             }
             writeReport(fileHdfsLocations, TIME_FORMATTER_DATE.format(processStart)
-                        ,TIME_FORMATTER_TIME.format(processStart), task);
+                ,TIME_FORMATTER_TIME.format(processStart), task);
             batchTaskService.save(task.progress(100).state(COMPLETED).endDate(Instant.now()));
         } catch (Exception e) {
             batchTaskService.save(
@@ -115,15 +112,15 @@ public class HdfsSearchReportTaskProcessorService implements BackgroundTaskProce
 
     private void writeReport(List<String> fileLocations, String savedDate, String savedTime, BatchTask task) throws IOException {
         Path path = Paths.get(reportLocation, buildReportName(task));
-        log.info("HDFS Report to create at {}", path);
+        log.info("HDFS Algortithm Report to create at {}", path);
         File file = path.toFile();
         file.createNewFile();
-        log.info("HDFS Report created at {}", path);
+        log.info("HDFS Algortithm Report created at {}", path);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            log.info("Start writing report");
+            log.info("Start writing Algortithm report");
             for (String hdfsFile : fileLocations){
                 writer.write("Processed: " + hdfsFile + ", Output location: "
-                            + "/user/hadoop/" + getFileName(hdfsFile) + "/" + savedDate + "/" + savedTime);
+                    + "/user/hadoop/" + getFileName(hdfsFile) + "/" + savedDate + "/" + savedTime);
             }
             log.info("Report generated successfully {}", file.getName());
         } catch (IOException e) {
@@ -132,11 +129,11 @@ public class HdfsSearchReportTaskProcessorService implements BackgroundTaskProce
         }
     }
 
-    private SampleSearchParametersDTO extractSearchParams(BatchTask task) {
+    private AlgorithmDTO extractSearchParams(BatchTask task) {
         try {
             jsonMapper.registerModule(new JavaTimeModule());
             return jsonMapper
-                .readValue(task.getParameters().toJson(), SampleSearchParametersDTO.class);
+                .readValue(task.getParameters().toJson(), AlgorithmDTO.class);
         } catch (IOException e) {
             log.error("Search parameters couldn't be processed from task information ", e);
             throw new UncheckedIOException(e);

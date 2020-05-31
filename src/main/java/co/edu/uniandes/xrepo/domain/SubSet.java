@@ -12,6 +12,8 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
+import co.edu.uniandes.xrepo.domain.enumeration.SubSetType;
+
 /**
  * A SubSet.
  */
@@ -43,6 +45,10 @@ public class SubSet implements Serializable {
     @Size(max = 2048)
     @Field("download_url")
     private String downloadUrl;
+
+    @NotNull
+    @Field("set_type")
+    private SubSetType setType;
 
     @DBRef
     @Field("laboratory")
@@ -123,6 +129,19 @@ public class SubSet implements Serializable {
         this.downloadUrl = downloadUrl;
     }
 
+    public SubSetType getSetType() {
+        return setType;
+    }
+
+    public SubSet setType(SubSetType setType) {
+        this.setType = setType;
+        return this;
+    }
+
+    public void setSetType(SubSetType setType) {
+        this.setType = setType;
+    }
+
     public Laboratory getLaboratory() {
         return laboratory;
     }
@@ -166,6 +185,7 @@ public class SubSet implements Serializable {
             ", fileHdfsLocation='" + getFileHdfsLocation() + "'" +
             ", dateCreated='" + getDateCreated() + "'" +
             ", downloadUrl='" + getDownloadUrl() + "'" +
+            ", setType='" + getSetType() + "'" +
             "}";
     }
 }

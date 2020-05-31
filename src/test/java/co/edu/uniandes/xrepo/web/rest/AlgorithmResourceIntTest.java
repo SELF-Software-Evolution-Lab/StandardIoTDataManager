@@ -22,7 +22,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.util.Base64Utils;
 import org.springframework.validation.Validator;
 
 import java.time.Instant;
@@ -97,7 +96,7 @@ public class AlgorithmResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final AlgorithmResource algorithmResource = new AlgorithmResource(algorithmService);
+        final AlgorithmResource algorithmResource = new AlgorithmResource(algorithmService, searchEngineService);
         this.restAlgorithmMockMvc = MockMvcBuilders.standaloneSetup(algorithmResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -216,7 +215,7 @@ public class AlgorithmResourceIntTest {
             .andExpect(jsonPath("$.[*].dateCreated").value(hasItem(DEFAULT_DATE_CREATED.toString())))
             .andExpect(jsonPath("$.[*].lastSuccessfulRun").value(hasItem(DEFAULT_LAST_SUCCESSFUL_RUN.toString())));
     }
-    
+
     @Test
     public void getAlgorithm() throws Exception {
         // Initialize the database

@@ -3,6 +3,7 @@ import java.time.Instant;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
+import co.edu.uniandes.xrepo.domain.enumeration.SubSetType;
 
 /**
  * A DTO for the SubSet entity.
@@ -26,6 +27,9 @@ public class SubSetDTO implements Serializable {
 
     @Size(max = 2048)
     private String downloadUrl;
+
+    @NotNull
+    private SubSetType setType;
 
 
     private String laboratoryId;
@@ -80,6 +84,14 @@ public class SubSetDTO implements Serializable {
         this.downloadUrl = downloadUrl;
     }
 
+    public SubSetType getSetType() {
+        return setType;
+    }
+
+    public void setSetType(SubSetType setType) {
+        this.setType = setType;
+    }
+
     public String getLaboratoryId() {
         return laboratoryId;
     }
@@ -126,6 +138,7 @@ public class SubSetDTO implements Serializable {
             ", fileHdfsLocation='" + getFileHdfsLocation() + "'" +
             ", dateCreated='" + getDateCreated() + "'" +
             ", downloadUrl='" + getDownloadUrl() + "'" +
+            ", setType='" + getSetType() + "'" +
             ", laboratory=" + getLaboratoryId() +
             ", laboratory='" + getLaboratoryName() + "'" +
             "}";

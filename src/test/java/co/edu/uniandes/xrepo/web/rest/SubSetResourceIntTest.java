@@ -35,6 +35,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import co.edu.uniandes.xrepo.domain.enumeration.SubSetType;
 /**
  * Test class for the SubSetResource REST controller.
  *
@@ -58,6 +59,9 @@ public class SubSetResourceIntTest {
 
     private static final String DEFAULT_DOWNLOAD_URL = "AAAAAAAAAA";
     private static final String UPDATED_DOWNLOAD_URL = "BBBBBBBBBB";
+
+    private static final SubSetType DEFAULT_SET_TYPE = SubSetType.TRAINING;
+    private static final SubSetType UPDATED_SET_TYPE = SubSetType.VALIDATION;
 
     @Autowired
     private SubSetRepository subSetRepository;
@@ -108,7 +112,8 @@ public class SubSetResourceIntTest {
             .description(DEFAULT_DESCRIPTION)
             .fileHdfsLocation(DEFAULT_FILE_HDFS_LOCATION)
             .dateCreated(DEFAULT_DATE_CREATED)
-            .downloadUrl(DEFAULT_DOWNLOAD_URL);
+            .downloadUrl(DEFAULT_DOWNLOAD_URL)
+            .setType(DEFAULT_SET_TYPE);
         // Add required entity
         Laboratory laboratory = LaboratoryResourceIntTest.createEntity();
         laboratory.setId("fixed-id-for-tests");
@@ -142,6 +147,7 @@ public class SubSetResourceIntTest {
         assertThat(testSubSet.getFileHdfsLocation()).isEqualTo(DEFAULT_FILE_HDFS_LOCATION);
         assertThat(testSubSet.getDateCreated()).isEqualTo(DEFAULT_DATE_CREATED);
         assertThat(testSubSet.getDownloadUrl()).isEqualTo(DEFAULT_DOWNLOAD_URL);
+        assertThat(testSubSet.getSetType()).isEqualTo(DEFAULT_SET_TYPE);
     }
 
     @Test
@@ -200,6 +206,24 @@ public class SubSetResourceIntTest {
     }
 
     @Test
+    public void checkSetTypeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = subSetRepository.findAll().size();
+        // set the field null
+        subSet.setSetType(null);
+
+        // Create the SubSet, which fails.
+        SubSetDTO subSetDTO = subSetMapper.toDto(subSet);
+
+        restSubSetMockMvc.perform(post("/api/sub-sets")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(subSetDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<SubSet> subSetList = subSetRepository.findAll();
+        assertThat(subSetList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
     public void getAllSubSets() throws Exception {
         // Initialize the database
         subSetRepository.save(subSet);
@@ -213,7 +237,8 @@ public class SubSetResourceIntTest {
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].fileHdfsLocation").value(hasItem(DEFAULT_FILE_HDFS_LOCATION.toString())))
             .andExpect(jsonPath("$.[*].dateCreated").value(hasItem(DEFAULT_DATE_CREATED.toString())))
-            .andExpect(jsonPath("$.[*].downloadUrl").value(hasItem(DEFAULT_DOWNLOAD_URL.toString())));
+            .andExpect(jsonPath("$.[*].downloadUrl").value(hasItem(DEFAULT_DOWNLOAD_URL.toString())))
+            .andExpect(jsonPath("$.[*].setType").value(hasItem(DEFAULT_SET_TYPE.toString())));
     }
     
     @Test
@@ -230,7 +255,8 @@ public class SubSetResourceIntTest {
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.fileHdfsLocation").value(DEFAULT_FILE_HDFS_LOCATION.toString()))
             .andExpect(jsonPath("$.dateCreated").value(DEFAULT_DATE_CREATED.toString()))
-            .andExpect(jsonPath("$.downloadUrl").value(DEFAULT_DOWNLOAD_URL.toString()));
+            .andExpect(jsonPath("$.downloadUrl").value(DEFAULT_DOWNLOAD_URL.toString()))
+            .andExpect(jsonPath("$.setType").value(DEFAULT_SET_TYPE.toString()));
     }
 
     @Test
@@ -254,7 +280,8 @@ public class SubSetResourceIntTest {
             .description(UPDATED_DESCRIPTION)
             .fileHdfsLocation(UPDATED_FILE_HDFS_LOCATION)
             .dateCreated(UPDATED_DATE_CREATED)
-            .downloadUrl(UPDATED_DOWNLOAD_URL);
+            .downloadUrl(UPDATED_DOWNLOAD_URL)
+            .setType(UPDATED_SET_TYPE);
         SubSetDTO subSetDTO = subSetMapper.toDto(updatedSubSet);
 
         restSubSetMockMvc.perform(put("/api/sub-sets")
@@ -271,6 +298,7 @@ public class SubSetResourceIntTest {
         assertThat(testSubSet.getFileHdfsLocation()).isEqualTo(UPDATED_FILE_HDFS_LOCATION);
         assertThat(testSubSet.getDateCreated()).isEqualTo(UPDATED_DATE_CREATED);
         assertThat(testSubSet.getDownloadUrl()).isEqualTo(UPDATED_DOWNLOAD_URL);
+        assertThat(testSubSet.getSetType()).isEqualTo(UPDATED_SET_TYPE);
     }
 
     @Test

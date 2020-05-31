@@ -1,5 +1,7 @@
 package co.edu.uniandes.xrepo.web.rest;
 import co.edu.uniandes.xrepo.service.AlgorithmService;
+import co.edu.uniandes.xrepo.service.SearchEngineService;
+import co.edu.uniandes.xrepo.service.dto.SampleSearchParametersDTO;
 import co.edu.uniandes.xrepo.web.rest.errors.BadRequestAlertException;
 import co.edu.uniandes.xrepo.web.rest.util.HeaderUtil;
 import co.edu.uniandes.xrepo.web.rest.util.PaginationUtil;
@@ -10,11 +12,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -33,9 +35,11 @@ public class AlgorithmResource {
     private static final String ENTITY_NAME = "algorithm";
 
     private final AlgorithmService algorithmService;
+    private final SearchEngineService searchEngineService;
 
-    public AlgorithmResource(AlgorithmService algorithmService) {
+    public AlgorithmResource(AlgorithmService algorithmService, SearchEngineService searchEngineService) {
         this.algorithmService = algorithmService;
+        this.searchEngineService = searchEngineService;
     }
 
     /**
@@ -102,6 +106,16 @@ public class AlgorithmResource {
     public ResponseEntity<AlgorithmDTO> getAlgorithm(@PathVariable String id) {
         log.debug("REST request to get Algorithm : {}", id);
         Optional<AlgorithmDTO> algorithmDTO = algorithmService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(algorithmDTO);
+    }
+
+    @GetMapping("/algorithms/runhdfs/{id}")
+    public ResponseEntity<AlgorithmDTO> runHdfsAlgorithm(@PathVariable String id) throws IOException {
+        Optional<AlgorithmDTO> algorithmDTO = algorithmService.findOne(id);
+        SearchEngineService.SearchResponse l = null;
+        if (algorithmDTO.isPresent()) {
+            l = searchEngineService.hdfsRunMapReduceTask(algorithmDTO.get());
+        }
         return ResponseUtil.wrapOrNotFound(algorithmDTO);
     }
 

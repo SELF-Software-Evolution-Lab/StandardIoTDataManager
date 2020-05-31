@@ -38,6 +38,12 @@ export class AlgorithmService {
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
+    runMR(id: string): Observable<EntityResponseType> {
+        return this.http
+            .get<IAlgorithm>(`${this.resourceUrl}/runhdfs/${id}`, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+    }
+
     query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
         return this.http

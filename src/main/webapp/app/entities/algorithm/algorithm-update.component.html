@@ -41,9 +41,9 @@
                         [(ngModel)]="algorithm.mapperText" ></textarea>
                 </div>
                 <div class="form-group" [hidden]="!algorithm.mapperFileUrl">
-                    <label class="form-control-label" for="field_mapperFileUrl">Mapper File Url</label>
+                    <label class="form-control-label" for="field_mapperFileUrl">Mapper File HDFS Url</label>
                     <input type="text" class="form-control" name="mapperFileUrl" id="field_mapperFileUrl"
-                        [(ngModel)]="algorithm.mapperFileUrl" maxlength="2048"/>
+                        [(ngModel)]="algorithm.mapperFileUrl" maxlength="2048" readonly/>
                     <div [hidden]="!(editForm.controls.mapperFileUrl?.dirty && editForm.controls.mapperFileUrl?.invalid)">
                         <small class="form-text text-danger"
                         [hidden]="!editForm.controls.mapperFileUrl?.errors?.maxlength">
@@ -57,9 +57,9 @@
                         [(ngModel)]="algorithm.reducerText" ></textarea>
                 </div>
                 <div class="form-group" [hidden]="!algorithm.reducerFileUrl">
-                    <label class="form-control-label" for="field_reducerFileUrl">Reducer File Url</label>
+                    <label class="form-control-label" for="field_reducerFileUrl">Reducer File HDFS Url</label>
                     <input type="text" class="form-control" name="reducerFileUrl" id="field_reducerFileUrl"
-                        [(ngModel)]="algorithm.reducerFileUrl" maxlength="2048"/>
+                        [(ngModel)]="algorithm.reducerFileUrl" maxlength="2048" readonly/>
                     <div [hidden]="!(editForm.controls.reducerFileUrl?.dirty && editForm.controls.reducerFileUrl?.invalid)">
                         <small class="form-text text-danger"
                         [hidden]="!editForm.controls.reducerFileUrl?.errors?.maxlength">

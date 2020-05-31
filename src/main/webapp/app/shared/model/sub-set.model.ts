@@ -1,5 +1,10 @@
 import { Moment } from 'moment';
 
+export const enum SubSetType {
+    TRAINING = 'TRAINING',
+    VALIDATION = 'VALIDATION'
+}
+
 export interface ISubSet {
     id?: string;
     name?: string;
@@ -7,6 +12,7 @@ export interface ISubSet {
     fileHdfsLocation?: string;
     dateCreated?: Moment;
     downloadUrl?: string;
+    setType?: SubSetType;
     laboratoryName?: string;
     laboratoryId?: string;
 }
@@ -19,6 +25,7 @@ export class SubSet implements ISubSet {
         public fileHdfsLocation?: string,
         public dateCreated?: Moment,
         public downloadUrl?: string,
+        public setType?: SubSetType,
         public laboratoryName?: string,
         public laboratoryId?: string
     ) {}
