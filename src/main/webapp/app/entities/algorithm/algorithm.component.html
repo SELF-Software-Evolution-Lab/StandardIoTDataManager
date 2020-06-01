@@ -14,17 +14,18 @@
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="name"><span>Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <!--<th jhiSortBy="mapperText"><span>Mapper Text</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="mapperFileUrl"><span>Mapper File Url</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="reducerText"><span>Reducer Text</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="reducerFileUrl"><span>Reducer File Url</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
-            <th jhiSortBy="dateCreated"><span>Date Created</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="lastSuccessfulRun"><span>Last Successful Run</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="laboratoryName"><span>Laboratory</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th></th>
+                <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th jhiSortBy="name"><span>Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <!--<th jhiSortBy="mapperText"><span>Mapper Text</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th jhiSortBy="mapperFileUrl"><span>Mapper File Url</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th jhiSortBy="reducerText"><span>Reducer Text</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th jhiSortBy="reducerFileUrl"><span>Reducer File Url</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                <th jhiSortBy="dateCreated"><span>Date Created</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th jhiSortBy="lastSuccessfulRun"><span>Last Successful Run</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th jhiSortBy="setType"><span>Set Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th jhiSortBy="laboratoryName"><span>Laboratory</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -38,6 +39,7 @@
                 <td>{{algorithm.reducerFileUrl}}</td>-->
                 <td>{{algorithm.dateCreated | date:'medium'}}</td>
                 <td>{{algorithm.lastSuccessfulRun | date:'medium'}}</td>
+                <td>{{algorithm.setType}}</td>
                 <td>
                     <div *ngIf="algorithm.laboratoryId">
                         <a [routerLink]="['../laboratory', algorithm.laboratoryId , 'view' ]" >{{algorithm.laboratoryName}}</a>

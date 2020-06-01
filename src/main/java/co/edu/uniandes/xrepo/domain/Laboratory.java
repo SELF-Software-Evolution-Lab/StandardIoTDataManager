@@ -22,7 +22,7 @@ import java.util.Objects;
 public class Laboratory implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     private String id;
 
@@ -48,10 +48,9 @@ public class Laboratory implements Serializable {
     @Field("tags")
     private String tags;
 
-    @DBRef
     @Field("algorithm")
     private Set<Algorithm> algorithms = new HashSet<>();
-    @DBRef
+
     @Field("subSet")
     private Set<SubSet> subSets = new HashSet<>();
     @DBRef

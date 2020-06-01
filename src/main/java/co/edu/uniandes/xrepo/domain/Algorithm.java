@@ -12,6 +12,8 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
+import co.edu.uniandes.xrepo.domain.enumeration.SubSetType;
+
 /**
  * A Algorithm.
  */
@@ -51,6 +53,10 @@ public class Algorithm implements Serializable {
 
     @Field("last_successful_run")
     private Instant lastSuccessfulRun;
+
+    @NotNull
+    @Field("set_type")
+    private SubSetType setType;
 
     @DBRef
     @Field("laboratory")
@@ -170,6 +176,19 @@ public class Algorithm implements Serializable {
         this.lastSuccessfulRun = lastSuccessfulRun;
     }
 
+    public SubSetType getSetType() {
+        return setType;
+    }
+
+    public Algorithm setType(SubSetType setType) {
+        this.setType = setType;
+        return this;
+    }
+
+    public void setSetType(SubSetType setType) {
+        this.setType = setType;
+    }
+
     public Laboratory getLaboratory() {
         return laboratory;
     }
@@ -216,6 +235,7 @@ public class Algorithm implements Serializable {
             ", reducerFileUrl='" + getReducerFileUrl() + "'" +
             ", dateCreated='" + getDateCreated() + "'" +
             ", lastSuccessfulRun='" + getLastSuccessfulRun() + "'" +
+            ", setType='" + getSetType() + "'" +
             "}";
     }
 }

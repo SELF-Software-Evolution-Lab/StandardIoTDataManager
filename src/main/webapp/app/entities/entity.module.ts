@@ -47,6 +47,10 @@ import { RouterModule } from '@angular/router';
             {
                 path: 'sub-set',
                 loadChildren: './sub-set/sub-set.module#XrepoSubSetModule'
+            },
+            {
+                path: 'algorithm',
+                loadChildren: './algorithm/algorithm.module#XrepoAlgorithmModule'
             }
             /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
         ])

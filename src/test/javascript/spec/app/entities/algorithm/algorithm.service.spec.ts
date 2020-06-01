@@ -7,7 +7,7 @@ import { take, map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { AlgorithmService } from 'app/entities/algorithm/algorithm.service';
-import { IAlgorithm, Algorithm } from 'app/shared/model/algorithm.model';
+import { IAlgorithm, Algorithm, SubSetType } from 'app/shared/model/algorithm.model';
 
 describe('Service Tests', () => {
     describe('Algorithm Service', () => {
@@ -25,7 +25,18 @@ describe('Service Tests', () => {
             httpMock = injector.get(HttpTestingController);
             currentDate = moment();
 
-            elemDefault = new Algorithm('ID', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', currentDate, currentDate);
+            elemDefault = new Algorithm(
+                'ID',
+                'AAAAAAA',
+                'AAAAAAA',
+                'AAAAAAA',
+                'AAAAAAA',
+                'AAAAAAA',
+                'AAAAAAA',
+                currentDate,
+                currentDate,
+                SubSetType.TRAINING
+            );
         });
 
         describe('Service methods', async () => {
@@ -80,7 +91,8 @@ describe('Service Tests', () => {
                         reducerText: 'BBBBBB',
                         reducerFileUrl: 'BBBBBB',
                         dateCreated: currentDate.format(DATE_TIME_FORMAT),
-                        lastSuccessfulRun: currentDate.format(DATE_TIME_FORMAT)
+                        lastSuccessfulRun: currentDate.format(DATE_TIME_FORMAT),
+                        setType: 'BBBBBB'
                     },
                     elemDefault
                 );
@@ -110,7 +122,8 @@ describe('Service Tests', () => {
                         reducerText: 'BBBBBB',
                         reducerFileUrl: 'BBBBBB',
                         dateCreated: currentDate.format(DATE_TIME_FORMAT),
-                        lastSuccessfulRun: currentDate.format(DATE_TIME_FORMAT)
+                        lastSuccessfulRun: currentDate.format(DATE_TIME_FORMAT),
+                        setType: 'BBBBBB'
                     },
                     elemDefault
                 );

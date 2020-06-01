@@ -4,6 +4,8 @@ import co.edu.uniandes.xrepo.domain.BatchTask;
 import co.edu.uniandes.xrepo.domain.enumeration.TaskType;
 import co.edu.uniandes.xrepo.service.BatchTaskService;
 import co.edu.uniandes.xrepo.service.LaboratoryService;
+import co.edu.uniandes.xrepo.service.SubSetService;
+import co.edu.uniandes.xrepo.service.dto.SubSetDTO;
 import co.edu.uniandes.xrepo.service.dto.AlgorithmDTO;
 import co.edu.uniandes.xrepo.service.task.BackgroundTaskProcessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,10 +42,15 @@ public class HdfsRunMRAlgorithmTaskProcessorService implements BackgroundTaskPro
     private final BatchTaskService batchTaskService;
 
     private final LaboratoryService laboratoryService;
+    private final SubSetService subSetService;
     private final String reportLocation;
+    private final String resultsLocation;
 
     public HdfsRunMRAlgorithmTaskProcessorService(BatchTaskService batchTaskService, LaboratoryService samplingService
-        , @Value("${xrepo.report-generation-location}") String reportLocation) {
+        , SubSetService subSetService, @Value("${xrepo.report-generation-location}") String reportLocation
+        , @Value("${xrepo.mr-results-hdfs-location}") String resultsLocation) {
+        this.subSetService = subSetService;
+        this.resultsLocation = resultsLocation;
         log.info("Creating HDFS search processor service");
         this.batchTaskService = batchTaskService;
         this.laboratoryService = samplingService;
@@ -80,16 +87,21 @@ public class HdfsRunMRAlgorithmTaskProcessorService implements BackgroundTaskPro
             log.info("Processing HDFS algorithm with id {}", params.getId());
 
             List<Process> consoleTracker = new ArrayList<>();
+            List<String> resultLocations = new ArrayList<>();
 
             for(String hdfsFile : fileHdfsLocations){
                 Process console = Runtime.getRuntime().exec(new String[]{shellScript
                     ,"-i",hdfsFile
                     ,"-m",params.getMapperFileUrl()
                     ,"-r",params.getReducerFileUrl()
-                    ,"-o",getFileName(hdfsFile)
+                    ,"-o",getFileName(hdfsFile)+"-"+params.getLaboratoryId()
                     ,"-d",TIME_FORMATTER_DATE.format(processStart)
                     ,"-t",TIME_FORMATTER_TIME.format(processStart)});
+
                 consoleTracker.add(console);
+                resultLocations.add(resultsLocation + getFileName(hdfsFile)+"-"+params.getLaboratoryId()
+                    + "/" + TIME_FORMATTER_DATE.format(processStart)
+                    + "/" + TIME_FORMATTER_TIME.format(processStart));
             }
             //wait for all the console command to finish to write the report
             //better than wait for console, so all HDFS search can be made in parallel
@@ -99,8 +111,7 @@ public class HdfsRunMRAlgorithmTaskProcessorService implements BackgroundTaskPro
                     running = false;
                 }
             }
-            writeReport(fileHdfsLocations, TIME_FORMATTER_DATE.format(processStart)
-                ,TIME_FORMATTER_TIME.format(processStart), task);
+            createSubSet(params, resultLocations);
             batchTaskService.save(task.progress(100).state(COMPLETED).endDate(Instant.now()));
         } catch (Exception e) {
             batchTaskService.save(
@@ -110,23 +121,19 @@ public class HdfsRunMRAlgorithmTaskProcessorService implements BackgroundTaskPro
         }
     }
 
-    private void writeReport(List<String> fileLocations, String savedDate, String savedTime, BatchTask task) throws IOException {
-        Path path = Paths.get(reportLocation, buildReportName(task));
-        log.info("HDFS Algortithm Report to create at {}", path);
-        File file = path.toFile();
-        file.createNewFile();
-        log.info("HDFS Algortithm Report created at {}", path);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            log.info("Start writing Algortithm report");
-            for (String hdfsFile : fileLocations){
-                writer.write("Processed: " + hdfsFile + ", Output location: "
-                    + "/user/hadoop/" + getFileName(hdfsFile) + "/" + savedDate + "/" + savedTime);
-            }
-            log.info("Report generated successfully {}", file.getName());
-        } catch (IOException e) {
-            file.delete();
-            throw new UncheckedIOException(e);
-        }
+    private void createSubSet(AlgorithmDTO sourceAlgorithm,List<String> hdfsLocations){
+        SubSetDTO subsetDTO = new SubSetDTO();
+        subsetDTO.setName("Results-"+sourceAlgorithm.getName());
+        subsetDTO.setDescription("Results of runnung " + sourceAlgorithm.getName() + " on the sampling data");
+        subsetDTO.setFileHdfsLocation(hdfsLocations);
+        subsetDTO.setDateCreated(Instant.now());
+        subsetDTO.setDownloadUrl(hdfsLocations);
+        subsetDTO.setSetType(sourceAlgorithm.getSetType());
+        subsetDTO.setLaboratoryId(sourceAlgorithm.getLaboratoryId());
+        subsetDTO.setLaboratoryName(sourceAlgorithm.getLaboratoryName());
+
+        //save the subset
+        subSetService.saveOnAlgorithm(subsetDTO);
     }
 
     private AlgorithmDTO extractSearchParams(BatchTask task) {
