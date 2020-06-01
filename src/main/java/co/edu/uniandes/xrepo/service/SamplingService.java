@@ -1,9 +1,13 @@
 package co.edu.uniandes.xrepo.service;
 
+import java.io.*;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.io.SegmentedStringWriter;
+import com.google.common.io.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -19,6 +23,9 @@ import co.edu.uniandes.xrepo.repository.SamplingRepository;
 import co.edu.uniandes.xrepo.service.dto.SamplingDTO;
 import co.edu.uniandes.xrepo.service.dto.SensorDTO;
 import co.edu.uniandes.xrepo.service.mapper.SamplingMapper;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.mail.Multipart;
 
 /**
  * Service Implementation for managing Sampling.
@@ -155,5 +162,32 @@ public class SamplingService {
         return samplingRepository.findByTargetSystemId(targetSystemID).stream()
             .flatMap(sampling -> sampling.getFileUris().stream())
             .collect(Collectors.toList());
+    }
+
+    public String getFileName(MultipartFile fileMultipart , String samplingId){
+        try {
+            File fileTemp = new File(fileMultipart.getOriginalFilename());
+            String nameFile = "";
+            Long random = (new Date()).getTime();
+            String ext = Files.getFileExtension(fileTemp.getName());
+
+            if( samplingId != null && !samplingId.equals("")  && !samplingId.isEmpty()){
+                nameFile =  samplingId+"_"+random+"."+ext;
+            }else{
+                InputStream is = fileMultipart.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                List<String> result = new ArrayList<>();
+                String line = br.lines().findFirst().get();
+                String[] columns = line.split(",");
+                Iterator<String> iterator = Arrays.stream(columns).iterator();
+                iterator.next();
+                String samplingIdLocal = iterator.next();
+                nameFile =  samplingIdLocal+"_"+random+"."+ext;
+            }
+            return nameFile;
+        }catch(Exception e){
+            log.error("Error : "+ e.getMessage());
+            return null;
+        }
     }
 }

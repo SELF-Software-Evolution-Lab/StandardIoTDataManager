@@ -23,6 +23,9 @@ public class FileSystemConfiguration {
     @Value("${xrepo.samples-files-location}")
     private String samplesFilesLocation;
 
+    @Value("${xrepo.remove-prefix-hdfs}")
+    private String removePrefixHdfs;
+
     @Bean
     @Profile("prod")
     public CommandLineRunner checkFileSystemProd(ApplicationContext ctx) {

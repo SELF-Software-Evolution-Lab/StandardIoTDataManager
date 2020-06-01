@@ -1,10 +1,10 @@
 package co.edu.uniandes.xrepo.web.rest;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +21,7 @@ import co.edu.uniandes.xrepo.domain.enumeration.TaskState;
 import co.edu.uniandes.xrepo.domain.enumeration.TaskType;
 import co.edu.uniandes.xrepo.security.SecurityUtils;
 import co.edu.uniandes.xrepo.service.BatchTaskService;
+import co.edu.uniandes.xrepo.service.SamplingService;
 import co.edu.uniandes.xrepo.service.dto.SamplesFilesParametersDTO;
 import co.edu.uniandes.xrepo.web.rest.util.HeaderUtil;
 
@@ -37,29 +38,39 @@ public class SamplesFilesResource {
 
     private final BatchTaskService batchTaskService;
 
-    private final String samplesFilesLocation; 
+    private final SamplingService samplingService;
 
-    public SamplesFilesResource(BatchTaskService batchTaskService, @Value("${xrepo.samples-files-location}") String samplesFilesLocation) {
+    private final String samplesFilesLocation;
+
+    private final String removePrefixHdfs;
+
+    public SamplesFilesResource(BatchTaskService batchTaskService, SamplingService samplingService, @Value("${xrepo.samples-files-location}") String samplesFilesLocation, @Value("${xrepo.remove-prefix-hdfs}") String removePrefixHdfs) {
         this.batchTaskService = batchTaskService;
+        this.samplingService = samplingService;
         this.samplesFilesLocation = samplesFilesLocation;
+        this.removePrefixHdfs = removePrefixHdfs;
     }
 
     @PostMapping("/samples-files-2")
-    public ResponseEntity<Void> createSamplesFiles2(@RequestPart MultipartFile file) {
+    public ResponseEntity<Void> createSamplesFiles2(@RequestPart("file") MultipartFile file, @RequestPart(value = "samplingId", required = false) String samplingId) {
 
         File fileTemp = new File(file.getOriginalFilename());
+
         log.debug("REST request to save archivo : {};{};{};{}", file.getName(), file.getOriginalFilename(),
                 file.getSize(), fileTemp.getName());
 
+        String nombreArchivo = samplingService.getFileName( file, samplingId);
+
         try {
             long fileSize = file.getSize();
-            Path filePath = Paths.get(samplesFilesLocation, fileTemp.getName());
+            Path filePath = Paths.get(samplesFilesLocation, nombreArchivo);
+
             File archivo = filePath.toFile();
-            archivo.setReadable(true, false); 
-            archivo.setWritable(true, false); 
+            archivo.setReadable(true, false);
+            archivo.setWritable(true, false);
             file.transferTo(archivo);
-            archivo.setReadable(true, false); 
-            archivo.setWritable(true, false); 
+            archivo.setReadable(true, false);
+            archivo.setWritable(true, false);
             BatchTask tarea = new BatchTask();
             tarea.progress(0);
             tarea.setState(TaskState.PENDING);
@@ -67,11 +78,17 @@ public class SamplesFilesResource {
             tarea.setDescription("Process File " + fileTemp.getName());
             tarea.setCreateDate(Instant.now());
             tarea.setUser(SecurityUtils.getCurrentUserLogin().get());
-            
+
             SamplesFilesParametersDTO parameters = new SamplesFilesParametersDTO();
 
             parameters.setFilePath(filePath.toString());
             parameters.setFileSize(fileSize);
+
+            //Actualizar filesUrls de sampling
+            String[] array = nombreArchivo.split("_");
+
+            String uriFile = filePath.toString().replace(removePrefixHdfs,"");
+            samplingService.addFileUriToSampling(array[0], uriFile);
 
             tarea.objectToParameters(parameters);
             tarea = batchTaskService.save(tarea);
