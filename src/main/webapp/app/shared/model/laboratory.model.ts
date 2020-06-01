@@ -9,7 +9,7 @@ export interface ILaboratory {
     dateCreated?: Moment;
     shareUrl?: string;
     shareValidThru?: Moment;
-    tags?: string;
+    tags?: string[];
     algorithms?: IAlgorithm[];
     subSets?: ISubSet[];
     samplingName?: string;
@@ -24,7 +24,7 @@ export class Laboratory implements ILaboratory {
         public dateCreated?: Moment,
         public shareUrl?: string,
         public shareValidThru?: Moment,
-        public tags?: string,
+        public tags?: string[],
         public algorithms?: IAlgorithm[],
         public subSets?: ISubSet[],
         public samplingName?: string,

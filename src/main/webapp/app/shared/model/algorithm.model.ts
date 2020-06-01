@@ -1,5 +1,10 @@
 import { Moment } from 'moment';
 
+export const enum SubSetType {
+    TRAINING = 'TRAINING',
+    VALIDATION = 'VALIDATION'
+}
+
 export interface IAlgorithm {
     id?: string;
     name?: string;
@@ -10,6 +15,7 @@ export interface IAlgorithm {
     reducerFileUrl?: string;
     dateCreated?: Moment;
     lastSuccessfulRun?: Moment;
+    setType?: SubSetType;
     laboratoryName?: string;
     laboratoryId?: string;
 }
@@ -25,6 +31,7 @@ export class Algorithm implements IAlgorithm {
         public reducerFileUrl?: string,
         public dateCreated?: Moment,
         public lastSuccessfulRun?: Moment,
+        public setType?: SubSetType,
         public laboratoryName?: string,
         public laboratoryId?: string
     ) {}

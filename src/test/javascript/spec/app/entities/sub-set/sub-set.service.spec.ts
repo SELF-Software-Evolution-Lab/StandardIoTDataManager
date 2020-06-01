@@ -7,7 +7,7 @@ import { take, map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { SubSetService } from 'app/entities/sub-set/sub-set.service';
-import { ISubSet, SubSet } from 'app/shared/model/sub-set.model';
+import { ISubSet, SubSet, SubSetType } from 'app/shared/model/sub-set.model';
 
 describe('Service Tests', () => {
     describe('SubSet Service', () => {
@@ -25,7 +25,7 @@ describe('Service Tests', () => {
             httpMock = injector.get(HttpTestingController);
             currentDate = moment();
 
-            elemDefault = new SubSet('ID', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', currentDate, 'AAAAAAA');
+            elemDefault = new SubSet('ID', 'AAAAAAA', 'AAAAAAA', ['AAAAAAA'], currentDate, ['AAAAAAA'], SubSetType.TRAINING);
         });
 
         describe('Service methods', async () => {
@@ -74,7 +74,8 @@ describe('Service Tests', () => {
                         description: 'BBBBBB',
                         fileHdfsLocation: 'BBBBBB',
                         dateCreated: currentDate.format(DATE_TIME_FORMAT),
-                        downloadUrl: 'BBBBBB'
+                        downloadUrl: 'BBBBBB',
+                        setType: 'BBBBBB'
                     },
                     elemDefault
                 );
@@ -100,7 +101,8 @@ describe('Service Tests', () => {
                         description: 'BBBBBB',
                         fileHdfsLocation: 'BBBBBB',
                         dateCreated: currentDate.format(DATE_TIME_FORMAT),
-                        downloadUrl: 'BBBBBB'
+                        downloadUrl: 'BBBBBB',
+                        setType: 'BBBBBB'
                     },
                     elemDefault
                 );

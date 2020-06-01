@@ -11,6 +11,7 @@ import { AlgorithmComponent } from './algorithm.component';
 import { AlgorithmDetailComponent } from './algorithm-detail.component';
 import { AlgorithmUpdateComponent } from './algorithm-update.component';
 import { AlgorithmDeletePopupComponent } from './algorithm-delete-dialog.component';
+import { AlgorithmRunMRPopupComponent } from './algorithm-run-mr-dialog.component';
 import { IAlgorithm } from 'app/shared/model/algorithm.model';
 
 @Injectable({ providedIn: 'root' })
@@ -85,6 +86,19 @@ export const algorithmPopupRoute: Routes = [
     {
         path: ':id/delete',
         component: AlgorithmDeletePopupComponent,
+        resolve: {
+            algorithm: AlgorithmResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'Algorithms'
+        },
+        canActivate: [UserRouteAccessService],
+        outlet: 'popup'
+    },
+    {
+        path: ':id/run',
+        component: AlgorithmRunMRPopupComponent,
         resolve: {
             algorithm: AlgorithmResolve
         },

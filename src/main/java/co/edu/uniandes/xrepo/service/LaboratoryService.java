@@ -1,9 +1,10 @@
 package co.edu.uniandes.xrepo.service;
 
+import co.edu.uniandes.xrepo.domain.Algorithm;
 import co.edu.uniandes.xrepo.domain.Laboratory;
-import co.edu.uniandes.xrepo.domain.Sampling;
+import co.edu.uniandes.xrepo.domain.SubSet;
 import co.edu.uniandes.xrepo.repository.LaboratoryRepository;
-import co.edu.uniandes.xrepo.repository.SamplingRepository;
+import co.edu.uniandes.xrepo.repository.SubSetRepository;
 import co.edu.uniandes.xrepo.service.dto.LaboratoryDTO;
 import co.edu.uniandes.xrepo.service.mapper.LaboratoryMapper;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Service Implementation for managing Laboratory.
@@ -26,11 +28,13 @@ public class LaboratoryService {
     private final Logger log = LoggerFactory.getLogger(LaboratoryService.class);
 
     private final LaboratoryRepository laboratoryRepository;
+    private final SubSetRepository subSetRepository;
 
     private final LaboratoryMapper laboratoryMapper;
 
-    public LaboratoryService(LaboratoryRepository laboratoryRepository, LaboratoryMapper laboratoryMapper) {
+    public LaboratoryService(LaboratoryRepository laboratoryRepository, SubSetRepository subSetRepository, LaboratoryMapper laboratoryMapper) {
         this.laboratoryRepository = laboratoryRepository;
+        this.subSetRepository = subSetRepository;
         this.laboratoryMapper = laboratoryMapper;
     }
 
@@ -85,8 +89,13 @@ public class LaboratoryService {
      */
     public List<String> findAllSharedFiles(String id) {
         log.debug("Request to get all Laboratory shared files: {}", id);
-        return laboratoryRepository.findById(id).get()
-            .getSampling().getFileUris().stream().collect(Collectors.toList()) ;
+        List<String> samplingFiles = laboratoryRepository.findById(id).get()
+            .getSampling().getFileUris().stream().collect(Collectors.toList());
+        List<String> subsetFiles = subSetRepository.findByLaboratoryId(id)
+            .stream().map(x -> x.getFileHdfsLocation())
+            .flatMap(x -> x.stream()).collect(Collectors.toList());
+
+        return Stream.concat(samplingFiles.stream(), subsetFiles.stream()).collect(Collectors.toList());
     }
 
     /**

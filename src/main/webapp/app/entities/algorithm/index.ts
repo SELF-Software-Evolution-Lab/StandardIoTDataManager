@@ -4,3 +4,4 @@ export * from './algorithm-delete-dialog.component';
 export * from './algorithm-detail.component';
 export * from './algorithm.component';
 export * from './algorithm.route';
+export * from './algorithm-run-mr-dialog.component';

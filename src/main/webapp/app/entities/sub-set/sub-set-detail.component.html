@@ -15,7 +15,11 @@
                 </dd>
                 <dt><span>File Hdfs Location</span></dt>
                 <dd>
-                    <span>{{subSet.fileHdfsLocation}}</span>
+                    <ul class="list-unstyled">
+                        <li *ngFor="let location of subSet.fileHdfsLocation">
+                            <span class="badge badge-info">{{ location }}</span>
+                        </li>
+                    </ul>
                 </dd>
                 <dt><span>Date Created</span></dt>
                 <dd>
@@ -23,7 +27,15 @@
                 </dd>
                 <dt><span>Download Url</span></dt>
                 <dd>
-                    <span>{{subSet.downloadUrl}}</span>
+                    <ul class="list-unstyled">
+                        <li *ngFor="let downloadUrl of subSet.downloadUrl">
+                            <span class="badge badge-info">{{ downloadUrl }}</span>
+                        </li>
+                    </ul>
+                </dd>
+                <dt><span>Set Type</span></dt>
+                <dd>
+                    <span>{{subSet.setType}}</span>
                 </dd>
                 <dt><span>Laboratory</span></dt>
                 <dd>

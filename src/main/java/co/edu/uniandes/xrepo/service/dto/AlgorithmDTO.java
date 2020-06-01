@@ -3,6 +3,7 @@ import java.time.Instant;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
+import co.edu.uniandes.xrepo.domain.enumeration.SubSetType;
 
 /**
  * A DTO for the Algorithm entity.
@@ -31,6 +32,9 @@ public class AlgorithmDTO implements Serializable {
     private Instant dateCreated;
 
     private Instant lastSuccessfulRun;
+
+    @NotNull
+    private SubSetType setType;
 
 
     private String laboratoryId;
@@ -109,6 +113,14 @@ public class AlgorithmDTO implements Serializable {
         this.lastSuccessfulRun = lastSuccessfulRun;
     }
 
+    public SubSetType getSetType() {
+        return setType;
+    }
+
+    public void setSetType(SubSetType setType) {
+        this.setType = setType;
+    }
+
     public String getLaboratoryId() {
         return laboratoryId;
     }
@@ -158,6 +170,7 @@ public class AlgorithmDTO implements Serializable {
             ", reducerFileUrl='" + getReducerFileUrl() + "'" +
             ", dateCreated='" + getDateCreated() + "'" +
             ", lastSuccessfulRun='" + getLastSuccessfulRun() + "'" +
+            ", setType='" + getSetType() + "'" +
             ", laboratory=" + getLaboratoryId() +
             ", laboratory='" + getLaboratoryName() + "'" +
             "}";

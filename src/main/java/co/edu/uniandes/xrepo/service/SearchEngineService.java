@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import co.edu.uniandes.xrepo.service.dto.AlgorithmDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -86,6 +87,12 @@ public class SearchEngineService {
     public SearchResponse hdfsFindTask(SampleSearchParametersDTO searchParametersDTO) throws IOException {
         SearchResponse response = new SearchResponse();
         response.setBatchTaskId(deferGeneration(searchParametersDTO,TaskType.HDFS_REPORT));
+        return response;
+    }
+
+    public SearchResponse hdfsRunMapReduceTask(AlgorithmDTO algorithmDTO) throws IOException {
+        SearchResponse response = new SearchResponse();
+        response.setBatchTaskId(deferGeneration(algorithmDTO,TaskType.HDFS_MR_ALGORITHM));
         return response;
     }
 
@@ -192,7 +199,7 @@ public class SearchEngineService {
         return saved.getId();
     }
 
-    private String deferGeneration(SampleSearchParametersDTO params, TaskType tskType) {
+    private String deferGeneration(Object params, TaskType tskType) {
         BatchTask deferredTask = BatchTask.builder()
             .createDate(Instant.now())
             .progress(0)

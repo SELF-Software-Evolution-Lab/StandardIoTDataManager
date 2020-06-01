@@ -33,7 +33,11 @@
                 <td>{{laboratory.dateCreated | date:'medium'}}</td>
                 <td>{{laboratory.shareUrl}}</td>
                 <td>{{laboratory.shareValidThru | date:'medium'}}</td>
-                <td>{{laboratory.tags}}</td>
+                <td>
+                    <div *ngFor="let tag of laboratory.tags">
+                        <span class="badge badge-info">{{ tag }}</span>
+                    </div>
+                </td>
                 <td>
                     <div *ngIf="laboratory.samplingId">
                         <a [routerLink]="['../sampling', laboratory.samplingId , 'view' ]" >{{laboratory.samplingName}}</a>

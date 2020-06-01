@@ -56,7 +56,8 @@ import {
     faDolly,
     faFlask,
     faFileContract,
-    faObjectUngroup
+    faObjectUngroup,
+    faPlay
 } from '@fortawesome/free-solid-svg-icons';
 
 // Adds the SVG icon to the library so you can use it in your page
@@ -111,5 +112,6 @@ library.add(faDolly);
 library.add(faFlask);
 library.add(faFileContract);
 library.add(faObjectUngroup);
+library.add(faPlay);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

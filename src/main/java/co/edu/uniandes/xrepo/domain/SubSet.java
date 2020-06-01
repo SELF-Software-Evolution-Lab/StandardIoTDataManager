@@ -10,7 +10,11 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import co.edu.uniandes.xrepo.domain.enumeration.SubSetType;
 
 /**
  * A SubSet.
@@ -19,7 +23,7 @@ import java.util.Objects;
 public class SubSet implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     private String id;
 
@@ -33,16 +37,18 @@ public class SubSet implements Serializable {
     private String description;
 
     @NotNull
-    @Size(max = 2048)
     @Field("file_hdfs_location")
-    private String fileHdfsLocation;
+    private List<String> fileHdfsLocation = new ArrayList<>();
 
     @Field("date_created")
     private Instant dateCreated;
 
-    @Size(max = 2048)
     @Field("download_url")
-    private String downloadUrl;
+    private List<String> downloadUrl;
+
+    @NotNull
+    @Field("set_type")
+    private SubSetType setType;
 
     @DBRef
     @Field("laboratory")
@@ -84,16 +90,16 @@ public class SubSet implements Serializable {
         this.description = description;
     }
 
-    public String getFileHdfsLocation() {
+    public List<String> getFileHdfsLocation() {
         return fileHdfsLocation;
     }
 
-    public SubSet fileHdfsLocation(String fileHdfsLocation) {
+    public SubSet fileHdfsLocation(List<String> fileHdfsLocation) {
         this.fileHdfsLocation = fileHdfsLocation;
         return this;
     }
 
-    public void setFileHdfsLocation(String fileHdfsLocation) {
+    public void setFileHdfsLocation(List<String> fileHdfsLocation) {
         this.fileHdfsLocation = fileHdfsLocation;
     }
 
@@ -110,17 +116,30 @@ public class SubSet implements Serializable {
         this.dateCreated = dateCreated;
     }
 
-    public String getDownloadUrl() {
+    public List<String> getDownloadUrl() {
         return downloadUrl;
     }
 
-    public SubSet downloadUrl(String downloadUrl) {
+    public SubSet downloadUrl(List<String> downloadUrl) {
         this.downloadUrl = downloadUrl;
         return this;
     }
 
-    public void setDownloadUrl(String downloadUrl) {
+    public void setDownloadUrl(List<String> downloadUrl) {
         this.downloadUrl = downloadUrl;
+    }
+
+    public SubSetType getSetType() {
+        return setType;
+    }
+
+    public SubSet setType(SubSetType setType) {
+        this.setType = setType;
+        return this;
+    }
+
+    public void setSetType(SubSetType setType) {
+        this.setType = setType;
     }
 
     public Laboratory getLaboratory() {
@@ -166,6 +185,7 @@ public class SubSet implements Serializable {
             ", fileHdfsLocation='" + getFileHdfsLocation() + "'" +
             ", dateCreated='" + getDateCreated() + "'" +
             ", downloadUrl='" + getDownloadUrl() + "'" +
+            ", setType='" + getSetType() + "'" +
             "}";
     }
 }

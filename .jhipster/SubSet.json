@@ -9,7 +9,9 @@
             "relationshipValidateRules": [
                 "required"
             ],
-            "otherEntityField": "name"
+            "otherEntityField": "name",
+            "otherEntityRelationshipNameUndefined": true,
+            "otherEntityRelationshipName": "subSet"
         }
     ],
     "fields": [
@@ -50,6 +52,14 @@
                 "maxlength"
             ],
             "fieldValidateRulesMaxlength": "2048"
+        },
+        {
+            "fieldName": "setType",
+            "fieldType": "SubSetType",
+            "fieldValues": "TRAINING,VALIDATION",
+            "fieldValidateRules": [
+                "required"
+            ]
         }
     ],
     "dto": "mapstruct",
