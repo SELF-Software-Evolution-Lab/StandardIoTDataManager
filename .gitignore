@@ -142,3 +142,4 @@ Desktop.ini
 # ESLint
 ######################
 .eslintcache
+/src/test/java/co/edu/uniandes/xrepo/web/rest/AuthorResourceIntTest.java

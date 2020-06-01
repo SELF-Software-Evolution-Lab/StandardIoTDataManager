@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -35,6 +36,8 @@ import co.edu.uniandes.xrepo.service.dto.SamplesFilesParametersDTO;
 import co.edu.uniandes.xrepo.service.task.BackgroundTaskProcessor;
 import co.edu.uniandes.xrepo.service.util.AsyncDelegator;
 
+import javax.swing.*;
+
 @Service
 public class ProcessingFiles implements BackgroundTaskProcessor {
 
@@ -44,8 +47,6 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
     private final AsyncDelegator asyncDelegator;
     private final ObjectMapper jsonMapper = new ObjectMapper();
     private final DateTimeFormatter dateTimeformatter = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.SSS");
-   
-
 
     public ProcessingFiles(BatchTaskService batchTaskService, AsyncDelegator asyncDelegator, SampleService sampleService) {
         this.batchTaskService = batchTaskService;
@@ -70,8 +71,9 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
             parameters.setProcessedLinesOk(0);
             task.startDate(Instant.now()).state(TaskState.PROCESSING).objectToParameters(parameters);
             batchTaskService.save(task);
-            processFile(parameters, task);
-
+            if( task.getType() != TaskType.FILE_LOAD) { //Evitar el guardado de los datos en mongo
+                processFile(parameters, task);
+            }
             task.endDate(Instant.now()).state(TaskState.COMPLETED).progress(100).objectToParameters(parameters);
             batchTaskService.save(task);
 
@@ -85,15 +87,22 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
 
     private void processFile(SamplesFilesParametersDTO params, BatchTask task) {
         Path file = Paths.get(params.getFilePath());
+
         try (Stream<String> lines = Files.lines(file, StandardCharsets.UTF_8)) {
-            lines.forEach(s -> processFileLine(s, task, params));
+
+            Stream<String> allLines = Files.lines(file, StandardCharsets.UTF_8);
+
+            String firstLine = lines.findFirst().get();
+            String samplingId = getSamplingIdFromFile( firstLine , file);
+
+            allLines.skip(1).skip(2).forEach( s -> processFileLine(s, task, params, samplingId) );
         } catch (IOException ioe) {
             log.error("Unexpected error handling samples file", ioe);
         }
     }
 
-    private void processFileLine(String line, BatchTask task, SamplesFilesParametersDTO params) {
-        SampleDTO sample = parseLineToSample(line);
+    private void processFileLine(String line, BatchTask task, SamplesFilesParametersDTO params, String samplingId) {
+        SampleDTO sample = parseLineToSample(line, samplingId);
         if (sample == null) {
             return;
         }
@@ -140,7 +149,25 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
         }
     }
 
-    private SampleDTO parseLineToSample(String line) {
+    private String getSamplingIdFromFile(String line, Path file) {
+        String[] columns = line.split(",");
+        Iterator<String> iterator = Arrays.stream(columns).iterator();
+        // Sampling Id
+        iterator.next();
+        String samplingId = iterator.next();
+
+        if( samplingId.equals("") || samplingId.isEmpty() ){ //No se encuentra el id sampling en el archivo y se busca en el nombre del archivo
+            String nameFile = file.getFileName().toString();
+            String[] partsName = nameFile.split( "." );
+            Iterator<String> iteratorName = Arrays.stream(columns).iterator();
+            samplingId = iterator.next();
+        }
+        log.info( " SamplingId new Function " +  samplingId );
+
+        return samplingId;
+    }
+
+    private SampleDTO parseLineToSample(String line, String samplingId) {
 
         try {
             SampleDTO sample = new SampleDTO();
@@ -149,16 +176,18 @@ public class ProcessingFiles implements BackgroundTaskProcessor {
 
             Iterator<String> iterator = Arrays.stream(columns).iterator();
             // Sampling Id
-            String samplingId = iterator.next();
+            //String samplingId = iterator.next();
             sample.setSamplingId(samplingId);
 
             // DateTime
             String datetime = iterator.next();
-            sample.setDateTime(LocalDateTime.parse(datetime, dateTimeformatter));
+            LocalDateTime localDate = LocalDateTime.parse(datetime, dateTimeformatter);
+            sample.setDateTime( localDate );
 
             // Time stamp
-            BigDecimal timeStamp = new BigDecimal(iterator.next());
-            
+            //BigDecimal timeStamp = new BigDecimal(iterator.next());
+            BigDecimal timeStamp = new BigDecimal( Timestamp.valueOf(localDate ).getTime() );
+
             sample.setTs(new SampleDTO.SampleInstant(timeStamp.longValue(),
                 timeStamp.remainder(BigDecimal.ONE).multiply(new BigDecimal(1000000000)).longValue()));
 

@@ -6,12 +6,23 @@
     <jhi-alert-error></jhi-alert-error>
     <div class="col-12">
         <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <div class="mb-3">
+                <div class="form-group">
+                    <select class="form-control" name="sampling" [(ngModel)]="valueSampling">
+                        <option value="">Select a sampling for the file sample</option>
+                        <option *ngFor="let sampling of samplings ;trackBy: trackId" value="{{sampling.id}}"> {{sampling.experimentName}} - {{sampling.id}} </option>
+                    </select>
+                </div>
+                <small><i>* If not select a sampling please put the ID sampling into the file sample. Example ID : 5e94d6374ab5ab6aa35d30fc</i></small>
+            </div>
+            <hr>
             <div>
                 <div class="form-group">
                     <label class="form-control-label" for="file">File to upload</label>
                     <input type="file" (change)="handleFileInput($event.target.files)" id="file"/>
                 </div>
             </div>
+            <hr>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>

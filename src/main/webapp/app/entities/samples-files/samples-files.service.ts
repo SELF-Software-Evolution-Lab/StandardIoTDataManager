@@ -14,9 +14,10 @@ export class SamplesFilesService {
 
     constructor(protected http: HttpClient) {}
 
-    create2(file: File): Observable<EntityResponseType> {
+    create2(file: File, samplingId: string): Observable<EntityResponseType> {
         const formData: FormData = new FormData();
         formData.append('file', file);
+        formData.append('samplingId', samplingId);
         console.log('formulario:');
         console.log(formData);
         return this.http
