@@ -5,7 +5,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { of } from 'rxjs';
 import { take, map } from 'rxjs/operators';
 import { TagService } from 'app/entities/tag/tag.service';
-import { ITag, Tag } from 'app/shared/model/tag.model';
+import { ITag, Tag, TagType } from 'app/shared/model/tag.model';
 
 describe('Service Tests', () => {
     describe('Tag Service', () => {
@@ -21,7 +21,7 @@ describe('Service Tests', () => {
             service = injector.get(TagService);
             httpMock = injector.get(HttpTestingController);
 
-            elemDefault = new Tag('ID', 'AAAAAAA');
+            elemDefault = new Tag('ID', 'AAAAAAA', TagType.ANALYSIS_PURPOSE);
         });
 
         describe('Service methods', async () => {
@@ -55,7 +55,8 @@ describe('Service Tests', () => {
             it('should update a Tag', async () => {
                 const returnedFromService = Object.assign(
                     {
-                        name: 'BBBBBB'
+                        name: 'BBBBBB',
+                        type: 'BBBBBB'
                     },
                     elemDefault
                 );
@@ -72,7 +73,8 @@ describe('Service Tests', () => {
             it('should return a list of Tag', async () => {
                 const returnedFromService = Object.assign(
                     {
-                        name: 'BBBBBB'
+                        name: 'BBBBBB',
+                        type: 'BBBBBB'
                     },
                     elemDefault
                 );

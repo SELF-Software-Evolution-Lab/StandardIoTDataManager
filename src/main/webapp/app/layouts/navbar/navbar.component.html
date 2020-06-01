@@ -74,6 +74,24 @@
                         </a>
                     </li>
                     <li>
+                        <a class="dropdown-item" routerLink="laboratory" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="flask" fixedWidth="true"></fa-icon>
+                            <span>Laboratory</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="algorithm" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="file-contract" fixedWidth="true"></fa-icon>
+                            <span>Algorithm</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="sub-set" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="object-ungroup" fixedWidth="true"></fa-icon>
+                            <span>Sub Set</span>
+                        </a>
+                    </li>
+                    <li>
                         <a class="dropdown-item" routerLink="tag" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon icon="tags" fixedWidth="true"></fa-icon>
                             <span>Tags</span>

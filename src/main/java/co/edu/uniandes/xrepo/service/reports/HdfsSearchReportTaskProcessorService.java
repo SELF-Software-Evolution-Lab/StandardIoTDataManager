@@ -1,7 +1,6 @@
 package co.edu.uniandes.xrepo.service.reports;
 
 import co.edu.uniandes.xrepo.domain.BatchTask;
-import co.edu.uniandes.xrepo.domain.Sample;
 import co.edu.uniandes.xrepo.domain.enumeration.TaskType;
 import co.edu.uniandes.xrepo.service.BatchTaskService;
 import co.edu.uniandes.xrepo.service.SamplingService;
@@ -9,12 +8,10 @@ import co.edu.uniandes.xrepo.service.dto.SampleSearchParametersDTO;
 import co.edu.uniandes.xrepo.service.task.BackgroundTaskProcessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.util.CloseableIterator;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -26,7 +23,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static co.edu.uniandes.xrepo.domain.enumeration.TaskState.*;
 
@@ -82,7 +78,7 @@ public class HdfsSearchReportTaskProcessorService implements BackgroundTaskProce
                 return;
             }
 
-            String shellScript = new ClassPathResource("mapreduce-files/RunRemoteMR.sh").getURI().getPath();
+            String shellScript = new ClassPathResource("mapreduce-files/RunRemoteMRSearch.sh").getURI().getPath();
 
             log.info("Processing HDFS report starting: {}, ending {}", startTime.toString(), endTime.toString());
 

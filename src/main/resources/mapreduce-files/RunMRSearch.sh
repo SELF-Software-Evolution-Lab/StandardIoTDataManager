@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#this is intended to be placed and ran on the HDFS server.
+#this is intended to be placed and run on the HDFS server.
 
 usage()
 {

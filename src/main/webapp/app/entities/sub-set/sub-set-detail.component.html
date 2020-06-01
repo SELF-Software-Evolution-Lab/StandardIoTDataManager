@@ -1,0 +1,61 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="subSet">
+            <h2><span>Sub Set</span> {{subSet.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Name</span></dt>
+                <dd>
+                    <span>{{subSet.name}}</span>
+                </dd>
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{subSet.description}}</span>
+                </dd>
+                <dt><span>File Hdfs Location</span></dt>
+                <dd>
+                    <ul class="list-unstyled">
+                        <li *ngFor="let location of subSet.fileHdfsLocation">
+                            <span class="badge badge-info">{{ location }}</span>
+                        </li>
+                    </ul>
+                </dd>
+                <dt><span>Date Created</span></dt>
+                <dd>
+                    <span>{{subSet.dateCreated}}</span>
+                </dd>
+                <dt><span>Download Url</span></dt>
+                <dd>
+                    <ul class="list-unstyled">
+                        <li *ngFor="let downloadUrl of subSet.downloadUrl">
+                            <span class="badge badge-info">{{ downloadUrl }}</span>
+                        </li>
+                    </ul>
+                </dd>
+                <dt><span>Set Type</span></dt>
+                <dd>
+                    <span>{{subSet.setType}}</span>
+                </dd>
+                <dt><span>Laboratory</span></dt>
+                <dd>
+                    <div *ngIf="subSet.laboratoryId">
+                        <a [routerLink]="['/laboratory', subSet.laboratoryId, 'view']">{{subSet.laboratoryName}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/sub-set', subSet.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

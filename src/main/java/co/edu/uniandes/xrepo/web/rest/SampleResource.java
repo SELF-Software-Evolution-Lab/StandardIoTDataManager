@@ -80,12 +80,11 @@ public class SampleResource {
     @PostMapping("/samples/data")
     public ResponseEntity<SearchResponse> preSearchSample(@RequestBody SampleSearchParametersDTO searchParametersDTO) throws IOException {
 //        SearchResponse l = searchEngineService.preSearchSamples(searchParametersDTO);
-        //to avoid messing with the response types, im just implementing HDFS search on top.
-        //of existing functionality
+        //to avoid messing with the response types,
+        //im just implementing HDFS search on top of existing functionality
         SearchResponse l = searchEngineService.hdfsFindTask(searchParametersDTO);
         return ResponseEntity.ok().body(l);
     }
-
 
     /**
      * PUT  /samples : Updates an existing sample.

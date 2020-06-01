@@ -1,0 +1,23 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <h2><span class="font-weight-bold">Laboratory:</span> {{laboratory.name}}</h2>
+        <div class="alert alert-warning">
+            Current Time is: {{today}}
+        </div>
+        <div *ngIf="linkHasExpired(); else elseBlock">
+            <span class="alert alert-danger">The provided link Has expired</span>
+        </div>
+        <ng-template #elseBlock>
+            <div class="alert alert-primary">
+                {{getFileCount()}} Files available to download Until {{laboratory.shareValidThru}}
+            </div>
+            <div *ngIf="fileShares">
+                <ul class="list-unstyled">
+                    <li *ngFor="let file of fileShares">
+                        <span class="badge badge-info">{{ file }}</span>
+                    </li>
+                </ul>
+            </div>
+        </ng-template>
+    </div>
+</div>

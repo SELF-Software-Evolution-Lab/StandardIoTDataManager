@@ -1,0 +1,65 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="algorithm">
+            <h2><span>Algorithm</span> {{algorithm.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Name</span></dt>
+                <dd>
+                    <span>{{algorithm.name}}</span>
+                </dd>
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{algorithm.description}}</span>
+                </dd>
+                <dt><span>Mapper Text</span></dt>
+                <dd>
+                    <span>{{algorithm.mapperText}}</span>
+                </dd>
+                <dt><span>Mapper File Url</span></dt>
+                <dd>
+                    <span>{{algorithm.mapperFileUrl}}</span>
+                </dd>
+                <dt><span>Reducer Text</span></dt>
+                <dd>
+                    <span>{{algorithm.reducerText}}</span>
+                </dd>
+                <dt><span>Reducer File Url</span></dt>
+                <dd>
+                    <span>{{algorithm.reducerFileUrl}}</span>
+                </dd>
+                <dt><span>Date Created</span></dt>
+                <dd>
+                    <span>{{algorithm.dateCreated}}</span>
+                </dd>
+                <dt><span>Last Successful Run</span></dt>
+                <dd>
+                    <span>{{algorithm.lastSuccessfulRun}}</span>
+                </dd>
+                <dt><span>Set Type</span></dt>
+                <dd>
+                    <span>{{algorithm.setType}}</span>
+                </dd>
+                <dt><span>Laboratory</span></dt>
+                <dd>
+                    <div *ngIf="algorithm.laboratoryId">
+                        <a [routerLink]="['/laboratory', algorithm.laboratoryId, 'view']">{{algorithm.laboratoryName}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/algorithm', algorithm.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
