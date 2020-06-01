@@ -7,63 +7,63 @@
                 <div class="form-group" [hidden]="!algorithm.id">
                     <label for="id">ID</label>
                     <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="algorithm.id" readonly />
+                           [(ngModel)]="algorithm.id" readonly />
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_name">Name</label>
                     <input type="text" class="form-control" name="name" id="field_name"
-                        [(ngModel)]="algorithm.name" required maxlength="30"/>
+                           [(ngModel)]="algorithm.name" required maxlength="30"/>
                     <div [hidden]="!(editForm.controls.name?.dirty && editForm.controls.name?.invalid)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.name?.errors?.required">
-                        This field is required.
+                               [hidden]="!editForm.controls.name?.errors?.required">
+                            This field is required.
                         </small>
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.name?.errors?.maxlength">
-                        This field cannot be longer than 30 characters.
+                               [hidden]="!editForm.controls.name?.errors?.maxlength">
+                            This field cannot be longer than 30 characters.
                         </small>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_description">Description</label>
                     <input type="text" class="form-control" name="description" id="field_description"
-                        [(ngModel)]="algorithm.description" maxlength="1024"/>
+                           [(ngModel)]="algorithm.description" maxlength="1024"/>
                     <div [hidden]="!(editForm.controls.description?.dirty && editForm.controls.description?.invalid)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.description?.errors?.maxlength">
-                        This field cannot be longer than 1024 characters.
+                               [hidden]="!editForm.controls.description?.errors?.maxlength">
+                            This field cannot be longer than 1024 characters.
                         </small>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_mapperText">Mapper Text</label>
                     <textarea class="form-control" name="mapperText" id="field_mapperText"
-                        [(ngModel)]="algorithm.mapperText" ></textarea>
+                              [(ngModel)]="algorithm.mapperText" ></textarea>
                 </div>
                 <div class="form-group" [hidden]="!algorithm.mapperFileUrl">
                     <label class="form-control-label" for="field_mapperFileUrl">Mapper File HDFS Url</label>
                     <input type="text" class="form-control" name="mapperFileUrl" id="field_mapperFileUrl"
-                        [(ngModel)]="algorithm.mapperFileUrl" maxlength="2048" readonly/>
+                           [(ngModel)]="algorithm.mapperFileUrl" maxlength="2048" readonly/>
                     <div [hidden]="!(editForm.controls.mapperFileUrl?.dirty && editForm.controls.mapperFileUrl?.invalid)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.mapperFileUrl?.errors?.maxlength">
-                        This field cannot be longer than 2048 characters.
+                               [hidden]="!editForm.controls.mapperFileUrl?.errors?.maxlength">
+                            This field cannot be longer than 2048 characters.
                         </small>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_reducerText">Reducer Text</label>
                     <textarea class="form-control" name="reducerText" id="field_reducerText"
-                        [(ngModel)]="algorithm.reducerText" ></textarea>
+                              [(ngModel)]="algorithm.reducerText" ></textarea>
                 </div>
                 <div class="form-group" [hidden]="!algorithm.reducerFileUrl">
                     <label class="form-control-label" for="field_reducerFileUrl">Reducer File HDFS Url</label>
                     <input type="text" class="form-control" name="reducerFileUrl" id="field_reducerFileUrl"
-                        [(ngModel)]="algorithm.reducerFileUrl" maxlength="2048" readonly/>
+                           [(ngModel)]="algorithm.reducerFileUrl" maxlength="2048" readonly/>
                     <div [hidden]="!(editForm.controls.reducerFileUrl?.dirty && editForm.controls.reducerFileUrl?.invalid)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.reducerFileUrl?.errors?.maxlength">
-                        This field cannot be longer than 2048 characters.
+                               [hidden]="!editForm.controls.reducerFileUrl?.errors?.maxlength">
+                            This field cannot be longer than 2048 characters.
                         </small>
                     </div>
                 </div>
@@ -81,6 +81,19 @@
                         />
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_setType">Set Type</label>
+                    <select class="form-control" name="setType" [(ngModel)]="algorithm.setType" id="field_setType"  required>
+                        <option value="TRAINING">TRAINING</option>
+                        <option value="VALIDATION">VALIDATION</option>
+                    </select>
+                    <div [hidden]="!(editForm.controls.setType?.dirty && editForm.controls.setType?.invalid)">
+                        <small class="form-text text-danger"
+                               [hidden]="!editForm.controls.setType?.errors?.required">
+                            This field is required.
+                        </small>
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_laboratory">Laboratory</label>
@@ -91,7 +104,7 @@
                 </div>
                 <div [hidden]="!(editForm.controls.laboratory?.dirty && editForm.controls.laboratory?.invalid)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.laboratory?.errors?.required">
+                           [hidden]="!editForm.controls.laboratory?.errors?.required">
                         This field is required.
                     </small>
                 </div>

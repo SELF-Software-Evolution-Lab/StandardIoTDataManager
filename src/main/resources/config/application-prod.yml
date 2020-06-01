@@ -131,4 +131,5 @@ xrepo:
     samples-files-location: /home/andes/xrepo/data/input-samples
     temp-algorithm-files-location: /home/andes/xrepo/data/temp-algorithm
     algorithm-hdfs-location: /home/hadoop/xrepo/algorithms/
+    mr-results-hdfs-location: /user/andes/algorithm-result/
     batch-tasks-checker-frequency: 120000

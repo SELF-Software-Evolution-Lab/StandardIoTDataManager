@@ -25,7 +25,7 @@ describe('Service Tests', () => {
             httpMock = injector.get(HttpTestingController);
             currentDate = moment();
 
-            elemDefault = new SubSet('ID', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', currentDate, 'AAAAAAA', SubSetType.TRAINING);
+            elemDefault = new SubSet('ID', 'AAAAAAA', 'AAAAAAA', ['AAAAAAA'], currentDate, ['AAAAAAA'], SubSetType.TRAINING);
         });
 
         describe('Service methods', async () => {

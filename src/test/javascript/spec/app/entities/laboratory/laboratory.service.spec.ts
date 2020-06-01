@@ -25,7 +25,7 @@ describe('Service Tests', () => {
             httpMock = injector.get(HttpTestingController);
             currentDate = moment();
 
-            elemDefault = new Laboratory('ID', 'AAAAAAA', 'AAAAAAA', currentDate, 'AAAAAAA', currentDate, 'AAAAAAA');
+            elemDefault = new Laboratory('ID', 'AAAAAAA', 'AAAAAAA', currentDate, 'AAAAAAA', currentDate);
         });
 
         describe('Service methods', async () => {

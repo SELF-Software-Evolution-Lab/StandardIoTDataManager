@@ -9,9 +9,9 @@ export interface ISubSet {
     id?: string;
     name?: string;
     description?: string;
-    fileHdfsLocation?: string;
+    fileHdfsLocation?: string[];
     dateCreated?: Moment;
-    downloadUrl?: string;
+    downloadUrl?: string[];
     setType?: SubSetType;
     laboratoryName?: string;
     laboratoryId?: string;
@@ -22,9 +22,9 @@ export class SubSet implements ISubSet {
         public id?: string,
         public name?: string,
         public description?: string,
-        public fileHdfsLocation?: string,
+        public fileHdfsLocation?: string[],
         public dateCreated?: Moment,
-        public downloadUrl?: string,
+        public downloadUrl?: string[],
         public setType?: SubSetType,
         public laboratoryName?: string,
         public laboratoryId?: string

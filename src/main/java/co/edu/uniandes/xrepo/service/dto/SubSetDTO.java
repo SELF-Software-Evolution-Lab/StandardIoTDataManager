@@ -2,6 +2,7 @@ package co.edu.uniandes.xrepo.service.dto;
 import java.time.Instant;
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 import co.edu.uniandes.xrepo.domain.enumeration.SubSetType;
 
@@ -20,13 +21,11 @@ public class SubSetDTO implements Serializable {
     private String description;
 
     @NotNull
-    @Size(max = 2048)
-    private String fileHdfsLocation;
+    private List<String> fileHdfsLocation;
 
     private Instant dateCreated;
 
-    @Size(max = 2048)
-    private String downloadUrl;
+    private List<String> downloadUrl;
 
     @NotNull
     private SubSetType setType;
@@ -60,11 +59,11 @@ public class SubSetDTO implements Serializable {
         this.description = description;
     }
 
-    public String getFileHdfsLocation() {
+    public List<String> getFileHdfsLocation() {
         return fileHdfsLocation;
     }
 
-    public void setFileHdfsLocation(String fileHdfsLocation) {
+    public void setFileHdfsLocation(List<String> fileHdfsLocation) {
         this.fileHdfsLocation = fileHdfsLocation;
     }
 
@@ -76,11 +75,11 @@ public class SubSetDTO implements Serializable {
         this.dateCreated = dateCreated;
     }
 
-    public String getDownloadUrl() {
+    public List<String> getDownloadUrl() {
         return downloadUrl;
     }
 
-    public void setDownloadUrl(String downloadUrl) {
+    public void setDownloadUrl(List<String> downloadUrl) {
         this.downloadUrl = downloadUrl;
     }
 

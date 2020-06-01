@@ -1,6 +1,7 @@
 package co.edu.uniandes.xrepo.service;
 
 import co.edu.uniandes.xrepo.domain.SubSet;
+import co.edu.uniandes.xrepo.domain.enumeration.SubSetType;
 import co.edu.uniandes.xrepo.repository.SubSetRepository;
 import co.edu.uniandes.xrepo.service.dto.SubSetDTO;
 import co.edu.uniandes.xrepo.service.mapper.SubSetMapper;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -38,6 +40,23 @@ public class SubSetService {
      */
     public SubSetDTO save(SubSetDTO subSetDTO) {
         log.debug("Request to save SubSet : {}", subSetDTO);
+        SubSet subSet = subSetMapper.toEntity(subSetDTO);
+        subSet = subSetRepository.save(subSet);
+        return subSetMapper.toDto(subSet);
+    }
+
+    public SubSetDTO saveOnAlgorithm(SubSetDTO subSetDTO) {
+        log.debug("Request to save SubSet : {}", subSetDTO);
+        //check if the type exists and update it
+        List<SubSet> subSets = subSetRepository.findAll();
+        for(SubSet item : subSets){
+            if (item.getSetType() == SubSetType.TRAINING && subSetDTO.getSetType() == SubSetType.TRAINING){
+                subSetDTO.setId(item.getId());
+            }
+            if (item.getSetType() == SubSetType.VALIDATION && subSetDTO.getSetType() == SubSetType.VALIDATION){
+                subSetDTO.setId(item.getId());
+            }
+        }
         SubSet subSet = subSetMapper.toEntity(subSetDTO);
         subSet = subSetRepository.save(subSet);
         return subSetMapper.toDto(subSet);
