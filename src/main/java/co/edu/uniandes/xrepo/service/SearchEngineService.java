@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.util.CloseableIterator;
 import org.springframework.stereotype.Service;
 import org.springframework.core.io.ClassPathResource;
 
@@ -33,6 +35,9 @@ import co.edu.uniandes.xrepo.service.reports.SearchReportTaskProcessor;
 import co.edu.uniandes.xrepo.service.util.AsyncDelegator;
 import lombok.Getter;
 import lombok.Setter;
+
+import static co.edu.uniandes.xrepo.domain.enumeration.TaskState.*;
+import static co.edu.uniandes.xrepo.domain.enumeration.TaskState.ERROR;
 
 @Service
 public class SearchEngineService {
@@ -86,6 +91,21 @@ public class SearchEngineService {
 
     public SearchResponse hdfsFindTask(SampleSearchParametersDTO searchParametersDTO) throws IOException {
         SearchResponse response = new SearchResponse();
+        Query query = new Query(searchParametersDTO.asSamplingCriteria());
+        CloseableIterator<Sampling> stream = null;
+        try {
+            log.info("Processing report for query: {}", query.getQueryObject().toJson());
+            Long count = mongoTemplate.count(query, Sampling.class);
+            response.setCount(count);
+            searchParametersDTO.setExpectedRecords(count);
+            log.info("Cursor retrieved");
+        } catch (Exception e) {
+            log.error("Unexpected error handling report file", e);
+        } finally {
+            if (stream != null) {
+                stream.close();
+            }
+        }
         response.setBatchTaskId(deferGeneration(searchParametersDTO,TaskType.HDFS_REPORT));
         return response;
     }

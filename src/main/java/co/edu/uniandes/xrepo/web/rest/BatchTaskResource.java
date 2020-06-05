@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -166,6 +168,20 @@ public class BatchTaskResource {
     public ResponseEntity<FileSystemResource> getFileFromSearchReport(@PathVariable String id) throws IOException {
         log.debug("REST request to get a search report");
         File file = batchTaskService.fileFromReport(id);
+        FileSystemResource fileSystemResource = new FileSystemResource(file);
+
+        return ResponseEntity.ok()
+            .contentLength(fileSystemResource.contentLength())
+            .contentType(MediaType.parseMediaType("text/csv"))
+            .header(CONTENT_DISPOSITION,"attachment; filename="+file.getName())
+            .body(fileSystemResource);
+    }
+
+    @GetMapping("/batch-tasks/search-reports/hdfsfile/{name}/{date}/{time}")
+    public ResponseEntity<FileSystemResource> getHdfsFileFromSearchReport(@PathVariable String name, @PathVariable String date, @PathVariable String time) throws IOException {
+        log.debug("REST request to get a search report");
+        Path path = Paths.get("/var/hdfs/user/andes/search-result", name, date, time, "part-00000");
+        File file = path.toFile();
         FileSystemResource fileSystemResource = new FileSystemResource(file);
 
         return ResponseEntity.ok()
