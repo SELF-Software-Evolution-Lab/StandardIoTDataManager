@@ -15,20 +15,24 @@
                 </dd>
                 <dt><span>Mapper Text</span></dt>
                 <dd>
-                    <span>{{algorithm.mapperText}}</span>
+                    <!--<span>{{algorithm.mapperText}}</span>-->
+                    <textarea class="form-control" name="mapperText" id="field_mapperText"
+                              [(ngModel)]="algorithm.mapperText" readonly></textarea>
                 </dd>
-                <dt><span>Mapper File Url</span></dt>
+                <!--<dt><span>Mapper File Url</span></dt>
                 <dd>
                     <span>{{algorithm.mapperFileUrl}}</span>
-                </dd>
+                </dd>-->
                 <dt><span>Reducer Text</span></dt>
                 <dd>
-                    <span>{{algorithm.reducerText}}</span>
+                    <!--<span>{{algorithm.reducerText}}</span>-->
+                    <textarea class="form-control" name="reducerText" id="field_reducerText"
+                              [(ngModel)]="algorithm.reducerText" readonly></textarea>
                 </dd>
-                <dt><span>Reducer File Url</span></dt>
+                <!--<dt><span>Reducer File Url</span></dt>
                 <dd>
                     <span>{{algorithm.reducerFileUrl}}</span>
-                </dd>
+                </dd>-->
                 <dt><span>Date Created</span></dt>
                 <dd>
                     <span>{{algorithm.dateCreated}}</span>

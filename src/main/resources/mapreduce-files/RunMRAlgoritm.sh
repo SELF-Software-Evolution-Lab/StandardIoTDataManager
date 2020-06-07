@@ -51,4 +51,4 @@ done
 ~/hadoop/bin/mapred streaming \
 -mapper "$mapper" -file "$mapper" \
 -reducer "$reducer" -file "$reducer" \
--input "$inputFilename" -output /user/andes/algorithm-result/"$outputFolder"/"$dateFolder"/"$timeFolder"
+-input "$inputFilename" -output "$outputFolder"/"$dateFolder"/"$timeFolder"

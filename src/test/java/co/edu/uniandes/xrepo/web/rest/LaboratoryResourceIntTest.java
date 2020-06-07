@@ -90,7 +90,7 @@ public class LaboratoryResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final LaboratoryResource laboratoryResource = new LaboratoryResource(laboratoryService);
+        final LaboratoryResource laboratoryResource = new LaboratoryResource(laboratoryService, hdfsResultsLocation, nfsGatewayMountPoint);
         this.restLaboratoryMockMvc = MockMvcBuilders.standaloneSetup(laboratoryResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -203,7 +203,7 @@ public class LaboratoryResourceIntTest {
             .andExpect(jsonPath("$.[*].shareValidThru").value(hasItem(DEFAULT_SHARE_VALID_THRU.toString())))
             .andExpect(jsonPath("$.[*].tags").value(hasItem(DEFAULT_TAGS.toString())));
     }
-    
+
     @Test
     public void getLaboratory() throws Exception {
         // Initialize the database

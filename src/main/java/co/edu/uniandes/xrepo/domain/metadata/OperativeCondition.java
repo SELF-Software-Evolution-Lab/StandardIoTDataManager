@@ -23,6 +23,8 @@ public class OperativeCondition {
         return varName;
     }
 
+
+
     public void setVarName(String varName) {
         this.varName = varName;
     }

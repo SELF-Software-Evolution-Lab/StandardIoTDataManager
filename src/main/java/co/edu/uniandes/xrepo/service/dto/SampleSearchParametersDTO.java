@@ -78,6 +78,39 @@ public class SampleSearchParametersDTO implements Serializable {
         }
     }
 
+    private void operativeRangeCriteria(Criteria mainCriteria) {
+        if (!operativeConditions.isEmpty()) {
+            //mainCriteria.and("conditions").elemMatch(Criteria.where("value").gte(operativeConditions.get(0).getMinVal()));
+            for (OperativeRange range : getOperativeConditions()){
+                mainCriteria.and("conditions").elemMatch(Criteria.where("varName").is(range.getVarNameUpCased())
+                    .and("value").gte(range.getMinVal()).lte(range.getMaxVal()));
+            }
+        }
+    }
+
+    private void samplingSensorCriteria(Criteria mainCriteria) {
+        if (!sensorsId.isEmpty()) {
+            //mainCriteria.and("conditions").elemMatch(Criteria.where("value").gte(operativeConditions.get(0).getMinVal()));
+            mainCriteria.and("sensors").elemMatch(Criteria.where("internalId").in(getSensorsId()));
+        }
+    }
+
+    private void samplingTagCriteria(Criteria mainCriteria) {
+        if (!tags.isEmpty()) {
+            //mainCriteria.and("conditions").elemMatch(Criteria.where("value").gte(operativeConditions.get(0).getMinVal()));
+            mainCriteria.and("tags").elemMatch(Criteria.where("").in(getTags()));
+        }
+    }
+
+    public Criteria asSamplingCriteria() {
+        final Criteria mainCriteria = new Criteria();
+        targetSystemCriteria(mainCriteria);
+        operativeRangeCriteria(mainCriteria);
+        samplingSensorCriteria(mainCriteria);
+        samplingTagCriteria(mainCriteria);
+        return mainCriteria;
+    }
+
     public List<String> getTargetSystemId() {
         return targetSystemId;
     }

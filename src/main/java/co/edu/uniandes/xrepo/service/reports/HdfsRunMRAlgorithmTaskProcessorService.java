@@ -28,7 +28,7 @@ import java.util.List;
 import static co.edu.uniandes.xrepo.domain.enumeration.TaskState.*;
 
 @Service
-public class HdfsRunMRAlgorithmTaskProcessorService implements BackgroundTaskProcessor, SearchReportFileLocator {
+public class HdfsRunMRAlgorithmTaskProcessorService implements BackgroundTaskProcessor {
 
     private final Logger log = LoggerFactory.getLogger(HdfsSearchReportTaskProcessorService.class);
     private static final ObjectMapper jsonMapper = new ObjectMapper();
@@ -43,18 +43,16 @@ public class HdfsRunMRAlgorithmTaskProcessorService implements BackgroundTaskPro
 
     private final LaboratoryService laboratoryService;
     private final SubSetService subSetService;
-    private final String reportLocation;
     private final String resultsLocation;
 
     public HdfsRunMRAlgorithmTaskProcessorService(BatchTaskService batchTaskService, LaboratoryService samplingService
-        , SubSetService subSetService, @Value("${xrepo.report-generation-location}") String reportLocation
+        , SubSetService subSetService
         , @Value("${xrepo.mr-results-hdfs-location}") String resultsLocation) {
         this.subSetService = subSetService;
         this.resultsLocation = resultsLocation;
         log.info("Creating HDFS search processor service");
         this.batchTaskService = batchTaskService;
         this.laboratoryService = samplingService;
-        this.reportLocation = reportLocation;
     }
 
     @Override
@@ -71,7 +69,7 @@ public class HdfsRunMRAlgorithmTaskProcessorService implements BackgroundTaskPro
             batchTaskService.save(task.startDate(processStart).state(PROCESSING));
             AlgorithmDTO params = extractSearchParams(task);
 
-            List<String> fileHdfsLocations = laboratoryService.findAllSharedFiles(params.getLaboratoryId());
+            List<String> fileHdfsLocations = laboratoryService.findAllLaboratorySourceFilesUrl(params.getLaboratoryId());
 
             if (fileHdfsLocations.isEmpty()){
                 log.warn("No data found to Run Map Reduce {}", params);
@@ -94,14 +92,12 @@ public class HdfsRunMRAlgorithmTaskProcessorService implements BackgroundTaskPro
                     ,"-i",hdfsFile
                     ,"-m",params.getMapperFileUrl()
                     ,"-r",params.getReducerFileUrl()
-                    ,"-o",getFileName(hdfsFile)+"-"+params.getLaboratoryId()
+                    ,"-o",getOutputPath(hdfsFile, params.getLaboratoryId())
                     ,"-d",TIME_FORMATTER_DATE.format(processStart)
                     ,"-t",TIME_FORMATTER_TIME.format(processStart)});
 
                 consoleTracker.add(console);
-                resultLocations.add(resultsLocation + getFileName(hdfsFile)+"-"+params.getLaboratoryId()
-                    + "/" + TIME_FORMATTER_DATE.format(processStart)
-                    + "/" + TIME_FORMATTER_TIME.format(processStart));
+                resultLocations.add(getOutputPath(hdfsFile, params.getLaboratoryId(), processStart));
             }
             //wait for all the console command to finish to write the report
             //better than wait for console, so all HDFS search can be made in parallel
@@ -148,20 +144,18 @@ public class HdfsRunMRAlgorithmTaskProcessorService implements BackgroundTaskPro
 
     }
 
-    public File locateReportFile(BatchTask task) {
-        Path path = Paths.get(reportLocation, buildReportName(task));
-        return path.toFile();
-    }
-
-    private String buildReportName(BatchTask task) {
-        String id = task.getId();
-        String createDate = TIME_FORMATTER_FILE.format(task.getCreateDate());
-        String startDate = TIME_FORMATTER_FILE.format(task.getStartDate());
-        return id + "_" + createDate + "_" + startDate + ".csv";
-    }
-
     private String getFileName(String hdfsPath){
         String[] components = hdfsPath.split("/");
         return components[components.length-1];
+    }
+
+    private String getOutputPath(String inputPath, String labId){
+        return resultsLocation + "/" + getFileName(inputPath) + "-" + labId;
+    }
+
+    private String getOutputPath(String inputPath, String labId, Instant processInstant){
+        return getOutputPath(inputPath, labId)
+            + "/" + TIME_FORMATTER_DATE.format(processInstant)
+            + "/" + TIME_FORMATTER_TIME.format(processInstant);
     }
 }

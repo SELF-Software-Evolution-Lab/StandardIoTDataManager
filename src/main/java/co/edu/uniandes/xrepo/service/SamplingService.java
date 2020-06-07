@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import co.edu.uniandes.xrepo.domain.metadata.OperativeCondition;
+import co.edu.uniandes.xrepo.domain.metadata.OperativeRange;
 import com.fasterxml.jackson.core.io.SegmentedStringWriter;
 import com.google.common.io.Files;
 import org.slf4j.Logger;

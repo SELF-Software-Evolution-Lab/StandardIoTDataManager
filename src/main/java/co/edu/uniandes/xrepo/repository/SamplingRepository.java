@@ -1,5 +1,7 @@
 package co.edu.uniandes.xrepo.repository;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;

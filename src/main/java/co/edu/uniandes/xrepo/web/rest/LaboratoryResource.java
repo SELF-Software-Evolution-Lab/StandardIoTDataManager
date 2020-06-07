@@ -7,20 +7,28 @@ import co.edu.uniandes.xrepo.service.dto.LaboratoryDTO;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 
 /**
  * REST controller for managing Laboratory.
@@ -34,9 +42,15 @@ public class LaboratoryResource {
     private static final String ENTITY_NAME = "laboratory";
 
     private final LaboratoryService laboratoryService;
+    private final String hdfsResultsLocation;
+    private final String nfsGatewayMountPoint;
 
-    public LaboratoryResource(LaboratoryService laboratoryService) {
+    public LaboratoryResource(LaboratoryService laboratoryService
+        , @Value("${xrepo.mr-results-hdfs-location}") String hdfsResultsLocation
+        , @Value("${xrepo.remove-prefix-hdfs}") String nfsGatewayMountPoint) {
         this.laboratoryService = laboratoryService;
+        this.hdfsResultsLocation = hdfsResultsLocation;
+        this.nfsGatewayMountPoint = nfsGatewayMountPoint;
     }
 
     /**
@@ -113,12 +127,26 @@ public class LaboratoryResource {
         return ResponseEntity.ok().body(sharedFilesURL);
     }
 
-    /*same as Get Lab but authorized on anonymous connections*/
+    /*same as Get Lab authorized on anonymous connections*/
     @GetMapping("/laboratories/anonymous/{id}")
     public ResponseEntity<LaboratoryDTO> getAnonymousLaboratory(@PathVariable String id) {
         log.debug("REST request to get Laboratory : {}", id);
         Optional<LaboratoryDTO> laboratoryDTO = laboratoryService.findOne(id);
         return ResponseUtil.wrapOrNotFound(laboratoryDTO);
+    }
+
+    @GetMapping("/laboratories/files/download/{name}/{date}/{time}")
+    public ResponseEntity<FileSystemResource> getFileFromHDFS(@PathVariable String name, @PathVariable String date, @PathVariable String time) throws IOException {
+        log.debug("REST request to download Laboratory shared files : {}", name);
+        Path path = Paths.get(nfsGatewayMountPoint + hdfsResultsLocation, name, date, time, "part-00000");
+        File file = path.toFile();
+        FileSystemResource fileSystemResource = new FileSystemResource(file);
+
+        return ResponseEntity.ok()
+            .contentLength(fileSystemResource.contentLength())
+            .contentType(MediaType.parseMediaType("text/csv"))
+            .header(CONTENT_DISPOSITION,"attachment; filename="+file.getName())
+            .body(fileSystemResource);
     }
 
     /**

@@ -22,14 +22,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.ZoneOffset;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 
-import static co.edu.uniandes.xrepo.web.rest.TestUtil.sameInstant;
 import static co.edu.uniandes.xrepo.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -90,7 +86,7 @@ public class BatchTaskResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final BatchTaskResource batchTaskResource = new BatchTaskResource(batchTaskService);
+        final BatchTaskResource batchTaskResource = new BatchTaskResource(batchTaskService, hdfsSearchReportLocation);
         this.restBatchTaskMockMvc = MockMvcBuilders.standaloneSetup(batchTaskResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -179,7 +175,7 @@ public class BatchTaskResourceIntTest {
             .andExpect(jsonPath("$.[*].endDate").value(DEFAULT_END_DATE.toString()))
             .andExpect(jsonPath("$.[*].progress").value(hasItem(DEFAULT_PROGRESS)));
     }
-    
+
     @Test
     public void getBatchTask() throws Exception {
         // Initialize the database

@@ -110,8 +110,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
              * since angular cant download large files
              */
             .antMatchers("/api/batch-tasks/search-reports/file/*").permitAll()
+            .antMatchers("/api/batch-tasks/search-reports/hdfsfile/*/*/*").permitAll()
             .antMatchers("/api/laboratories/files/*").permitAll()
             .antMatchers("/api/laboratories/anonymous/*").permitAll()
+            .antMatchers("/api/laboratories/files/download/*/*/*").permitAll()
             .antMatchers("/api/**").authenticated()
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/info").permitAll()

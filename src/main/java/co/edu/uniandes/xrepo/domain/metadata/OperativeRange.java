@@ -25,6 +25,10 @@ public class OperativeRange implements Serializable {
         return varName;
     }
 
+    public String getVarNameUpCased(){
+        return varName.substring(0,1).toUpperCase() + varName.substring(1);
+    }
+
     public void setVarName(String varName) {
         this.varName = varName;
     }

@@ -4,11 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,9 +48,12 @@ public class BatchTaskResource {
     private static final String ENTITY_NAME = "batchTask";
 
     private final BatchTaskService batchTaskService;
+    private final String hdfsSearchReportLocation;
 
-    public BatchTaskResource(BatchTaskService batchTaskService) {
+    public BatchTaskResource(BatchTaskService batchTaskService
+        ,@Value("${xrepo.report-generation-location}") String hdfsSearchReportLocation) {
         this.batchTaskService = batchTaskService;
+        this.hdfsSearchReportLocation = hdfsSearchReportLocation;
     }
 
     /**
@@ -166,6 +172,20 @@ public class BatchTaskResource {
     public ResponseEntity<FileSystemResource> getFileFromSearchReport(@PathVariable String id) throws IOException {
         log.debug("REST request to get a search report");
         File file = batchTaskService.fileFromReport(id);
+        FileSystemResource fileSystemResource = new FileSystemResource(file);
+
+        return ResponseEntity.ok()
+            .contentLength(fileSystemResource.contentLength())
+            .contentType(MediaType.parseMediaType("text/csv"))
+            .header(CONTENT_DISPOSITION,"attachment; filename="+file.getName())
+            .body(fileSystemResource);
+    }
+
+    @GetMapping("/batch-tasks/search-reports/hdfsfile/{name}/{date}/{time}")
+    public ResponseEntity<FileSystemResource> getHdfsFileFromSearchReport(@PathVariable String name, @PathVariable String date, @PathVariable String time) throws IOException {
+        log.debug("REST request to get a search report");
+        Path path = Paths.get(hdfsSearchReportLocation, name, date, time, "part-00000");
+        File file = path.toFile();
         FileSystemResource fileSystemResource = new FileSystemResource(file);
 
         return ResponseEntity.ok()

@@ -14,7 +14,10 @@
             <div *ngIf="fileShares">
                 <ul class="list-unstyled">
                     <li *ngFor="let file of fileShares">
-                        <span class="badge badge-info">{{ file }}</span>
+                        <a href="{{ getFileLocation(file) }}" target="_blank" class="text-success">
+                            <fa-icon [icon]="'file-download'"></fa-icon> {{getFileName(file)}}
+                        </a>
+                         <span class="badge badge-info">{{ getFileType(file) }}</span>
                     </li>
                 </ul>
             </div>
