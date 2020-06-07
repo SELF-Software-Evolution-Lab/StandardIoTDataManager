@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,9 +48,12 @@ public class BatchTaskResource {
     private static final String ENTITY_NAME = "batchTask";
 
     private final BatchTaskService batchTaskService;
+    private final String hdfsSearchReportLocation;
 
-    public BatchTaskResource(BatchTaskService batchTaskService) {
+    public BatchTaskResource(BatchTaskService batchTaskService
+        ,@Value("${xrepo.report-generation-location}") String hdfsSearchReportLocation) {
         this.batchTaskService = batchTaskService;
+        this.hdfsSearchReportLocation = hdfsSearchReportLocation;
     }
 
     /**
@@ -180,7 +184,7 @@ public class BatchTaskResource {
     @GetMapping("/batch-tasks/search-reports/hdfsfile/{name}/{date}/{time}")
     public ResponseEntity<FileSystemResource> getHdfsFileFromSearchReport(@PathVariable String name, @PathVariable String date, @PathVariable String time) throws IOException {
         log.debug("REST request to get a search report");
-        Path path = Paths.get("/var/hdfs/user/andes/search-result", name, date, time, "part-00000");
+        Path path = Paths.get(hdfsSearchReportLocation, name, date, time, "part-00000");
         File file = path.toFile();
         FileSystemResource fileSystemResource = new FileSystemResource(file);
 

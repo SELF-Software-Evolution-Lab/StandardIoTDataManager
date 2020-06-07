@@ -4,6 +4,8 @@ import * as moment from 'moment';
 
 import { ILaboratory } from 'app/shared/model/laboratory.model';
 
+import { LaboratoryService } from 'app/entities/laboratory/laboratory.service';
+
 @Component({
     selector: 'jhi-laboratory-share',
     templateUrl: './laboratory-share.component.html',
@@ -14,7 +16,7 @@ export class LaboratoryShareComponent implements OnInit {
     laboratory: ILaboratory;
     today;
 
-    constructor(protected activatedRoute: ActivatedRoute) {}
+    constructor(protected activatedRoute: ActivatedRoute, protected laboratoryService: LaboratoryService) {}
 
     ngOnInit() {
         this.activatedRoute.data.subscribe(({ files, laboratory }) => {
@@ -33,5 +35,19 @@ export class LaboratoryShareComponent implements OnInit {
 
     getFileCount() {
         return this.fileShares.length;
+    }
+
+    getFileName(fileUrl: String) {
+        let fileURL = fileUrl.split(',')[0].split('/');
+        return fileURL[1];
+    }
+
+    getFileLocation(fileUrl: String) {
+        let fileURL = fileUrl.split(',')[0].split('/');
+        return this.laboratoryService.locateResult(fileURL[1], fileURL[2], fileURL[3]);
+    }
+
+    getFileType(fileUrl: String) {
+        return fileUrl.split(',')[1];
     }
 }

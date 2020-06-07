@@ -86,4 +86,8 @@ export class LaboratoryService {
             .get<ILaboratory>(`${this.resourceUrl}/anonymous/${id}`, { observe: 'response' })
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
+
+    locateResult(name: string, date: string, time: string): string {
+        return `${this.resourceUrl}/files/download/${name}/${date}/${time}`;
+    }
 }

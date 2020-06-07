@@ -13,6 +13,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import co.edu.uniandes.xrepo.domain.enumeration.SubSetType;
 
@@ -92,6 +93,10 @@ public class SubSet implements Serializable {
 
     public List<String> getFileHdfsLocation() {
         return fileHdfsLocation;
+    }
+
+    public List<String> getFileHdfsLocationAndType() {
+        return fileHdfsLocation.stream().map(x -> x + "," + this.setType).collect(Collectors.toList());
     }
 
     public SubSet fileHdfsLocation(List<String> fileHdfsLocation) {
