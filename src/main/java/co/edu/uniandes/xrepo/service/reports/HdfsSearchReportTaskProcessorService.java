@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static co.edu.uniandes.xrepo.domain.enumeration.TaskState.*;
+import static java.lang.Thread.sleep;
 
 @Service
 public class HdfsSearchReportTaskProcessorService implements BackgroundTaskProcessor, SearchReportFileLocator {
@@ -129,17 +130,9 @@ public class HdfsSearchReportTaskProcessorService implements BackgroundTaskProce
                     ,"-t",TIME_FORMATTER_TIME.format(processStart)});
                 consoleTracker.add(console);
             }
-            //wait for all the console command to finish to write the report
-            //better than wait for console, so all HDFS search can be made in parallel
-            Boolean running = true;
-            while (running){
-              if (!consoleTracker.stream().anyMatch(s -> s.isAlive())){
-                  running = false;
-              }
-            }
+            monitorAndSaveProgress(consoleTracker,task);
             writeReport(fileHdfsLocations, TIME_FORMATTER_DATE.format(processStart)
                         ,TIME_FORMATTER_TIME.format(processStart), task);
-            batchTaskService.save(task.progress(100).state(COMPLETED).endDate(Instant.now()));
         } catch (Exception e) {
             batchTaskService.save(
                 task.progress(0).state(ERROR).endDate(Instant.now())
@@ -166,6 +159,12 @@ public class HdfsSearchReportTaskProcessorService implements BackgroundTaskProce
             file.delete();
             throw new UncheckedIOException(e);
         }
+        batchTaskService.save(task.progress(100).state(COMPLETED).endDate(Instant.now()));
+    }
+
+    private void monitorAndSaveProgress(List<Process> consoleProcesses, BatchTask task) throws InterruptedException {
+        //the idea here is to monitor all spawned console processes in parallel.
+        HdfsRunMRAlgorithmTaskProcessorService.monitorAndSaveProgress(consoleProcesses, task, batchTaskService);
     }
 
     private SampleSearchParametersDTO extractSearchParams(BatchTask task) {

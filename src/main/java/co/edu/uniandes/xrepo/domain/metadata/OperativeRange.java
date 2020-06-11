@@ -3,6 +3,7 @@ package co.edu.uniandes.xrepo.domain.metadata;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -14,6 +15,7 @@ import lombok.ToString;
 @Builder
 @ToString
 @EqualsAndHashCode
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OperativeRange implements Serializable {
 
     private String varName;

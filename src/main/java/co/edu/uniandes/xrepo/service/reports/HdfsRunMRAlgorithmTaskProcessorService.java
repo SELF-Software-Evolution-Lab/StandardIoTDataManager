@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static co.edu.uniandes.xrepo.domain.enumeration.TaskState.*;
+import static java.lang.Thread.sleep;
 
 @Service
 public class HdfsRunMRAlgorithmTaskProcessorService implements BackgroundTaskProcessor {
@@ -99,14 +100,7 @@ public class HdfsRunMRAlgorithmTaskProcessorService implements BackgroundTaskPro
                 consoleTracker.add(console);
                 resultLocations.add(getOutputPath(hdfsFile, params.getLaboratoryId(), processStart));
             }
-            //wait for all the console command to finish to write the report
-            //better than wait for console, so all HDFS search can be made in parallel
-            Boolean running = true;
-            while (running){
-                if (!consoleTracker.stream().anyMatch(s -> s.isAlive())){
-                    running = false;
-                }
-            }
+            monitorAndSaveProgress(consoleTracker,task,batchTaskService);
             createSubSet(params, resultLocations);
             batchTaskService.save(task.progress(100).state(COMPLETED).endDate(Instant.now()));
         } catch (Exception e) {
@@ -142,6 +136,17 @@ public class HdfsRunMRAlgorithmTaskProcessorService implements BackgroundTaskPro
             throw new UncheckedIOException(e);
         }
 
+    }
+
+    static void monitorAndSaveProgress(List<Process> consoleProcesses, BatchTask task, BatchTaskService batchTaskService) throws InterruptedException {
+        long completedMapReduce = consoleProcesses.size();
+        while (completedMapReduce != 0){
+            sleep(1 * 1000);
+            if (consoleProcesses.stream().filter(s -> s.isAlive()).count() != completedMapReduce){
+                completedMapReduce = consoleProcesses.stream().filter(s -> s.isAlive()).count();
+                batchTaskService.save(task.progress((int)((consoleProcesses.size() - completedMapReduce)*100/consoleProcesses.size())));
+            }
+        }
     }
 
     private String getFileName(String hdfsPath){
