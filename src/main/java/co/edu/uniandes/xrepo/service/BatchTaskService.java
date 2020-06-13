@@ -133,6 +133,20 @@ public class BatchTaskService {
             return batchTaskRepository.findByTypeAndUserAndState(TaskType.FILE_LOAD, currentUser(), state, pageable);
     }
 
+    public Page<BatchTask> findAllMapReduceByUser(Pageable pageable) {
+        if (currentUser().equals("admin"))
+            return batchTaskRepository.findByType(TaskType.HDFS_MR_ALGORITHM, pageable);
+        else
+            return batchTaskRepository.findByTypeAndUser(TaskType.HDFS_MR_ALGORITHM, currentUser(), pageable);
+    }
+
+    public Page<BatchTask> findAllMapReduceByUserAndState(Pageable pageable, TaskState state) {
+        if (currentUser().equals("admin"))
+            return batchTaskRepository.findByTypeAndState(TaskType.HDFS_MR_ALGORITHM, state, pageable);
+        else
+            return batchTaskRepository.findByTypeAndUserAndState(TaskType.HDFS_MR_ALGORITHM, currentUser(), state, pageable);
+    }
+
     public File fileFromReport(String id) {
         Optional<BatchTask> byId = batchTaskRepository.findById(id);
         BatchTask batchTask = byId.orElseThrow(() -> new NoSuchElementException("Report for id " + id + " wasn't found"));

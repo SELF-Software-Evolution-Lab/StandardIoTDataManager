@@ -63,6 +63,10 @@ public class Algorithm implements Serializable {
     @JsonIgnoreProperties("algorithms")
     private Laboratory laboratory;
 
+    @DBRef
+    @Field("subSet")
+    private SubSet subSet;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
         return id;
@@ -200,6 +204,19 @@ public class Algorithm implements Serializable {
 
     public void setLaboratory(Laboratory laboratory) {
         this.laboratory = laboratory;
+    }
+
+    public SubSet getSubSet() {
+        return subSet;
+    }
+
+    public Algorithm subSet(SubSet subSet) {
+        this.subSet = subSet;
+        return this;
+    }
+
+    public void setSubSet(SubSet subSet) {
+        this.subSet = subSet;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

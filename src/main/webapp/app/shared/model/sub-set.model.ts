@@ -15,6 +15,7 @@ export interface ISubSet {
     setType?: SubSetType;
     laboratoryName?: string;
     laboratoryId?: string;
+    algorithmId?: string;
 }
 
 export class SubSet implements ISubSet {
@@ -27,6 +28,7 @@ export class SubSet implements ISubSet {
         public downloadUrl?: string[],
         public setType?: SubSetType,
         public laboratoryName?: string,
-        public laboratoryId?: string
+        public laboratoryId?: string,
+        public algorithmId?: string
     ) {}
 }

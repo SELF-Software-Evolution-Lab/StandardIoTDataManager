@@ -18,6 +18,7 @@ export interface IAlgorithm {
     setType?: SubSetType;
     laboratoryName?: string;
     laboratoryId?: string;
+    subSetId?: string;
 }
 
 export class Algorithm implements IAlgorithm {
@@ -33,6 +34,7 @@ export class Algorithm implements IAlgorithm {
         public lastSuccessfulRun?: Moment,
         public setType?: SubSetType,
         public laboratoryName?: string,
-        public laboratoryId?: string
+        public laboratoryId?: string,
+        public subSetId?: string
     ) {}
 }

@@ -8,14 +8,16 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity Algorithm and its DTO AlgorithmDTO.
  */
-@Mapper(componentModel = "spring", uses = {LaboratoryMapper.class})
+@Mapper(componentModel = "spring", uses = {LaboratoryMapper.class, SubSetMapper.class})
 public interface AlgorithmMapper extends EntityMapper<AlgorithmDTO, Algorithm> {
 
     @Mapping(source = "laboratory.id", target = "laboratoryId")
     @Mapping(source = "laboratory.name", target = "laboratoryName")
+    @Mapping(source = "subSet.id", target = "subSetId")
     AlgorithmDTO toDto(Algorithm algorithm);
 
     @Mapping(source = "laboratoryId", target = "laboratory")
+    @Mapping(source = "subSetId", target = "subSet")
     Algorithm toEntity(AlgorithmDTO algorithmDTO);
 
     default Algorithm fromId(String id) {

@@ -138,6 +138,23 @@ public class BatchTaskResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+    @GetMapping("/batch-tasks/mapreduce-reports")
+    public ResponseEntity<List<BatchTask>> getAllMapReduceByUser(Pageable pageable) {
+        log.debug("REST request to get a page of map reduce tasks");
+        Page<BatchTask> page = batchTaskService.findAllMapReduceByUser(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/batch-tasks/upload-files");
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+
+    @GetMapping("/batch-tasks/mapreduce-reports/{state}")
+    public ResponseEntity<List<BatchTask>> getAllMapReduceByUser(Pageable pageable, @PathVariable TaskState state) {
+        log.debug("REST request to get a page of map reduce tasks by state");
+        Page<BatchTask> page = batchTaskService.findAllMapReduceByUserAndState(pageable, state);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/batch-tasks/upload-files/{%s}", state));
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
     /**
      * GET  /batch-tasks/search-reports : get all the search reports tasks.
      *

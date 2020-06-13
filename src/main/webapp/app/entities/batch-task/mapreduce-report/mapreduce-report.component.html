@@ -1,14 +1,7 @@
 <div>
     <h2 id="page-heading">
-        <span><fa-icon icon="file-upload"></fa-icon> Loaded Samples</span>
-        <button class="btn btn-info " [routerLink]="['/batch-task/search-report']">
-            <fa-icon [icon]="'file-csv'"></fa-icon>
-            <span>Search Reports</span>
-        </button>
-        <button class="btn btn-info " [routerLink]="['/batch-task/mapreduce-report']">
-            <fa-icon [icon]="'file-contract'"></fa-icon>
-            <span>MapReduce Reports</span>
-        </button>
+        <span><fa-icon [icon]="'file-csv'"></fa-icon> Map Reduce Reports</span>
+
         <button class="btn btn-primary float-right" (click)="refresh()">
             <fa-icon [icon]="'sync'"></fa-icon> <span>Refresh</span>
         </button>
@@ -41,7 +34,6 @@
             <th jhiSortBy="state"><span>Status</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="startDate"><span>Start Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="endDate"><span>End Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -55,7 +47,6 @@
                 <td>{{batchTask.state}}</td>
                 <td>{{batchTask.startDate | date:'medium'}}</td>
                 <td>{{batchTask.endDate | date:'medium'}}</td>
-                <td>{{batchTask.description}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

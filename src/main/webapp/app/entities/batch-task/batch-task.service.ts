@@ -57,6 +57,19 @@ export class BatchTaskService {
         }
     }
 
+    queryMyMapReduce(req?: any, taskState?: TaskState): Observable<EntityArrayResponseType> {
+        const options = createRequestOption(req);
+        if (taskState === TaskState.ALL) {
+            return this.http
+                .get<IBatchTask[]>(`${this.resourceUrl}/mapreduce-reports`, { params: options, observe: 'response' })
+                .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+        } else {
+            return this.http
+                .get<IBatchTask[]>(`${this.resourceUrl}/mapreduce-reports/${taskState}`, { params: options, observe: 'response' })
+                .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+        }
+    }
+
     queryMyReports(req?: any, taskState?: TaskState): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
         if (taskState === TaskState.ALL) {

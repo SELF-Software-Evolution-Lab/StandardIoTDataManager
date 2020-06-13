@@ -16,6 +16,7 @@ public interface SubSetMapper extends EntityMapper<SubSetDTO, SubSet> {
     SubSetDTO toDto(SubSet subSet);
 
     @Mapping(source = "laboratoryId", target = "laboratory")
+    @Mapping(target = "algorithm", ignore = true)
     SubSet toEntity(SubSetDTO subSetDTO);
 
     default SubSet fromId(String id) {

@@ -12,6 +12,7 @@ import {
     batchTaskPopupRoute
 } from './';
 import { SearchReportComponent } from 'app/entities/batch-task/search-report/search-report.component';
+import { MapreduceReportComponent } from 'app/entities/batch-task/mapreduce-report/mapreduce-report.component';
 
 const ENTITY_STATES = [...batchTaskRoute, ...batchTaskPopupRoute];
 
@@ -23,7 +24,8 @@ const ENTITY_STATES = [...batchTaskRoute, ...batchTaskPopupRoute];
         BatchTaskUpdateComponent,
         BatchTaskDeleteDialogComponent,
         BatchTaskDeletePopupComponent,
-        SearchReportComponent
+        SearchReportComponent,
+        MapreduceReportComponent
     ],
     entryComponents: [BatchTaskComponent, BatchTaskUpdateComponent, BatchTaskDeleteDialogComponent, BatchTaskDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

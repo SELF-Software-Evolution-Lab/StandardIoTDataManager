@@ -1,6 +1,7 @@
 package co.edu.uniandes.xrepo.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -38,12 +39,14 @@ public class SubSet implements Serializable {
     private String description;
 
     @NotNull
+    @Size(max = 2048)
     @Field("file_hdfs_location")
     private List<String> fileHdfsLocation = new ArrayList<>();
 
     @Field("date_created")
     private Instant dateCreated;
 
+    @Size(max = 2048)
     @Field("download_url")
     private List<String> downloadUrl;
 
@@ -55,6 +58,11 @@ public class SubSet implements Serializable {
     @Field("laboratory")
     @JsonIgnoreProperties("subSets")
     private Laboratory laboratory;
+
+    @DBRef
+    @Field("algorithm")
+    @com.fasterxml.jackson.annotation.JsonBackReference
+    private Algorithm algorithm;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
@@ -98,6 +106,7 @@ public class SubSet implements Serializable {
     public List<String> getFileHdfsLocationAndType() {
         return fileHdfsLocation.stream().map(x -> x + "," + this.setType).collect(Collectors.toList());
     }
+
 
     public SubSet fileHdfsLocation(List<String> fileHdfsLocation) {
         this.fileHdfsLocation = fileHdfsLocation;
@@ -158,6 +167,19 @@ public class SubSet implements Serializable {
 
     public void setLaboratory(Laboratory laboratory) {
         this.laboratory = laboratory;
+    }
+
+    public Algorithm getAlgorithm() {
+        return algorithm;
+    }
+
+    public SubSet algorithm(Algorithm algorithm) {
+        this.algorithm = algorithm;
+        return this;
+    }
+
+    public void setAlgorithm(Algorithm algorithm) {
+        this.algorithm = algorithm;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

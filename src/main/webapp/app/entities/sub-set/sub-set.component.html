@@ -22,6 +22,7 @@
             <!--<th jhiSortBy="downloadUrl"><span>Download Url</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
             <th jhiSortBy="setType"><span>Set Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="laboratoryName"><span>Laboratory</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <!--<th jhiSortBy="algorithmId"><span>Algorithm</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
             <th></th>
             </tr>
             </thead>
@@ -48,6 +49,11 @@
                         <a [routerLink]="['../laboratory', subSet.laboratoryId , 'view' ]" >{{subSet.laboratoryName}}</a>
                     </div>
                 </td>
+                <!--<td>
+                    <div *ngIf="subSet.algorithmId">
+                        <a [routerLink]="['../algorithm', subSet.algorithmId , 'view' ]" >Source Algorithm</a>
+                    </div>
+                </td>-->
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

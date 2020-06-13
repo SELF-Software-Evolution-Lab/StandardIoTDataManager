@@ -121,9 +121,11 @@ public class HdfsRunMRAlgorithmTaskProcessorService implements BackgroundTaskPro
         subsetDTO.setSetType(sourceAlgorithm.getSetType());
         subsetDTO.setLaboratoryId(sourceAlgorithm.getLaboratoryId());
         subsetDTO.setLaboratoryName(sourceAlgorithm.getLaboratoryName());
+        //save the succesfull run timestamp
+        sourceAlgorithm.setLastSuccessfulRun(Instant.now());
 
         //save the subset
-        subSetService.saveOnAlgorithm(subsetDTO);
+        subSetService.saveOnAlgorithm(subsetDTO, sourceAlgorithm);
     }
 
     private AlgorithmDTO extractSearchParams(BatchTask task) {

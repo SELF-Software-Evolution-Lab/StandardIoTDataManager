@@ -10,8 +10,16 @@
                 "required"
             ],
             "otherEntityField": "name",
-            "otherEntityRelationshipNameUndefined": true,
+            "otherEntityRelationshipNameUndefined": false,
             "otherEntityRelationshipName": "subSet"
+        },
+        {
+            "relationshipName": "algorithm",
+            "otherEntityName": "algorithm",
+            "relationshipType": "one-to-one",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "subSet",
+            "otherEntityRelationshipNameUndefined": false
         }
     ],
     "fields": [

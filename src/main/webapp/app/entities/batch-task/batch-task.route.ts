@@ -13,6 +13,7 @@ import { BatchTaskUpdateComponent } from './batch-task-update.component';
 import { BatchTaskDeletePopupComponent } from './batch-task-delete-dialog.component';
 import { IBatchTask } from 'app/shared/model/batch-task.model';
 import { SearchReportComponent } from 'app/entities/batch-task/search-report/search-report.component';
+import { MapreduceReportComponent } from 'app/entities/batch-task/mapreduce-report/mapreduce-report.component';
 
 @Injectable({ providedIn: 'root' })
 export class BatchTaskResolve implements Resolve<IBatchTask> {
@@ -58,6 +59,19 @@ export const batchTaskRoute: Routes = [
         canActivate: [UserRouteAccessService]
     },
     {
+        path: 'mapreduce-report',
+        component: MapreduceReportComponent,
+        resolve: {
+            pagingParams: JhiResolvePagingParams
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            defaultSort: 'createDate,desc',
+            pageTitle: 'MapReduce Reports'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
         path: ':id/view',
         component: BatchTaskDetailComponent,
         resolve: {
@@ -71,6 +85,18 @@ export const batchTaskRoute: Routes = [
     },
     {
         path: 'search-report/:id/view',
+        component: BatchTaskDetailComponent,
+        resolve: {
+            batchTask: BatchTaskResolve
+        },
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'BatchTasks'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'mapreduce-report/:id/view',
         component: BatchTaskDetailComponent,
         resolve: {
             batchTask: BatchTaskResolve

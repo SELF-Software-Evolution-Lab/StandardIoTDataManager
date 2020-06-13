@@ -1,9 +1,13 @@
 package co.edu.uniandes.xrepo.service;
 
+import co.edu.uniandes.xrepo.domain.Algorithm;
 import co.edu.uniandes.xrepo.domain.SubSet;
 import co.edu.uniandes.xrepo.domain.enumeration.SubSetType;
+import co.edu.uniandes.xrepo.repository.AlgorithmRepository;
 import co.edu.uniandes.xrepo.repository.SubSetRepository;
+import co.edu.uniandes.xrepo.service.dto.AlgorithmDTO;
 import co.edu.uniandes.xrepo.service.dto.SubSetDTO;
+import co.edu.uniandes.xrepo.service.mapper.AlgorithmMapper;
 import co.edu.uniandes.xrepo.service.mapper.SubSetMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,12 +28,17 @@ public class SubSetService {
     private final Logger log = LoggerFactory.getLogger(SubSetService.class);
 
     private final SubSetRepository subSetRepository;
+    private final AlgorithmRepository algorithmRepository;
 
     private final SubSetMapper subSetMapper;
+    private final AlgorithmMapper algorithmMapper;
 
-    public SubSetService(SubSetRepository subSetRepository, SubSetMapper subSetMapper) {
+    public SubSetService(SubSetRepository subSetRepository, AlgorithmRepository algorithmRepository
+        , SubSetMapper subSetMapper, AlgorithmMapper algorithmMapper) {
         this.subSetRepository = subSetRepository;
+        this.algorithmRepository = algorithmRepository;
         this.subSetMapper = subSetMapper;
+        this.algorithmMapper = algorithmMapper;
     }
 
     /**
@@ -45,10 +54,10 @@ public class SubSetService {
         return subSetMapper.toDto(subSet);
     }
 
-    public SubSetDTO saveOnAlgorithm(SubSetDTO subSetDTO) {
+    public SubSetDTO saveOnAlgorithm(SubSetDTO subSetDTO, AlgorithmDTO algorithmDTO) {
         log.debug("Request to save SubSet : {}", subSetDTO);
         //check if the type exists and update it
-        List<SubSet> subSets = subSetRepository.findAll();
+        List<SubSet> subSets = subSetRepository.findByLaboratoryId(algorithmDTO.getLaboratoryId());
         for(SubSet item : subSets){
             if (item.getSetType() == SubSetType.TRAINING && subSetDTO.getSetType() == SubSetType.TRAINING){
                 subSetDTO.setId(item.getId());
@@ -59,6 +68,9 @@ public class SubSetService {
         }
         SubSet subSet = subSetMapper.toEntity(subSetDTO);
         subSet = subSetRepository.save(subSet);
+        algorithmDTO.setSubSetId(subSet.getId());
+        Algorithm algorithm = algorithmMapper.toEntity(algorithmDTO);
+        algorithmRepository.save(algorithm);
         return subSetMapper.toDto(subSet);
     }
 
