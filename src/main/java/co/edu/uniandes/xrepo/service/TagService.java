@@ -3,6 +3,7 @@ package co.edu.uniandes.xrepo.service;
 import co.edu.uniandes.xrepo.domain.Experiment;
 import co.edu.uniandes.xrepo.domain.Sampling;
 import co.edu.uniandes.xrepo.domain.Tag;
+import co.edu.uniandes.xrepo.domain.enumeration.TagType;
 import co.edu.uniandes.xrepo.repository.ExperimentRepository;
 import co.edu.uniandes.xrepo.repository.SamplingRepository;
 import co.edu.uniandes.xrepo.repository.TagRepository;
@@ -100,5 +101,15 @@ public class TagService {
             samplingsTags).collect(Collectors.toSet());
 
         return new ArrayList<>(collect);
+    }
+
+    public Page<Tag> findAllByAnalisysPurpose(Pageable pageable) {
+        log.debug("Request to get all Tags");
+        return tagRepository.findByType(pageable, TagType.ANALYSIS_PURPOSE);
+    }
+
+    public Page<Tag> findAllByFailureMode(Pageable pageable) {
+        log.debug("Request to get all Tags");
+        return tagRepository.findByType(pageable, TagType.FAILURE_MODE);
     }
 }

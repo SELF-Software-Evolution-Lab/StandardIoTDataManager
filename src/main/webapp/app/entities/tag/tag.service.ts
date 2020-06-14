@@ -39,4 +39,14 @@ export class TagService {
     listByTargetSystem(tsId: string): Observable<HttpResponse<string[]>> {
         return this.http.get<string[]>(`${this.resourceUrl}/target-system/${tsId}`, { observe: 'response' });
     }
+
+    queryByAnalisysPurpose(req?: any): Observable<EntityArrayResponseType> {
+        const options = createRequestOption(req);
+        return this.http.get<ITag[]>(`${this.resourceUrl}/analisys-purpose`, { params: options, observe: 'response' });
+    }
+
+    queryByFailureMode(req?: any): Observable<EntityArrayResponseType> {
+        const options = createRequestOption(req);
+        return this.http.get<ITag[]>(`${this.resourceUrl}/failure-mode`, { params: options, observe: 'response' });
+    }
 }

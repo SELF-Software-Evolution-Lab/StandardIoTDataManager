@@ -106,6 +106,27 @@ public class TagResource {
     }
 
     /**
+     * GET  /tags : get all the analisys purpose tags.
+     *
+     * @return the ResponseEntity with status 200 (OK) and the list of tags in body
+     */
+    @GetMapping("/tags/analisys-purpose")
+    public ResponseEntity<List<Tag>> getAllTagsByAnalisysPurpose(Pageable pageable) {
+        log.debug("REST request to get a page of Tags");
+        Page<Tag> page = tagService.findAllByAnalisysPurpose(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/tags/analisys-purpose");
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/tags/failure-mode")
+    public ResponseEntity<List<Tag>> getAllTagsByFailureMode(Pageable pageable) {
+        log.debug("REST request to get a page of Tags");
+        Page<Tag> page = tagService.findAllByFailureMode(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/tags/failure-mode");
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
      * GET  /tags/:id : get the "id" tag.
      *
      * @param id the id of the tag to retrieve

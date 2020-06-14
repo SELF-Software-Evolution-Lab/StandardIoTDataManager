@@ -89,7 +89,7 @@ export class LaboratoryUpdateComponent implements OnInit {
 
     loadAllTags() {
         this.tagService
-            .query({})
+            .queryByAnalisysPurpose({})
             .subscribe((res: HttpResponse<ITag[]>) => this.todosTags(res.body), (res: HttpErrorResponse) => this.onError(res.message));
     }
 

@@ -130,7 +130,7 @@ export class SamplingUpdateComponent implements OnInit {
 
     loadAllTags() {
         this.tagService
-            .query({})
+            .queryByFailureMode({})
             .subscribe((res: HttpResponse<ITag[]>) => this.todosTags(res.body), (res: HttpErrorResponse) => this.onError(res.message));
     }
 
