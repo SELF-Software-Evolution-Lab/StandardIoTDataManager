@@ -66,9 +66,9 @@ public class SubSetService {
                 subSetDTO.setId(item.getId());
             }
         }
+        subSetDTO.setAlgorithmId(algorithmDTO.getId());
         SubSet subSet = subSetMapper.toEntity(subSetDTO);
         subSet = subSetRepository.save(subSet);
-        algorithmDTO.setSubSetId(subSet.getId());
         Algorithm algorithm = algorithmMapper.toEntity(algorithmDTO);
         algorithmRepository.save(algorithm);
         return subSetMapper.toDto(subSet);

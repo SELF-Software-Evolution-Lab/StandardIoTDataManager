@@ -11,9 +11,7 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * A Laboratory.
@@ -46,7 +44,7 @@ public class Laboratory implements Serializable {
     private Instant shareValidThru;
 
     @Field("tags")
-    private String tags;
+    private List<String> tags = new ArrayList<>();
 
     @Field("algorithm")
     private Set<Algorithm> algorithms = new HashSet<>();
@@ -132,16 +130,16 @@ public class Laboratory implements Serializable {
         this.shareValidThru = shareValidThru;
     }
 
-    public String getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public Laboratory tags(String tags) {
+    public Laboratory tags(List<String> tags) {
         this.tags = tags;
         return this;
     }
 
-    public void setTags(String tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 

@@ -35,6 +35,10 @@ public class SubSetDTO implements Serializable {
 
     private String laboratoryName;
 
+    private String algorithmId;
+
+    private String algorithmName;
+
     public String getId() {
         return id;
     }
@@ -107,6 +111,22 @@ public class SubSetDTO implements Serializable {
         this.laboratoryName = laboratoryName;
     }
 
+    public String getAlgorithmId() {
+        return algorithmId;
+    }
+
+    public void setAlgorithmId(String algorithmId) {
+        this.algorithmId = algorithmId;
+    }
+
+    public String getAlgorithmName() {
+        return algorithmName;
+    }
+
+    public void setAlgorithmName(String algorithmName) {
+        this.algorithmName = algorithmName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -140,6 +160,8 @@ public class SubSetDTO implements Serializable {
             ", setType='" + getSetType() + "'" +
             ", laboratory=" + getLaboratoryId() +
             ", laboratory='" + getLaboratoryName() + "'" +
+            ", algorithm=" + getAlgorithmId() +
+            ", algorithm='" + getAlgorithmName() + "'" +
             "}";
     }
 }

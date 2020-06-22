@@ -1,6 +1,7 @@
 package co.edu.uniandes.xrepo.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -10,6 +11,8 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 import co.edu.uniandes.xrepo.domain.enumeration.SubSetType;
@@ -65,8 +68,7 @@ public class Algorithm implements Serializable {
 
     @DBRef
     @Field("subSet")
-    private SubSet subSet;
-
+    private Set<SubSet> subSets = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
         return id;
@@ -206,17 +208,29 @@ public class Algorithm implements Serializable {
         this.laboratory = laboratory;
     }
 
-    public SubSet getSubSet() {
-        return subSet;
+    public Set<SubSet> getSubSets() {
+        return subSets;
     }
 
-    public Algorithm subSet(SubSet subSet) {
-        this.subSet = subSet;
+    public Algorithm subSets(Set<SubSet> subSets) {
+        this.subSets = subSets;
         return this;
     }
 
-    public void setSubSet(SubSet subSet) {
-        this.subSet = subSet;
+    public Algorithm addSubSet(SubSet subSet) {
+        this.subSets.add(subSet);
+        subSet.setAlgorithm(this);
+        return this;
+    }
+
+    public Algorithm removeSubSet(SubSet subSet) {
+        this.subSets.remove(subSet);
+        subSet.setAlgorithm(null);
+        return this;
+    }
+
+    public void setSubSets(Set<SubSet> subSets) {
+        this.subSets = subSets;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

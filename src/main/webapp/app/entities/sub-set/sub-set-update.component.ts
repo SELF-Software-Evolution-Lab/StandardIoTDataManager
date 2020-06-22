@@ -10,6 +10,8 @@ import { ISubSet } from 'app/shared/model/sub-set.model';
 import { SubSetService } from './sub-set.service';
 import { ILaboratory } from 'app/shared/model/laboratory.model';
 import { LaboratoryService } from 'app/entities/laboratory';
+import { IAlgorithm } from 'app/shared/model/algorithm.model';
+import { AlgorithmService } from 'app/entities/algorithm';
 
 @Component({
     selector: 'jhi-sub-set-update',
@@ -20,12 +22,15 @@ export class SubSetUpdateComponent implements OnInit {
     isSaving: boolean;
 
     laboratories: ILaboratory[];
+
+    algorithms: IAlgorithm[];
     dateCreated: string;
 
     constructor(
         protected jhiAlertService: JhiAlertService,
         protected subSetService: SubSetService,
         protected laboratoryService: LaboratoryService,
+        protected algorithmService: AlgorithmService,
         protected activatedRoute: ActivatedRoute
     ) {}
 
@@ -42,6 +47,13 @@ export class SubSetUpdateComponent implements OnInit {
                 map((response: HttpResponse<ILaboratory[]>) => response.body)
             )
             .subscribe((res: ILaboratory[]) => (this.laboratories = res), (res: HttpErrorResponse) => this.onError(res.message));
+        this.algorithmService
+            .query()
+            .pipe(
+                filter((mayBeOk: HttpResponse<IAlgorithm[]>) => mayBeOk.ok),
+                map((response: HttpResponse<IAlgorithm[]>) => response.body)
+            )
+            .subscribe((res: IAlgorithm[]) => (this.algorithms = res), (res: HttpErrorResponse) => this.onError(res.message));
     }
 
     previousState() {
@@ -76,6 +88,10 @@ export class SubSetUpdateComponent implements OnInit {
     }
 
     trackLaboratoryById(index: number, item: ILaboratory) {
+        return item.id;
+    }
+
+    trackAlgorithmById(index: number, item: IAlgorithm) {
         return item.id;
     }
 }

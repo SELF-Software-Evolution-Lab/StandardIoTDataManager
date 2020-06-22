@@ -8,15 +8,17 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity SubSet and its DTO SubSetDTO.
  */
-@Mapper(componentModel = "spring", uses = {LaboratoryMapper.class})
+@Mapper(componentModel = "spring", uses = {LaboratoryMapper.class, AlgorithmMapper.class})
 public interface SubSetMapper extends EntityMapper<SubSetDTO, SubSet> {
 
     @Mapping(source = "laboratory.id", target = "laboratoryId")
     @Mapping(source = "laboratory.name", target = "laboratoryName")
+    @Mapping(source = "algorithm.id", target = "algorithmId")
+    @Mapping(source = "algorithm.name", target = "algorithmName")
     SubSetDTO toDto(SubSet subSet);
 
     @Mapping(source = "laboratoryId", target = "laboratory")
-    @Mapping(target = "algorithm", ignore = true)
+    @Mapping(source = "algorithmId", target = "algorithm")
     SubSet toEntity(SubSetDTO subSetDTO);
 
     default SubSet fromId(String id) {

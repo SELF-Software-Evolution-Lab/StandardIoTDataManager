@@ -16,10 +16,10 @@
         {
             "relationshipName": "algorithm",
             "otherEntityName": "algorithm",
-            "relationshipType": "one-to-one",
-            "ownerSide": false,
+            "relationshipType": "many-to-one",
+            "otherEntityField": "name",
             "otherEntityRelationshipName": "subSet",
-            "otherEntityRelationshipNameUndefined": false
+            "otherEntityRelationshipNameUndefined": true
         }
     ],
     "fields": [

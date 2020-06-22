@@ -2,6 +2,7 @@ package co.edu.uniandes.xrepo.service.dto;
 import java.time.Instant;
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -25,7 +26,7 @@ public class LaboratoryDTO implements Serializable {
 
     private Instant shareValidThru;
 
-    private String tags;
+    private List<String> tags;
 
 
     private String samplingId;
@@ -80,11 +81,11 @@ public class LaboratoryDTO implements Serializable {
         this.shareValidThru = shareValidThru;
     }
 
-    public String getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(String tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 

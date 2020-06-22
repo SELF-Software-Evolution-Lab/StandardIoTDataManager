@@ -1,4 +1,5 @@
 import { Moment } from 'moment';
+import { ISubSet } from 'app/shared/model/sub-set.model';
 
 export const enum SubSetType {
     TRAINING = 'TRAINING',
@@ -18,7 +19,7 @@ export interface IAlgorithm {
     setType?: SubSetType;
     laboratoryName?: string;
     laboratoryId?: string;
-    subSetId?: string;
+    subSets?: ISubSet[];
 }
 
 export class Algorithm implements IAlgorithm {
@@ -35,6 +36,6 @@ export class Algorithm implements IAlgorithm {
         public setType?: SubSetType,
         public laboratoryName?: string,
         public laboratoryId?: string,
-        public subSetId?: string
+        public subSets?: ISubSet[]
     ) {}
 }

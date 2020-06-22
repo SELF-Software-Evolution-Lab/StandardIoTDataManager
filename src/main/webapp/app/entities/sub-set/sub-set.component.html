@@ -14,16 +14,14 @@
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="name"><span>Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <!--<th jhiSortBy="fileHdfsLocation"><span>File Hdfs Location</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
-            <th jhiSortBy="dateCreated"><span>Date Created</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <!--<th jhiSortBy="downloadUrl"><span>Download Url</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
-            <th jhiSortBy="setType"><span>Set Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="laboratoryName"><span>Laboratory</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <!--<th jhiSortBy="algorithmId"><span>Algorithm</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
-            <th></th>
+                <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th jhiSortBy="name"><span>Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th jhiSortBy="dateCreated"><span>Date Created</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th jhiSortBy="setType"><span>Set Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th jhiSortBy="laboratoryName"><span>Laboratory</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th jhiSortBy="algorithmName"><span>Algorithm</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -31,29 +29,18 @@
                 <td><a [routerLink]="['/sub-set', subSet.id, 'view' ]">{{subSet.id}}</a></td>
                 <td>{{subSet.name}}</td>
                 <td>{{subSet.description}}</td>
-                <!--<td>
-                    <div *ngFor="let fileLocation of subSet.fileHdfsLocation">
-                        <span class="badge badge-info">{{ fileLocation }}</span>
-                    </div>
-                </td>-->
                 <td>{{subSet.dateCreated | date:'medium'}}</td>
-                <!--<td>
-                    {{subSet.downloadUrl}}
-                    <div *ngFor="let downloadUrl of subSet.downloadUrl">
-                        <span class="badge badge-info">{{ downloadUrl }}</span>
-                    </div>
-                </td>-->
                 <td>{{subSet.setType}}</td>
                 <td>
                     <div *ngIf="subSet.laboratoryId">
                         <a [routerLink]="['../laboratory', subSet.laboratoryId , 'view' ]" >{{subSet.laboratoryName}}</a>
                     </div>
                 </td>
-                <!--<td>
+                <td>
                     <div *ngIf="subSet.algorithmId">
-                        <a [routerLink]="['../algorithm', subSet.algorithmId , 'view' ]" >Source Algorithm</a>
+                        <a [routerLink]="['../algorithm', subSet.algorithmId , 'view' ]" >{{subSet.algorithmName}}</a>
                     </div>
-                </td>-->
+                </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

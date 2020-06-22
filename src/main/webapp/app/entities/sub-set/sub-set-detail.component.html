@@ -43,6 +43,12 @@
                         <a [routerLink]="['/laboratory', subSet.laboratoryId, 'view']">{{subSet.laboratoryName}}</a>
                     </div>
                 </dd>
+                <dt><span>Algorithm</span></dt>
+                <dd>
+                    <div *ngIf="subSet.algorithmId">
+                        <a [routerLink]="['/algorithm', subSet.algorithmId, 'view']">{{subSet.algorithmName}}</a>
+                    </div>
+                </dd>
             </dl>
 
             <button type="submit"

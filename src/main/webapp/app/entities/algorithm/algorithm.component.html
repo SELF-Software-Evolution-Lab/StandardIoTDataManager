@@ -25,7 +25,6 @@
                 <th jhiSortBy="lastSuccessfulRun"><span>Last Successful Run</span> <fa-icon [icon]="'sort'"></fa-icon></th>
                 <th jhiSortBy="setType"><span>Set Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
                 <th jhiSortBy="laboratoryName"><span>Laboratory</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-                <th jhiSortBy="subSetId"><span>SubSet</span> <fa-icon [icon]="'sort'"></fa-icon></th>
                 <th></th>
             </tr>
             </thead>
@@ -46,11 +45,7 @@
                         <a [routerLink]="['../laboratory', algorithm.laboratoryId , 'view' ]" >{{algorithm.laboratoryName}}</a>
                     </div>
                 </td>
-                <td>
-                    <div *ngIf="algorithm.subSetId">
-                        <a [routerLink]="['../sub-set', algorithm.subSetId , 'view' ]" >SubSet</a>
-                    </div>
-                </td>
+
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

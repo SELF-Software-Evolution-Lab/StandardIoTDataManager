@@ -7,31 +7,31 @@
                 <div class="form-group" [hidden]="!subSet.id">
                     <label for="id">ID</label>
                     <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="subSet.id" readonly />
+                           [(ngModel)]="subSet.id" readonly />
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_name">Name</label>
                     <input type="text" class="form-control" name="name" id="field_name"
-                        [(ngModel)]="subSet.name" required maxlength="30"/>
+                           [(ngModel)]="subSet.name" required maxlength="30"/>
                     <div [hidden]="!(editForm.controls.name?.dirty && editForm.controls.name?.invalid)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.name?.errors?.required">
-                        This field is required.
+                               [hidden]="!editForm.controls.name?.errors?.required">
+                            This field is required.
                         </small>
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.name?.errors?.maxlength">
-                        This field cannot be longer than 30 characters.
+                               [hidden]="!editForm.controls.name?.errors?.maxlength">
+                            This field cannot be longer than 30 characters.
                         </small>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_description">Description</label>
                     <input type="text" class="form-control" name="description" id="field_description"
-                        [(ngModel)]="subSet.description" maxlength="1024"/>
+                           [(ngModel)]="subSet.description" maxlength="1024"/>
                     <div [hidden]="!(editForm.controls.description?.dirty && editForm.controls.description?.invalid)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.description?.errors?.maxlength">
-                        This field cannot be longer than 1024 characters.
+                               [hidden]="!editForm.controls.description?.errors?.maxlength">
+                            This field cannot be longer than 1024 characters.
                         </small>
                     </div>
                 </div>
@@ -50,24 +50,6 @@
                         </small>
                     </div>
                 </div>-->
-
-                <div class="form-group" [hidden]="true">
-                    <label class="form-control-label" for="fileHdfs">File Hdfs Location</label>
-                    <ng-select
-                        id ="fileHdfs"
-                        [items]="subSet.fileHdfsLocation"
-                        [multiple]="true"
-                        [closeOnSelect]="false"
-                        [searchable]="false"
-                        [clearable]="false"
-                        [hideSelected]="true"
-                        bindLabel="name"
-                        placeholder="Select Locations"
-                        [(ngModel)]="subSet.fileHdfsLocation"
-                        name="fileHdfs">
-                    </ng-select>
-                </div>
-
                 <div class="form-group">
                     <label class="form-control-label" for="field_dateCreated">Date Created</label>
                     <div class="d-flex">
@@ -86,25 +68,7 @@
                         </small>
                     </div>
                 </div>-->
-
-                <div class="form-group" [hidden]="true">
-                    <label class="form-control-label" for="downloadUrl">Download Url</label>
-                    <ng-select
-                        id ="downloadUrl"
-                        [items]="subSet.downloadUrl"
-                        [multiple]="true"
-                        [closeOnSelect]="false"
-                        [searchable]="false"
-                        [clearable]="false"
-                        [hideSelected]="true"
-                        bindLabel="name"
-                        placeholder="Select download"
-                        [(ngModel)]="subSet.downloadUrl"
-                        name="downloadUrl">
-                    </ng-select>
-                </div>
-
-                <div class="form-group" [hidden]="true">
+                <div class="form-group">
                     <label class="form-control-label" for="field_setType">Set Type</label>
                     <select class="form-control" name="setType" [(ngModel)]="subSet.setType" id="field_setType"  required>
                         <option value="TRAINING">TRAINING</option>
@@ -112,8 +76,8 @@
                     </select>
                     <div [hidden]="!(editForm.controls.setType?.dirty && editForm.controls.setType?.invalid)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.setType?.errors?.required">
-                        This field is required.
+                               [hidden]="!editForm.controls.setType?.errors?.required">
+                            This field is required.
                         </small>
                     </div>
                 </div>
@@ -127,9 +91,16 @@
                 </div>
                 <div [hidden]="!(editForm.controls.laboratory?.dirty && editForm.controls.laboratory?.invalid)">
                     <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.laboratory?.errors?.required">
+                           [hidden]="!editForm.controls.laboratory?.errors?.required">
                         This field is required.
                     </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_algorithm">Algorithm</label>
+                    <select class="form-control" id="field_algorithm" name="algorithm" [(ngModel)]="subSet.algorithmId" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="algorithmOption.id" *ngFor="let algorithmOption of algorithms; trackBy: trackAlgorithmById">{{algorithmOption.name}}</option>
+                    </select>
                 </div>
             </div>
             <div>

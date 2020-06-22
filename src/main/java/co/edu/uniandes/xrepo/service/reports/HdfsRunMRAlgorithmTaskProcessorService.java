@@ -124,7 +124,7 @@ public class HdfsRunMRAlgorithmTaskProcessorService implements BackgroundTaskPro
         //save the succesfull run timestamp
         sourceAlgorithm.setLastSuccessfulRun(Instant.now());
 
-        //save the subset
+        //save the subset and algorithm
         subSetService.saveOnAlgorithm(subsetDTO, sourceAlgorithm);
     }
 

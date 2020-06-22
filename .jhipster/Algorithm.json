@@ -16,9 +16,7 @@
         {
             "relationshipName": "subSet",
             "otherEntityName": "subSet",
-            "relationshipType": "one-to-one",
-            "otherEntityField": "id",
-            "ownerSide": true,
+            "relationshipType": "one-to-many",
             "otherEntityRelationshipName": "algorithm",
             "otherEntityRelationshipNameUndefined": false
         }

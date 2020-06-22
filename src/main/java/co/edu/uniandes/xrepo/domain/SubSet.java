@@ -61,7 +61,7 @@ public class SubSet implements Serializable {
 
     @DBRef
     @Field("algorithm")
-    @com.fasterxml.jackson.annotation.JsonBackReference
+    @JsonIgnoreProperties("subSets")
     private Algorithm algorithm;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
