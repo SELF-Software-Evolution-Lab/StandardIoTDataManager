@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter, Output } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -12,6 +12,7 @@ type EntityResponseType = HttpResponse<ISamplesFiles>;
 export class SamplesFilesService {
     public resourceUrl = SERVER_API_URL + 'api/samples-files';
 
+    @Output() public visibleFileUpload: EventEmitter<number> = new EventEmitter<number>();
     constructor(protected http: HttpClient) {}
 
     create2(file: File, samplingId: string): Observable<EntityResponseType> {

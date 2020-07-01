@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { SamplesFilesService } from './samples-files.service';
@@ -21,6 +21,7 @@ export class SamplesFilesUpdateComponent implements OnInit {
     samplings: ISampling[];
     valueSampling: string = '';
 
+    @Output() public visibleFileUpload: EventEmitter<string> = new EventEmitter<string>();
     constructor(
         protected samplesFilesService: SamplesFilesService,
         protected activatedRoute: ActivatedRoute,
@@ -39,7 +40,24 @@ export class SamplesFilesUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
-        this.subscribeToSaveResponse(this.samplesFilesService.create2(this.file, this.valueSampling));
+
+        this.samplesFilesService.visibleFileUpload.emit(0);
+        let _this = this;
+
+        var worker = new Worker('content/js/worker.js');
+        worker.postMessage({ file: this.file, samplingId: this.valueSampling });
+        worker.onmessage = function(e) {
+            console.log('Resopuesta worker : ', e);
+            if (e.data.indexOf('Error worker') == -1) {
+                //No hay errores
+                _this.samplesFilesService.visibleFileUpload.emit(1);
+            } else {
+                _this.samplesFilesService.visibleFileUpload.emit(-1);
+            }
+
+            _this.isSaving = false;
+        };
+        //this.subscribeToSaveResponse(this.samplesFilesService.create2(this.file, this.valueSampling));
     }
 
     protected subscribeToSaveResponse(result: Observable<HttpResponse<ISamplesFiles>>) {

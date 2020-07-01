@@ -24,6 +24,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ErrorComponent } from './layouts';
 import { XrepoSearchModule } from 'app/search/search.module';
+import { FileuploadProgressComponent } from './layouts/fileupload-progress/fileupload-progress.component';
 
 @NgModule({
     imports: [
@@ -45,7 +46,7 @@ import { XrepoSearchModule } from 'app/search/search.module';
         XrepoEntityModule,
         XrepoAppRoutingModule
     ],
-    declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],
+    declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent, FileuploadProgressComponent],
     providers: [
         {
             provide: HTTP_INTERCEPTORS,
