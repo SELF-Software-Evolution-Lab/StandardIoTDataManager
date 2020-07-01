@@ -15,7 +15,7 @@ export class FileuploadProgressComponent implements OnInit {
     ngOnInit() {
         this.samplesFilesService.visibleFileUpload.subscribe(isVisible => {
             if (isVisible == 1) {
-                this.label = 'Archivo cargado completamente...';
+                this.label = 'Uploaded file successfully...';
                 this.classBar = 'bg-success';
                 this.visibleFile = false;
                 this.visibleFile = true;
@@ -25,12 +25,12 @@ export class FileuploadProgressComponent implements OnInit {
                 }, 8000); //Despues de 5 segundos se quita el mensaje de carga
             } else {
                 if (isVisible == 0) {
-                    this.label = 'Subiendo Archivo ... ';
+                    this.label = 'Uploading file ... ';
                     this.classBar = 'progress-bar-animated';
                     console.log('entro aca verdadero :', isVisible);
                     this.visibleFile = true;
                 } else {
-                    this.label = 'Error subiendo archivo, por favor verifique el archivo de datos...';
+                    this.label = 'Error loading file, check file data, select valid sampling';
                     this.classBar = 'bg-danger';
                     this.visibleFile = false;
                     this.visibleFile = true;

@@ -3,15 +3,15 @@ this.onmessage = function(e){
 
 
     if( e.data!== undefined){
-        console.log( "Archivo", e.data.file);
-        console.log( "sampleId", e.data.samplingId);
+        //console.log( "Archivo", e.data.file);
+        //console.log( "sampleId", e.data.samplingId);
 
         /*for( var i=0;i< 10 ; i++){
             sleep(1000);
             console.log(  "Indice : ", i );
         }*/
 
-        let result = enviarArchivo( e.data.file, e.data.samplingId );
+        let result = enviarArchivo( e.data.file, e.data.samplingId, e.data.token );
         let _this = this;
         result.then(msg =>{
             console.log( "Mensaje" , msg);
@@ -21,7 +21,6 @@ this.onmessage = function(e){
             console.log( "Mensaje Error", error);
             this.postMessage("Error worker : " +error);
         });
-        //this.postMessage("cargado");
     }
 
 
@@ -34,7 +33,7 @@ this.onmessage = function(e){
         }
        }*/
 
-    function enviarArchivo( file, samplingId ){
+    function enviarArchivo( file, samplingId, token ){
         var formData = new FormData();
 
         formData.append('file', file);
@@ -42,19 +41,21 @@ this.onmessage = function(e){
         console.log('formulario:');
         console.log(formData);
 
-        return postAsync( '/api/samples-files-2' , formData);
+        return postAsync( '/api/samples-files-2' , formData, token);
     }
 
-    function postAsync(url, formData) {
+    function postAsync(url, formData, token ) {
         return new Promise(function(resolve, reject) {
           var req = new XMLHttpRequest();
-          req.open('POST', url);
 
+          req.open('POST', url);
+          token = token.replace(/^"+/, "");
+          //console.log("Token  filtrado:", token);
+          req.setRequestHeader('Authorization', 'Bearer ' + token);
           req.onload = function() {
             if (req.status == 200) { resolve(req.response); }
             else { reject(Error(req.statusText));}
           };
-
           req.onerror = function() {
             reject(Error("Network Error"));
           };

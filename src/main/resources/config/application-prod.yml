@@ -30,7 +30,7 @@ spring:
     data:
         mongodb:
             #uri: mongodb://localhost:27017/xrepo
-            uri: mongodb://xrepo:xrepo@10.0.0.7:27017/xrepo?authSource=admin
+            uri: mongodb://xrepo:xrepo@xrmongoserver1.westus2.cloudapp.azure.com:27017/xrepo?authSource=admin
     mail:
         host: smtp.gmail.com
         port: 587

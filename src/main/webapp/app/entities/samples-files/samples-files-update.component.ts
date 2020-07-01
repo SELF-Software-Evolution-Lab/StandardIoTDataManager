@@ -44,8 +44,12 @@ export class SamplesFilesUpdateComponent implements OnInit {
         this.samplesFilesService.visibleFileUpload.emit(0);
         let _this = this;
 
+        console.log('Si existe la variable', localStorage);
+        console.log('Si existe la variable', sessionStorage);
+        let token = this.getToken();
+
         var worker = new Worker('content/js/worker.js');
-        worker.postMessage({ file: this.file, samplingId: this.valueSampling });
+        worker.postMessage({ file: this.file, samplingId: this.valueSampling, token: token });
         worker.onmessage = function(e) {
             console.log('Resopuesta worker : ', e);
             if (e.data.indexOf('Error worker') == -1) {
@@ -110,5 +114,15 @@ export class SamplesFilesUpdateComponent implements OnInit {
 
     trackId(index: number, item: ISample) {
         return item.id;
+    }
+
+    getToken() {
+        let token = '';
+        if (sessionStorage) {
+            if (sessionStorage.getItem('jhi-authenticationtoken')) {
+                token = sessionStorage.getItem('jhi-authenticationtoken');
+            }
+        }
+        return token;
     }
 }
