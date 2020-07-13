@@ -5,9 +5,16 @@ import co.edu.uniandes.xrepo.XrepoApp;
 import co.edu.uniandes.xrepo.domain.Algorithm;
 import co.edu.uniandes.xrepo.domain.Laboratory;
 import co.edu.uniandes.xrepo.repository.AlgorithmRepository;
+import co.edu.uniandes.xrepo.repository.ExperimentRepository;
+import co.edu.uniandes.xrepo.repository.SamplingRepository;
 import co.edu.uniandes.xrepo.service.AlgorithmService;
+import co.edu.uniandes.xrepo.service.BatchTaskService;
+import co.edu.uniandes.xrepo.service.SamplingService;
+import co.edu.uniandes.xrepo.service.SearchEngineService;
 import co.edu.uniandes.xrepo.service.dto.AlgorithmDTO;
 import co.edu.uniandes.xrepo.service.mapper.AlgorithmMapper;
+import co.edu.uniandes.xrepo.service.reports.SearchReportTaskProcessor;
+import co.edu.uniandes.xrepo.service.util.AsyncDelegator;
 import co.edu.uniandes.xrepo.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -15,7 +22,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -101,7 +110,25 @@ public class AlgorithmResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final AlgorithmResource algorithmResource = new AlgorithmResource(algorithmService);
+        AlgorithmRepository algorithmRepository = null;
+        AlgorithmMapper algorithmMapper = null;
+        String tempAlgorithmLocation = "";
+        String algorithmHdfsLocation = "";
+
+        SamplingRepository samplingRepository = null;
+        SamplingService samplingService = null;
+        ExperimentRepository experimentRepository = null;
+        MongoTemplate mongoTemplate = null;
+        BatchTaskService batchTaskService = null;
+        SearchReportTaskProcessor reportTaskProcessor = null;
+        AsyncDelegator asyncDelegator = null;
+        int maxRecords = 0;
+
+        AlgorithmService algorithmService = new AlgorithmService( algorithmRepository,algorithmMapper, tempAlgorithmLocation, algorithmHdfsLocation );
+        SearchEngineService searchEngineService = new SearchEngineService( samplingRepository, samplingService, experimentRepository, mongoTemplate, batchTaskService,reportTaskProcessor,asyncDelegator,maxRecords);
+
+
+        final AlgorithmResource algorithmResource = new AlgorithmResource(algorithmService,searchEngineService);
         this.restAlgorithmMockMvc = MockMvcBuilders.standaloneSetup(algorithmResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -241,7 +268,7 @@ public class AlgorithmResourceIntTest {
             .andExpect(jsonPath("$.[*].lastSuccessfulRun").value(hasItem(DEFAULT_LAST_SUCCESSFUL_RUN.toString())))
             .andExpect(jsonPath("$.[*].setType").value(hasItem(DEFAULT_SET_TYPE.toString())));
     }
-    
+
     @Test
     public void getAlgorithm() throws Exception {
         // Initialize the database

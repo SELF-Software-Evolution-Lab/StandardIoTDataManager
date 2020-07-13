@@ -26,6 +26,7 @@ import org.springframework.validation.Validator;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -90,6 +91,8 @@ public class LaboratoryResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        String hdfsResultsLocation="";
+        String nfsGatewayMountPoint = "";
         final LaboratoryResource laboratoryResource = new LaboratoryResource(laboratoryService, hdfsResultsLocation, nfsGatewayMountPoint);
         this.restLaboratoryMockMvc = MockMvcBuilders.standaloneSetup(laboratoryResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -112,7 +115,7 @@ public class LaboratoryResourceIntTest {
             .dateCreated(DEFAULT_DATE_CREATED)
             .shareUrl(DEFAULT_SHARE_URL)
             .shareValidThru(DEFAULT_SHARE_VALID_THRU)
-            .tags(DEFAULT_TAGS);
+            .tags(Collections.singletonList(DEFAULT_TAGS));
         // Add required entity
         Sampling sampling = SamplingResourceIntTest.createEntity();
         sampling.setId("fixed-id-for-tests");
@@ -244,7 +247,7 @@ public class LaboratoryResourceIntTest {
             .dateCreated(UPDATED_DATE_CREATED)
             .shareUrl(UPDATED_SHARE_URL)
             .shareValidThru(UPDATED_SHARE_VALID_THRU)
-            .tags(UPDATED_TAGS);
+            .tags(Collections.singletonList(UPDATED_TAGS));
         LaboratoryDTO laboratoryDTO = laboratoryMapper.toDto(updatedLaboratory);
 
         restLaboratoryMockMvc.perform(put("/api/laboratories")

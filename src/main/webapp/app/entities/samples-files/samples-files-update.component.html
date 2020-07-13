@@ -10,7 +10,7 @@
                 <div class="form-group">
                     <select class="form-control" name="sampling" [(ngModel)]="valueSampling">
                         <option value="">Select a sampling for the file sample</option>
-                        <option *ngFor="let sampling of samplings ;trackBy: trackId" value="{{sampling.id}}"> {{sampling.experimentName}} - {{sampling.id}} </option>
+                        <option *ngFor="let sampling of samplings ;trackBy: trackId" value="{{sampling.id}}"> {{sampling.name}} - {{sampling.id}} </option>
                     </select>
                 </div>
                 <small><i>* If not select a sampling please put the ID sampling into the file sample. Example ID : 5e94d6374ab5ab6aa35d30fc</i></small>

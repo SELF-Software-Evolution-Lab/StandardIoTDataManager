@@ -26,6 +26,7 @@ import org.springframework.validation.Validator;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -110,9 +111,9 @@ public class SubSetResourceIntTest {
         SubSet subSet = new SubSet()
             .name(DEFAULT_NAME)
             .description(DEFAULT_DESCRIPTION)
-            .fileHdfsLocation(DEFAULT_FILE_HDFS_LOCATION)
+            .fileHdfsLocation(Collections.singletonList(DEFAULT_FILE_HDFS_LOCATION))
             .dateCreated(DEFAULT_DATE_CREATED)
-            .downloadUrl(DEFAULT_DOWNLOAD_URL)
+            .downloadUrl(Collections.singletonList(DEFAULT_DOWNLOAD_URL))
             .setType(DEFAULT_SET_TYPE);
         // Add required entity
         Laboratory laboratory = LaboratoryResourceIntTest.createEntity();
@@ -240,7 +241,7 @@ public class SubSetResourceIntTest {
             .andExpect(jsonPath("$.[*].downloadUrl").value(hasItem(DEFAULT_DOWNLOAD_URL.toString())))
             .andExpect(jsonPath("$.[*].setType").value(hasItem(DEFAULT_SET_TYPE.toString())));
     }
-    
+
     @Test
     public void getSubSet() throws Exception {
         // Initialize the database
@@ -278,9 +279,9 @@ public class SubSetResourceIntTest {
         updatedSubSet
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
-            .fileHdfsLocation(UPDATED_FILE_HDFS_LOCATION)
+            .fileHdfsLocation(Collections.singletonList(UPDATED_FILE_HDFS_LOCATION))
             .dateCreated(UPDATED_DATE_CREATED)
-            .downloadUrl(UPDATED_DOWNLOAD_URL)
+            .downloadUrl(Collections.singletonList(UPDATED_DOWNLOAD_URL))
             .setType(UPDATED_SET_TYPE);
         SubSetDTO subSetDTO = subSetMapper.toDto(updatedSubSet);
 

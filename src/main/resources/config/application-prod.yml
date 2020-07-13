@@ -31,6 +31,7 @@ spring:
         mongodb:
             #uri: mongodb://localhost:27017/xrepo
             uri: mongodb://xrepo:xrepo@xrmongoserver1.westus2.cloudapp.azure.com:27017/xrepo?authSource=admin
+            #uri: mongodb://xrepo:xrepo@10.0.0.7:27017/xrepo?authSource=admin
     mail:
         host: smtp.gmail.com
         port: 587
@@ -46,9 +47,9 @@ spring:
         cache: true
     servlet:
         multipart:
-            max-file-size: 700MB
-            max-request-size: 800MB
-            file-size-threshold: 1MB
+            max-file-size: 1500MB
+            max-request-size: 1600MB
+            file-size-threshold: 3MB
 
 # ===================================================================
 # To enable TLS in production, generate a certificate using:
@@ -134,4 +135,3 @@ xrepo:
     algorithm-hdfs-location: /home/hadoop/xrepo/algorithms/
     mr-results-hdfs-location: /user/andes/algorithm-result/
     batch-tasks-checker-frequency: 120000
-

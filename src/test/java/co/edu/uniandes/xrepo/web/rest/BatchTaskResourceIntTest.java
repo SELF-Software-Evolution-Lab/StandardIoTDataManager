@@ -86,6 +86,7 @@ public class BatchTaskResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        String hdfsSearchReportLocation = "";
         final BatchTaskResource batchTaskResource = new BatchTaskResource(batchTaskService, hdfsSearchReportLocation);
         this.restBatchTaskMockMvc = MockMvcBuilders.standaloneSetup(batchTaskResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)

@@ -40,6 +40,7 @@ spring:
         mongodb:
             #uri: mongodb://localhost:27017/xrepo
             uri: mongodb://xrepo:xrepo@xrmongoserver1.westus2.cloudapp.azure.com:27017/xrepo?authSource=admin
+            #uri: mongodb://xrepo:xrepo@10.0.0.7:27017/xrepo?authSource=admin
     mail:
         host: smtp.gmail.com
         port: 587
@@ -57,9 +58,9 @@ spring:
         cache: false
     servlet:
         multipart:
-            max-file-size: 700MB
-            max-request-size: 800MB
-            file-size-threshold: 1MB
+            max-file-size: 1500MB
+            max-request-size: 1600MB
+            file-size-threshold: 3MB
 server:
     port: 8080
 
@@ -118,8 +119,7 @@ xrepo:
     report-generation-location: /var/hdfs/user/andes/search-result
     samples-files-location: /var/hdfs/user/andes/input-samples
     remove-prefix-hdfs: /var/hdfs
-    temp-algorithm-files-location: ./build/temp-algorithm
+    temp-algorithm-files-location: /home/andes/xrepo/data/temp-algorithm
     algorithm-hdfs-location: /home/hadoop/xrepo/algorithms/
     mr-results-hdfs-location: /user/andes/algorithm-result
     batch-tasks-checker-frequency: 30000
-
