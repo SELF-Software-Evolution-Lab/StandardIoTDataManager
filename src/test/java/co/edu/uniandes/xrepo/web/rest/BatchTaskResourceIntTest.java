@@ -61,6 +61,8 @@ public class BatchTaskResourceIntTest {
     private static final Integer DEFAULT_PROGRESS = 1;
     private static final Integer UPDATED_PROGRESS = 2;
 
+    private final String hdfsSearchReportLocation = "";
+
     @Autowired
     private BatchTaskRepository batchTaskRepository;
 

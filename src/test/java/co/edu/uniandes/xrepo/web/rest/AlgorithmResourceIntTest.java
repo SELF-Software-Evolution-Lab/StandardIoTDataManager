@@ -6,6 +6,7 @@ import co.edu.uniandes.xrepo.domain.Algorithm;
 import co.edu.uniandes.xrepo.domain.Laboratory;
 import co.edu.uniandes.xrepo.repository.AlgorithmRepository;
 import co.edu.uniandes.xrepo.service.AlgorithmService;
+import co.edu.uniandes.xrepo.service.SearchEngineService;
 import co.edu.uniandes.xrepo.service.dto.AlgorithmDTO;
 import co.edu.uniandes.xrepo.service.mapper.AlgorithmMapper;
 import co.edu.uniandes.xrepo.web.rest.errors.ExceptionTranslator;
@@ -83,6 +84,9 @@ public class AlgorithmResourceIntTest {
     private AlgorithmService algorithmService;
 
     @Autowired
+    private SearchEngineService searchEngineService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -101,7 +105,7 @@ public class AlgorithmResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final AlgorithmResource algorithmResource = new AlgorithmResource(algorithmService);
+        final AlgorithmResource algorithmResource = new AlgorithmResource(algorithmService, searchEngineService);
         this.restAlgorithmMockMvc = MockMvcBuilders.standaloneSetup(algorithmResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -241,7 +245,7 @@ public class AlgorithmResourceIntTest {
             .andExpect(jsonPath("$.[*].lastSuccessfulRun").value(hasItem(DEFAULT_LAST_SUCCESSFUL_RUN.toString())))
             .andExpect(jsonPath("$.[*].setType").value(hasItem(DEFAULT_SET_TYPE.toString())));
     }
-    
+
     @Test
     public void getAlgorithm() throws Exception {
         // Initialize the database

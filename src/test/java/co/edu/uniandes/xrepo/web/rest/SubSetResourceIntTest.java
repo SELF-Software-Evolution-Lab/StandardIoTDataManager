@@ -26,6 +26,9 @@ import org.springframework.validation.Validator;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -51,14 +54,14 @@ public class SubSetResourceIntTest {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
-    private static final String DEFAULT_FILE_HDFS_LOCATION = "AAAAAAAAAA";
-    private static final String UPDATED_FILE_HDFS_LOCATION = "BBBBBBBBBB";
+    private static final ArrayList<String> DEFAULT_FILE_HDFS_LOCATION = new ArrayList<>(Arrays.asList("London", "Tokyo", "New York"));
+    private static final ArrayList<String> UPDATED_FILE_HDFS_LOCATION = new ArrayList<>(Arrays.asList("Paris", "Rio", "Berlin"));
 
     private static final Instant DEFAULT_DATE_CREATED = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DATE_CREATED = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final String DEFAULT_DOWNLOAD_URL = "AAAAAAAAAA";
-    private static final String UPDATED_DOWNLOAD_URL = "BBBBBBBBBB";
+    private static final ArrayList<String> DEFAULT_DOWNLOAD_URL = new ArrayList<>(Arrays.asList("London", "Tokyo", "New York"));
+    private static final ArrayList<String> UPDATED_DOWNLOAD_URL = new ArrayList<>(Arrays.asList("Paris", "Rio", "Berlin"));;
 
     private static final SubSetType DEFAULT_SET_TYPE = SubSetType.TRAINING;
     private static final SubSetType UPDATED_SET_TYPE = SubSetType.VALIDATION;
@@ -240,7 +243,7 @@ public class SubSetResourceIntTest {
             .andExpect(jsonPath("$.[*].downloadUrl").value(hasItem(DEFAULT_DOWNLOAD_URL.toString())))
             .andExpect(jsonPath("$.[*].setType").value(hasItem(DEFAULT_SET_TYPE.toString())));
     }
-    
+
     @Test
     public void getSubSet() throws Exception {
         // Initialize the database

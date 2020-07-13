@@ -116,6 +116,11 @@ public class HdfsSearchReportTaskProcessorService implements BackgroundTaskProce
 
             String shellScript = new ClassPathResource("mapreduce-files/RunRemoteMRSearch.sh").getURI().getPath();
 
+            //to run in production the file must be accessible on the file system
+            if (shellScript == null){
+                shellScript = "/home/andes/resources/main/mapreduce-files/RunRemoteMRSearch.sh";
+            }
+
             log.info("Processing HDFS report starting: {}, ending {}", startTime.toString(), endTime.toString());
 
             List<Process> consoleTracker = new ArrayList<>();

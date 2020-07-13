@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
@@ -26,6 +27,8 @@ import org.springframework.validation.Validator;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -59,8 +62,12 @@ public class LaboratoryResourceIntTest {
     private static final Instant DEFAULT_SHARE_VALID_THRU = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_SHARE_VALID_THRU = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final String DEFAULT_TAGS = "AAAAAAAAAA";
-    private static final String UPDATED_TAGS = "BBBBBBBBBB";
+    private static final ArrayList<String> DEFAULT_TAGS = new ArrayList<>(Arrays.asList("London", "Tokyo", "New York"));
+    private static final ArrayList<String> UPDATED_TAGS = new ArrayList<>(Arrays.asList("Paris", "Rio", "Berlin"));;
+
+    private final String hdfsResultsLocation = "";
+
+    private final String nfsGatewayMountPoint = "";
 
     @Autowired
     private LaboratoryRepository laboratoryRepository;
