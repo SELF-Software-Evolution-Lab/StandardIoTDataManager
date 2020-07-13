@@ -132,6 +132,12 @@ public class AlgorithmService {
         try {
             /*local path already contains the algorithm ID in the folder structure*/
             shellScript = new ClassPathResource("mapreduce-files/scpSendFiles.sh").getURI().getPath();
+
+            //to run in production the file must be accessible on the file system
+            if (shellScript == null){
+                shellScript = "/home/andes/resources/main/mapreduce-files/scpSendFiles.sh";
+            }
+
             Process console = Runtime.getRuntime().exec(new String[]{shellScript
                 ,"-l",localPath
                 ,"-r",algorithmHdfsLocation});

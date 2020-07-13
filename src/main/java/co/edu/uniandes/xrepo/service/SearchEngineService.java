@@ -80,6 +80,12 @@ public class SearchEngineService {
         LocalDateTime end = searchParametersDTO.getToDateTime();
 
         String shellScript = new ClassPathResource("mapreduce-files/ShellSample.sh").getURI().getPath();
+
+        //to run in production the file must be accessible on the file system
+        if (shellScript == null){
+            shellScript = "/home/andes/resources/main/mapreduce-files/ShellSample.sh";
+        }
+
         log.info("Start Date Requested", start.toString());
         log.info("End Date Requested", end.toString());
         Process console = Runtime.getRuntime().exec(new String[]{shellScript

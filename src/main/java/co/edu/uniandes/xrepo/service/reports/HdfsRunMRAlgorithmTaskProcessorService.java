@@ -83,6 +83,11 @@ public class HdfsRunMRAlgorithmTaskProcessorService implements BackgroundTaskPro
 
             String shellScript = new ClassPathResource("mapreduce-files/RunRemoteMRAlgorithm.sh").getURI().getPath();
 
+            //to run in production the file must be accessible on the file system
+            if (shellScript == null){
+                shellScript = "/home/andes/resources/main/mapreduce-files/RunRemoteMRAlgorithm.sh";
+            }
+
             log.info("Processing HDFS algorithm with id {}", params.getId());
 
             List<Process> consoleTracker = new ArrayList<>();
